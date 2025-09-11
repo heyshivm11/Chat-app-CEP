@@ -261,3 +261,39 @@
   animation: float-3 10s ease-in-out infinite;
 }
 
+/* Edge lighting effect */
+@keyframes glowing {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.edge-light {
+  position: relative;
+}
+
+.edge-light::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--radius); 
+  border: 2px solid transparent;
+  background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--primary) / 0.3), hsl(var(--primary))) border-box;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index: -1;
+  animation: glowing 10s linear infinite;
+  background-size: 400%;
+}

@@ -145,7 +145,7 @@ export default function ScriptPage() {
           
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
               <div className="xl:col-span-1">
-                  <Card className="glass-card h-full">
+                  <Card className="glass-card h-full edge-light">
                       <CardContent className="pt-6">
                           <div className="space-y-4">
                               <div className="space-y-2">

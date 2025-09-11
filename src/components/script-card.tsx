@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -20,7 +21,7 @@ export function ScriptCard({ script }: ScriptCardProps) {
 
   return (
     <>
-      <Card className="glass-card h-full rounded-xl shadow-lg transition-all duration-300 hover:shadow-primary/20 flex flex-col">
+      <Card className="glass-card h-full rounded-xl shadow-lg transition-all duration-300 hover:shadow-primary/20 flex flex-col edge-light">
         <CardHeader className="flex flex-row items-start justify-between">
           <CardTitle className="text-lg font-semibold leading-tight pr-4">{script.title}</CardTitle>
           <div className="flex items-center gap-1 flex-shrink-0">
