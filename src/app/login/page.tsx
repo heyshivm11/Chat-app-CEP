@@ -23,14 +23,14 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from '@/components/ui/select';
 
 interface IFormInput {
   firstName: string;
   department: 'Frontline' | 'Schedule Change';
 }
 
-export function LoginPage() {
+export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { login } = useAuth();
@@ -97,22 +97,25 @@ export function LoginPage() {
             </div>
             <div className="space-y-2">
               <Label>Department</Label>
-              <Select
-                onValueChange={(value: 'Frontline' | 'Schedule Change') => {
-                  setValue('department', value, { shouldValidate: true });
-                }}
-                {...register('department', {
-                  required: 'Department is required',
-                })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your department" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Frontline">Frontline</SelectItem>
-                  <SelectItem value="Schedule Change">Schedule Change</SelectItem>
-                </SelectContent>
-              </Select>
+              <Controller
+                name="department"
+                control={control}
+                rules={{ required: 'Department is required' }}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your department" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Frontline">Frontline</SelectItem>
+                      <SelectItem value="Schedule Change">Schedule Change</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {errors.department && (
                 <p className="text-xs text-red-500 mt-1">
                   {errors.department.message}
