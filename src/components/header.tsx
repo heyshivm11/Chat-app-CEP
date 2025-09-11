@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Plane, Search, LogOut, Gamepad2 } from "lucide-react";
+import { Plane, Search, LogOut, LayoutDashboard } from "lucide-react";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -79,10 +79,10 @@ export function Header({
         </div>
 
         <div className="flex items-center gap-2">
-            <Link href="/fun">
+            <Link href="/dashboard">
               <Button variant="ghost" size="icon">
-                  <Gamepad2 className="h-5 w-5" />
-                  <span className="sr-only">Fun Zone</span>
+                  <LayoutDashboard className="h-5 w-5" />
+                  <span className="sr-only">Dashboard</span>
               </Button>
             </Link>
             <ThemeSwitcher />
