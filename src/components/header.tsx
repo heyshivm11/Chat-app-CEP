@@ -36,7 +36,7 @@ export function Header({
   return (
     <header className="sticky top-0 z-10 w-full bg-background/80 backdrop-blur-sm border-b border-border/50">
       <div className="container mx-auto flex h-16 items-center gap-4 px-4 md:px-8">
-        <Link href="/" className="flex items-center gap-2 text-foreground font-semibold">
+        <Link href="/scripts" className="flex items-center gap-2 text-foreground font-semibold">
           <div className="h-6 w-6 relative">
               <Plane className="h-6 w-6 text-primary animate-fly" />
           </div>

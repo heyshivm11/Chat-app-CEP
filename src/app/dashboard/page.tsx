@@ -1,12 +1,10 @@
 
 "use client";
 
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/use-auth';
-import { ArrowLeft, BarChart2, ClipboardCheck, Lightbulb, UserCheck } from 'lucide-react';
-import Link from 'next/link';
-import { useMemo } from 'react';
+import { BarChart2, ClipboardCheck, Lightbulb, UserCheck } from 'lucide-react';
+import { useMemo, useEffect, useState } from 'react';
 
 const motivationalQuotes = [
     "The secret of getting ahead is getting started.",
@@ -32,6 +30,7 @@ function StatCard({ title, value, icon: Icon }: { title: string, value: string |
 
 export default function DashboardPage() {
     const { user } = useAuth();
+    const [quote, setQuote] = useState('');
     
     // In a real app, this data would come from a database or analytics service.
     const stats = {
@@ -40,31 +39,18 @@ export default function DashboardPage() {
         teamContribution: "78%"
     };
 
-    const quote = useMemo(() => {
-        return motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+    useEffect(() => {
+        setQuote(motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]);
     }, []);
 
     return (
-        <div className="min-h-screen w-full gradient-background flex flex-col">
-            <header className="sticky top-0 z-10 w-full bg-background/80 backdrop-blur-sm border-b border-border/50">
-                <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-8">
-                    <Button asChild variant="ghost">
-                        <Link href="/scripts">
-                            <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back to Scripts
-                        </Link>
-                    </Button>
-                    <h1 className="text-2xl font-bold text-primary">Agent Dashboard</h1>
-                    <div className="w-40"></div>
-                </div>
+        <div className="min-h-screen w-full gradient-background flex flex-col p-4 md:p-8">
+            <header className="mb-8">
+                 <h1 className="text-3xl font-bold tracking-tight text-primary">Agent Dashboard</h1>
+                 <p className="text-muted-foreground">Welcome back, {user?.displayName}! Here's your performance snapshot.</p>
             </header>
-            <main className="container mx-auto px-4 md:px-8 py-8 flex-grow">
+            <main className="flex-grow">
                 <div className="space-y-8">
-                    <div>
-                        <h2 className="text-3xl font-bold tracking-tight">Welcome back, {user?.displayName}!</h2>
-                        <p className="text-muted-foreground">Here's a look at your performance and insights.</p>
-                    </div>
-
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         <StatCard title="Scripts Copied Today" value={stats.scriptsCopied} icon={ClipboardCheck} />
                         <StatCard title="Most Used Script" value={stats.mostUsedScript} icon={BarChart2} />
