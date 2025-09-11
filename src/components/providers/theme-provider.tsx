@@ -2,17 +2,13 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
-export type Theme = "theme-default" | "theme-black-red" | "theme-black-green" | "theme-black-white" | "theme-white-red" | "theme-vector-pop" | "theme-neo-3d" | "theme-paper-cut" | "theme-monochrome-vector";
+export type Theme = "theme-default" | "theme-black-red" | "theme-black-green" | "theme-black-white" | "theme-white-red";
 export const themeNames: { [key in Theme]: string } = {
   "theme-default": "Midnight Blue",
   "theme-black-red": "Crimson Night",
   "theme-black-green": "Emerald Dark",
   "theme-black-white": "Monochrome",
   "theme-white-red": "Scarlet Light",
-  "theme-vector-pop": "Vector Pop",
-  "theme-neo-3d": "Neo 3D",
-  "theme-paper-cut": "Paper Cut",
-  "theme-monochrome-vector": "Monochrome Vector",
 };
 
 const themeKeys = Object.keys(themeNames) as Theme[];
@@ -40,7 +36,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const root = document.documentElement;
     root.className = ''; 
 
-    if (!theme.startsWith('theme-white') && !theme.startsWith('theme-vector-pop') && !theme.startsWith('theme-paper-cut') && !theme.startsWith('theme-monochrome-vector')) {
+    if (!theme.startsWith('theme-white')) {
       root.classList.add('dark');
     }
     
