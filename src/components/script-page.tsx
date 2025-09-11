@@ -8,6 +8,9 @@ import { Header } from "./header";
 import { FileText, Files } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 export default function ScriptPage({ department: initialDepartment }: { department?: string, departmentName?: string }) {
   const router = useRouter();
@@ -16,12 +19,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [category, setCategory] = useState("All");
   const [department, setDepartment] = useState(initialDepartment || "etg");
 
-  const [customer1Name, setCustomer1Name] = useState("");
-  const [agent1Name, setAgent1Name] = useState("Shivam");
-  
-  const [customer2Name, setCustomer2Name] = useState("");
-  const [agent2Name, setAgent2Name] = useState("Shivam");
-
+  const [customerName, setCustomerName] = useState("");
+  const [agentName, setAgentName] = useState("Shivam");
 
   const departmentName = department === 'etg' ? 'ETG' : 'Booking.com';
 
@@ -30,14 +29,14 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     router.push(`/scripts/${newDepartment}`, { scroll: false });
   };
 
-  const getProcessedScripts = (customerName: string, agentName: string) => {
-    return scripts.map(script => {
+  const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string) => {
+    return scriptsToProcess.map(script => {
       const newScript = JSON.parse(JSON.stringify(script)); // Deep copy
       
       const replacePlaceholders = (text: string) => {
         return text
-          .replace(/\[Customer First Name\]/g, customerName || '[Customer First Name]')
-          .replace(/\[Agent Name\]/g, agentName || 'Shivam');
+          .replace(/\[Customer First Name\]/g, currentCustomerName || '[Customer First Name]')
+          .replace(/\[Agent Name\]/g, currentAgentName || 'Shivam');
       };
 
       if (typeof newScript.content === 'string') {
@@ -53,9 +52,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   };
 
   const filteredScripts = useMemo(() => {
-    // For simplicity, we'll filter based on a single set of names for search,
-    // or we could decide not to replace placeholders before filtering.
-    // Let's not replace for filtering to keep it simple.
     return scripts.filter((script) => {
       const searchMatch =
         script.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -74,16 +70,14 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   }, [searchTerm, category]);
 
   const departmentScripts = useMemo(() => {
-    const filtered = filteredScripts.filter(s => s.department === department);
-    const processed = getProcessedScripts(customer1Name, agent1Name);
-    return processed.filter(ps => filtered.some(fs => fs.id === ps.id));
-  }, [filteredScripts, department, customer1Name, agent1Name]);
+    const deptScripts = filteredScripts.filter(s => s.department === department);
+    return getProcessedScripts(deptScripts, customerName, agentName);
+  }, [filteredScripts, department, customerName, agentName]);
   
   const commonScripts = useMemo(() => {
-    const filtered = filteredScripts.filter(s => s.department === "common");
-    const processed = getProcessedScripts(customer1Name, agent1Name);
-    return processed.filter(ps => filtered.some(fs => fs.id === ps.id));
-  }, [filteredScripts, customer1Name, agent1Name]);
+    const common = filteredScripts.filter(s => s.department === "common");
+    return getProcessedScripts(common, customerName, agentName);
+  }, [filteredScripts, customerName, agentName]);
 
 
   const renderScriptList = (scriptList: Script[]) => {
@@ -110,10 +104,31 @@ export default function ScriptPage({ department: initialDepartment }: { departme
         onDepartmentChange={handleDepartmentChange}
       />
       <main className="container mx-auto px-4 md:px-8 py-8">
-        <CustomerDetailsCard 
-          onCustomerNameChange={(name) => setCustomer1Name(name)}
-          onAgentNameChange={(name) => setAgent1Name(name)}
-        />
+        
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
+            <div className="xl:col-span-1">
+                <Card className="glass-card h-full">
+                    <CardHeader>
+                        <CardTitle>Name Placeholders</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="agentName">Agent Name</Label>
+                                <Input id="agentName" value={agentName} onChange={(e) => setAgentName(e.target.value)} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="customerName">Customer Name</Label>
+                                <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+            <div className="xl:col-span-2">
+                <CustomerDetailsCard agentName={agentName} />
+            </div>
+        </div>
 
         <div className="space-y-12 mt-8">
             <section>
