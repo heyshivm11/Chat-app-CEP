@@ -143,6 +143,76 @@
   --ring: 0 72% 51%;
 }
 
+/* Theme: Cyberpunk Glow (Black & Cyan) */
+.theme-cyberpunk-glow {
+  --background: 220 20% 10%;
+  --foreground: 180 100% 95%;
+  --card: 220 20% 13%;
+  --card-foreground: 180 100% 95%;
+  --popover: 220 20% 10%;
+  --popover-foreground: 180 100% 95%;
+  --primary: 180 100% 50%; /* Cyan */
+  --primary-foreground: 220 20% 10%;
+  --secondary: 220 20% 20%;
+  --secondary-foreground: 180 100% 95%;
+  --muted: 220 20% 20%;
+  --muted-foreground: 220 10% 60%;
+  --accent: 330 100% 50%; /* Magenta */
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 220 20% 25%;
+  --input: 220 20% 20%;
+  --ring: 180 100% 50%;
+}
+
+/* Theme: Solaris Flare (Black & Orange) */
+.theme-solaris-flare {
+  --background: 0 0% 8%;
+  --foreground: 30 100% 95%;
+  --card: 0 0% 12%;
+  --card-foreground: 30 100% 95%;
+  --popover: 0 0% 8%;
+  --popover-foreground: 30 100% 95%;
+  --primary: 30 100% 50%; /* Orange */
+  --primary-foreground: 0 0% 8%;
+  --secondary: 0 0% 17%;
+  --secondary-foreground: 30 100% 95%;
+  --muted: 0 0% 17%;
+  --muted-foreground: 0 0% 60%;
+  --accent: 30 100% 50%;
+  --accent-foreground: 0 0% 8%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 20%;
+  --input: 0 0% 17%;
+  --ring: 30 100% 50%;
+}
+
+/* Theme: Forest Whisper (Dark & Green) */
+.theme-forest-whisper {
+  --background: 120 20% 10%;
+  --foreground: 120 20% 95%;
+  --card: 120 20% 13%;
+  --card-foreground: 120 20% 95%;
+  --popover: 120 20% 10%;
+  --popover-foreground: 120 20% 95%;
+  --primary: 130 50% 45%; /* Forest Green */
+  --primary-foreground: 120 20% 95%;
+  --secondary: 120 10% 20%;
+  --secondary-foreground: 120 20% 95%;
+  --muted: 120 10% 20%;
+  --muted-foreground: 120 10% 60%;
+  --accent: 130 50% 45%;
+  --accent-foreground: 120 20% 95%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 120 20% 95%;
+  --border: 120 10% 25%;
+  --input: 120 10% 20%;
+  --ring: 130 50% 45%;
+}
+
+
 @layer base {
   * {
     @apply border-border;
