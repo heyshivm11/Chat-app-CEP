@@ -26,7 +26,7 @@ export default function ScriptPage() {
       const replacePlaceholders = (text: string) => {
         return text
           .replace(/\[Customer First Name\]/g, customerName || '[Customer First Name]')
-          .replace(/Shivam/g, agentName || 'Shivam');
+          .replace(/\[Agent Name\]/g, agentName || 'Shivam');
       };
 
       if (typeof newScript.content === 'string') {
@@ -65,22 +65,14 @@ export default function ScriptPage() {
   const departmentScripts = filteredScripts.filter(s => s.department === department);
   const commonScripts = filteredScripts.filter(s => s.department === "common");
 
-  const renderScriptList = (scriptList: Script[], isLoading: boolean) => {
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center py-16">
-                <Plane className="w-12 h-12 text-primary animate-pulse" />
-                <p className="ml-4 text-lg text-muted-foreground">Loading Scripts...</p>
-            </div>
-        );
-    }
+  const renderScriptList = (scriptList: Script[], showCopyButton: boolean) => {
     if (scriptList.length === 0) {
       return <p className="text-muted-foreground text-center py-8">No scripts found.</p>;
     }
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
         {scriptList.map((script) => (
-          <ScriptCard key={script.id} script={script} />
+          <ScriptCard key={script.id} script={script} showCopyButton={showCopyButton} />
         ))}
       </div>
     );
@@ -128,7 +120,7 @@ export default function ScriptPage() {
                 {departmentName} Scripts
               </AccordionTrigger>
               <AccordionContent>
-                {renderScriptList(departmentScripts, false)}
+                {renderScriptList(departmentScripts, true)}
               </AccordionContent>
             </AccordionItem>
             

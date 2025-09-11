@@ -12,7 +12,7 @@ export const scripts: Script[] = [
     content: [
         {
           title: 'Greeting',
-          content: 'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+          content: 'Welcome to Customer Care [Customer First Name], you’re speaking with [Agent Name]! Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
         },
         {
           title: 'Confirmation and query',
@@ -26,18 +26,18 @@ export const scripts: Script[] = [
     category: 'Request Not Stated & Verified',
     team: 'All',
     title: 'Request Not Stated & Verified',
-    content: "Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! How may I assist you today?",
+    content: "Welcome to Customer Care [Customer First Name], you’re speaking with [Agent Name]! How may I assist you today?",
   },
   {
     id: 'etg-3',
     department: 'etg',
-    category: 'Request Not Stated & Non-Verified',
+    category: 'Request Stated & Non-Verified',
     team: 'All',
     title: 'Request Stated & Non-Verified',
     content: [
       {
         title: 'Greeting and Verification',
-        content: 'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+        content: 'Welcome to Customer Care [Customer First Name], you’re speaking with [Agent Name]! Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
       },
       {
         title: 'Acknowledge Request',
@@ -54,7 +54,7 @@ export const scripts: Script[] = [
     content: [
         {
           title: 'Greeting',
-          content: 'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam!',
+          content: 'Welcome to Customer Care [Customer First Name], you’re speaking with [Agent Name]!',
         },
         {
           title: 'Acknowledge Request',
@@ -71,7 +71,7 @@ export const scripts: Script[] = [
     content: [
         {
             title: 'Greeting',
-            content: 'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam!',
+            content: 'Welcome to Customer Care [Customer First Name], you’re speaking with [Agent Name]!',
         },
         {
             title: 'Acknowledge Transfer',
@@ -90,7 +90,7 @@ export const scripts: Script[] = [
     content: [
         {
           title: 'Greeting and Verification',
-          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is [Agent Name]!Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
         },
         {
           title: 'Confirmation and Query',
@@ -104,7 +104,7 @@ export const scripts: Script[] = [
     category: 'Request Not Stated & Verified',
     team: 'All',
     title: 'Request Not Stated & Verified',
-    content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!How may I assist you today?',
+    content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is [Agent Name]!How may I assist you today?',
   },
   {
     id: 'booking-3',
@@ -115,7 +115,7 @@ export const scripts: Script[] = [
     content: [
         {
           title: 'Greeting and Verification',
-          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is [Agent Name]!Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
         },
         {
           title: 'Acknowledge Request',
@@ -132,7 +132,7 @@ export const scripts: Script[] = [
     content: [
         {
           title: 'Greeting',
-          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!',
+          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is [Agent Name]!',
         },
         {
           title: 'Acknowledge Request',
@@ -149,7 +149,7 @@ export const scripts: Script[] = [
     content: [
         {
           title: 'Greeting',
-          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!',
+          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is [Agent Name]!',
         },
         {
           title: 'Acknowledge Transfer and Review',
