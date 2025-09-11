@@ -6,7 +6,7 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { Header } from "./header";
-import { FileText, Files, RotateCcw, Workflow } from "lucide-react";
+import { FileText, Workflow, BookCopy, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -177,7 +177,7 @@ export default function ScriptPage() {
               
               <section>
                   <div className="flex items-center gap-3 mb-6">
-                      <Files className="h-7 w-7 text-primary" />
+                      <BookCopy className="h-7 w-7 text-primary" />
                       <h2 className="text-2xl font-bold tracking-tight text-foreground">Common Scripts</h2>
                   </div>
                   {renderScriptList(commonScripts)}
