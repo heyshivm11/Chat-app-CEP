@@ -83,23 +83,19 @@ export default function NotesPage() {
                             <TabsTrigger value="customer1">Customer 1</TabsTrigger>
                             <TabsTrigger value="customer2">Customer 2</TabsTrigger>
                         </TabsList>
-                        <TabsContent value="customer1" className="flex-grow flex flex-col">
-                           <div className="pt-4 flex-grow flex flex-col">
-                             <NotesSection
+                        <TabsContent value="customer1" className="flex-grow pt-4 flex flex-col">
+                            <NotesSection
                                 notes={roughNotes1}
                                 setNotes={setRoughNotes1}
                                 placeholder="Jot down quick notes for Customer 1 here..."
-                             />
-                           </div>
+                            />
                         </TabsContent>
-                        <TabsContent value="customer2" className="flex-grow flex flex-col">
-                           <div className="pt-4 flex-grow flex flex-col">
-                             <NotesSection
+                        <TabsContent value="customer2" className="flex-grow pt-4 flex flex-col">
+                            <NotesSection
                                 notes={roughNotes2}
                                 setNotes={setRoughNotes2}
                                 placeholder="Jot down quick notes for Customer 2 here..."
-                             />
-                           </div>
+                            />
                         </TabsContent>
                     </Tabs>
                 </CardContent>
