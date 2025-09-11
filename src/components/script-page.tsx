@@ -6,7 +6,7 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { Header } from "./header";
-import { FileText, Workflow, BookCopy, RotateCcw } from "lucide-react";
+import { FileText, Workflow, BookCopy, RotateCcw, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,6 +16,7 @@ import { Button } from "./ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { AuthGate } from "./auth-gate";
 import { TypingEffect } from "./typing-effect";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 export default function ScriptPage() {
   const router = useRouter();
@@ -26,6 +27,9 @@ export default function ScriptPage() {
   const [department, setDepartment] = useState("etg");
   const [agentName, setAgentName] = useState("");
   const [customerName, setCustomerName] = useState("");
+  const [openingOpen, setOpeningOpen] = useState(true);
+  const [workflowOpen, setWorkflowOpen] = useState(true);
+  const [commonOpen, setCommonOpen] = useState(true);
 
   const motivationalPhrases = [
     "Let's provide the best experience to customers...",
@@ -171,29 +175,65 @@ export default function ScriptPage() {
           </div>
 
           <div className="space-y-12 mt-8">
-              <section>
-                  <div className="flex items-center gap-3 mb-6">
-                      <FileText className="h-7 w-7 text-primary" />
-                      <h2 className="text-2xl font-bold tracking-tight text-foreground">Opening</h2>
-                  </div>
-                  {renderScriptList(departmentScripts)}
-              </section>
+              <Collapsible asChild open={openingOpen} onOpenChange={setOpeningOpen}>
+                <section>
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-3">
+                        <FileText className="h-7 w-7 text-primary" />
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground">Opening</h2>
+                      </div>
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="sm" className="w-9 p-0">
+                          <ChevronsUpDown className="h-4 w-4" />
+                          <span className="sr-only">Toggle Opening</span>
+                        </Button>
+                      </CollapsibleTrigger>
+                    </div>
+                    <CollapsibleContent>
+                      {renderScriptList(departmentScripts)}
+                    </CollapsibleContent>
+                </section>
+              </Collapsible>
 
-              <section>
-                  <div className="flex items-center gap-3 mb-6">
-                      <Workflow className="h-7 w-7 text-primary" />
-                      <h2 className="text-2xl font-bold tracking-tight text-foreground">Workflow</h2>
-                  </div>
-                  {renderScriptList(workflowScripts)}
-              </section>
+              <Collapsible asChild open={workflowOpen} onOpenChange={setWorkflowOpen}>
+                <section>
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-3">
+                        <Workflow className="h-7 w-7 text-primary" />
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground">Workflow</h2>
+                      </div>
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="sm" className="w-9 p-0">
+                          <ChevronsUpDown className="h-4 w-4" />
+                          <span className="sr-only">Toggle Workflow</span>
+                        </Button>
+                      </CollapsibleTrigger>
+                    </div>
+                    <CollapsibleContent>
+                      {renderScriptList(workflowScripts)}
+                    </CollapsibleContent>
+                </section>
+              </Collapsible>
               
-              <section>
-                  <div className="flex items-center gap-3 mb-6">
-                      <BookCopy className="h-7 w-7 text-primary" />
-                      <h2 className="text-2xl font-bold tracking-tight text-foreground">Common Scripts</h2>
-                  </div>
-                  {renderScriptList(commonScripts)}
-              </section>
+              <Collapsible asChild open={commonOpen} onOpenChange={setCommonOpen}>
+                <section>
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-3">
+                        <BookCopy className="h-7 w-7 text-primary" />
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground">Common Scripts</h2>
+                      </div>
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="sm" className="w-9 p-0">
+                          <ChevronsUpDown className="h-4 w-4" />
+                          <span className="sr-only">Toggle Common Scripts</span>
+                        </Button>
+                      </CollapsibleTrigger>
+                    </div>
+                    <CollapsibleContent>
+                      {renderScriptList(commonScripts)}
+                    </CollapsibleContent>
+                </section>
+              </Collapsible>
           </div>
         </main>
         <footer className="text-center py-4 text-sm text-muted-foreground">
