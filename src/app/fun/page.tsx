@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState } from "react";
 import { SnakeGame } from "@/components/snake-game";
 import { PacmanGame } from "@/components/pacman-game";
 import { TicTacToeGame } from "@/components/tic-tac-toe-game";
@@ -9,26 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gamepad2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-
-type Game = "snake" | "pacman" | "tic-tac-toe";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function FunPage() {
-  const [selectedGame, setSelectedGame] = useState<Game>("snake");
-
-  const renderGame = () => {
-    switch (selectedGame) {
-      case "snake":
-        return <SnakeGame />;
-      case "pacman":
-        return <PacmanGame />;
-      case "tic-tac-toe":
-        return <TicTacToeGame />;
-      default:
-        return <SnakeGame />;
-    }
-  };
-
   return (
     <div className="min-h-screen w-full gradient-background flex flex-col items-center justify-center p-4">
         <header className="absolute top-4 left-4">
@@ -45,29 +27,28 @@ export default function FunPage() {
                     <CardTitle>Fun Zone</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex justify-center gap-2 mb-4">
-                        <Button
-                            variant={selectedGame === "snake" ? "default" : "outline"}
-                            onClick={() => setSelectedGame("snake")}
-                        >
-                            Snake
-                        </Button>
-                        <Button
-                            variant={selectedGame === "pacman" ? "default" : "outline"}
-                            onClick={() => setSelectedGame("pacman")}
-                        >
-                            Pac-Man
-                        </Button>
-                        <Button
-                            variant={selectedGame === "tic-tac-toe" ? "default" : "outline"}
-                            onClick={() => setSelectedGame("tic-tac-toe")}
-                        >
-                            Tic-Tac-Toe
-                        </Button>
-                    </div>
-                    <div className="pt-4 flex justify-center">
-                        {renderGame()}
-                    </div>
+                    <Tabs defaultValue="snake" className="w-full">
+                        <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="snake">Snake</TabsTrigger>
+                            <TabsTrigger value="pacman">Pac-Man</TabsTrigger>
+                            <TabsTrigger value="tic-tac-toe">Tic-Tac-Toe</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="snake">
+                            <div className="pt-4 flex justify-center">
+                                <SnakeGame />
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="pacman">
+                            <div className="pt-4 flex justify-center">
+                                <PacmanGame />
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="tic-tac-toe">
+                            <div className="pt-4 flex justify-center">
+                                <TicTacToeGame />
+                            </div>
+                        </TabsContent>
+                    </Tabs>
                 </CardContent>
             </Card>
         </main>
