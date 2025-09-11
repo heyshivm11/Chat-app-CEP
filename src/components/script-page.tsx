@@ -5,31 +5,32 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { Header } from "./header";
-import { FileText, Files, User, UserCog } from "lucide-react";
-import { Input } from "./ui/input";
-import { Card } from "./ui/card";
+import { FileText, Files } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { CustomerDetailsCard } from "./customer-details-card";
 
-export default function ScriptPage({ department: initialDepartment, departmentName: initialDepartmentName }: { department?: string, departmentName?: string }) {
+export default function ScriptPage({ department: initialDepartment }: { department?: string, departmentName?: string }) {
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("All");
   const [department, setDepartment] = useState(initialDepartment || "etg");
-  const [customerName, setCustomerName] = useState("");
-  const [agentName, setAgentName] = useState("Shivam");
+
+  const [customer1Name, setCustomer1Name] = useState("");
+  const [agent1Name, setAgent1Name] = useState("Shivam");
+  
+  const [customer2Name, setCustomer2Name] = useState("");
+  const [agent2Name, setAgent2Name] = useState("Shivam");
+
 
   const departmentName = department === 'etg' ? 'ETG' : 'Booking.com';
 
   const handleDepartmentChange = (newDepartment: string) => {
     setDepartment(newDepartment);
-    // Use router to navigate without a full page reload if needed,
-    // but for this structure, just updating state is enough.
-    // router.push(`/scripts/${newDepartment}`, { scroll: false });
+    router.push(`/scripts/${newDepartment}`, { scroll: false });
   };
 
-
-  const processedScripts = useMemo(() => {
+  const getProcessedScripts = (customerName: string, agentName: string) => {
     return scripts.map(script => {
       const newScript = JSON.parse(JSON.stringify(script)); // Deep copy
       
@@ -49,11 +50,13 @@ export default function ScriptPage({ department: initialDepartment, departmentNa
       }
       return newScript;
     });
-  }, [customerName, agentName]);
-
+  };
 
   const filteredScripts = useMemo(() => {
-    return processedScripts.filter((script) => {
+    // For simplicity, we'll filter based on a single set of names for search,
+    // or we could decide not to replace placeholders before filtering.
+    // Let's not replace for filtering to keep it simple.
+    return scripts.filter((script) => {
       const searchMatch =
         script.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (typeof script.content === "string" && script.content.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -68,10 +71,20 @@ export default function ScriptPage({ department: initialDepartment, departmentNa
       
       return searchMatch && categoryMatch;
     });
-  }, [searchTerm, category, processedScripts]);
+  }, [searchTerm, category]);
 
-  const departmentScripts = filteredScripts.filter(s => s.department === department);
-  const commonScripts = filteredScripts.filter(s => s.department === "common");
+  const departmentScripts = useMemo(() => {
+    const filtered = filteredScripts.filter(s => s.department === department);
+    const processed = getProcessedScripts(customer1Name, agent1Name);
+    return processed.filter(ps => filtered.some(fs => fs.id === ps.id));
+  }, [filteredScripts, department, customer1Name, agent1Name]);
+  
+  const commonScripts = useMemo(() => {
+    const filtered = filteredScripts.filter(s => s.department === "common");
+    const processed = getProcessedScripts(customer1Name, agent1Name);
+    return processed.filter(ps => filtered.some(fs => fs.id === ps.id));
+  }, [filteredScripts, customer1Name, agent1Name]);
+
 
   const renderScriptList = (scriptList: Script[]) => {
     if (scriptList.length === 0) {
@@ -97,30 +110,12 @@ export default function ScriptPage({ department: initialDepartment, departmentNa
         onDepartmentChange={handleDepartmentChange}
       />
       <main className="container mx-auto px-4 md:px-8 py-8">
-        <Card className="glass-card p-4 md:p-6 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                        placeholder="Customer Name" 
-                        value={customerName}
-                        onChange={(e) => setCustomerName(e.target.value)}
-                        className="pl-10"
-                    />
-                 </div>
-                 <div className="relative">
-                    <UserCog className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                        placeholder="Agent Name" 
-                        value={agentName}
-                        onChange={(e) => setAgentName(e.target.value)}
-                        className="pl-10"
-                    />
-                 </div>
-            </div>
-        </Card>
+        <CustomerDetailsCard 
+          onCustomerNameChange={(name) => setCustomer1Name(name)}
+          onAgentNameChange={(name) => setAgent1Name(name)}
+        />
 
-        <div className="space-y-12">
+        <div className="space-y-12 mt-8">
             <section>
                 <div className="flex items-center gap-3 mb-6">
                     <FileText className="h-7 w-7 text-primary" />
