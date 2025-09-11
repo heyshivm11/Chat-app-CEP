@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, LogOut, Gamepad2 } from "lucide-react";
+import { Search, LogOut, Gamepad2, BookText } from "lucide-react";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -45,7 +45,12 @@ export function PageHeader({
 
   return (
     <header className="sticky top-0 z-30 w-full bg-background/80 backdrop-blur-sm border-b">
-      <div className="container flex h-16 items-center gap-4">
+      <div className="container flex h-16 items-center gap-6">
+        <Link href="/scripts" className="flex items-center gap-2 text-lg font-bold text-foreground">
+            <BookText className="h-6 w-6 text-primary" />
+            <span className="hidden sm:inline-block">CEP Scripts</span>
+        </Link>
+        
         <div className="flex-1 flex items-center gap-4">
           <div className="relative w-full max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
