@@ -12,3 +12,14 @@ export const RefineScriptOutputSchema = z.object({
   refinedScript: z.string().describe('The refined chat script.'),
 });
 export type RefineScriptOutput = z.infer<typeof RefineScriptOutputSchema>;
+
+// Schema for generateQuickScript
+export const GenerateQuickScriptInputSchema = z.object({
+    prompt: z.string().describe('The prompt to generate a script from.'),
+});
+export type GenerateQuickScriptInput = z.infer<typeof GenerateQuickScriptInputSchema>;
+
+export const GenerateQuickScriptOutputSchema = z.object({
+    script: z.string().describe('The generated chat script.'),
+});
+export type GenerateQuickScriptOutput = z.infer<typeof GenerateQuickScriptOutputSchema>;

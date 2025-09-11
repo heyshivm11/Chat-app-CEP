@@ -9,6 +9,7 @@ import { Header } from "./header";
 import { FileText, Workflow, BookCopy, RotateCcw, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
+import { QuickScriptGenerator } from "./quick-script-generator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -169,7 +170,8 @@ export default function ScriptPage() {
                       </CardContent>
                   </Card>
               </div>
-              <div className="xl:col-span-2">
+              <div className="xl:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <QuickScriptGenerator />
                   <CustomerDetailsCard agentName={agentName} />
               </div>
           </div>
