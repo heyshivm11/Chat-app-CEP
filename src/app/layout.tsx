@@ -27,7 +27,9 @@ export default function RootLayout({
       <body className="font-body antialiased gradient-background">
         <AuthProvider>
           <ThemeProvider>
-            {children}
+            <div className="flex flex-col min-h-screen">
+              <main className="flex-grow">{children}</main>
+            </div>
             <Toaster />
           </ThemeProvider>
         </AuthProvider>
