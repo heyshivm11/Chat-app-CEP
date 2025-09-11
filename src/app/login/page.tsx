@@ -64,11 +64,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 overflow-hidden relative">
-       {/* Decorative shapes */}
-      <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/10 rounded-full animate-float-1"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-secondary/10 rounded-xl animate-float-2"></div>
-      <div className="absolute bottom-1/2 right-1/3 w-16 h-16 bg-primary/5 rounded-full animate-float-3"></div>
-      <div className="absolute top-1/3 left-1/2 w-20 h-20 bg-secondary/5 rounded-lg animate-float-1"></div>
+       {/* Decorative flying airplanes */}
+      <Plane className="absolute top-1/4 left-1/4 w-32 h-32 text-primary/10 animate-float-1" />
+      <Plane className="absolute bottom-1/4 right-1/4 w-24 h-24 text-secondary/10 animate-float-2" />
+      <Plane className="absolute bottom-1/2 right-1/3 w-16 h-16 text-primary/5 animate-float-3" />
+      <Plane className="absolute top-1/3 left-1/2 w-20 h-20 text-secondary/5 animate-float-1" />
+
 
       <Card className="w-full max-w-md glass-card z-10 edge-light">
         <CardHeader className="text-center">
