@@ -4,6 +4,7 @@
 import { SnakeGame } from "@/components/snake-game";
 import { DinoRunGame } from "@/components/dino-run-game";
 import { TicTacToeGame } from "@/components/tic-tac-toe-game";
+import { MemoryGame } from "@/components/memory-game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gamepad2 } from "lucide-react";
 import Link from "next/link";
@@ -28,10 +29,11 @@ export default function FunPage() {
                 </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="snake">
-                        <TabsList className="grid w-full grid-cols-3">
+                        <TabsList className="grid w-full grid-cols-4">
                             <TabsTrigger value="snake">Snake</TabsTrigger>
                             <TabsTrigger value="dino-run">Dino Run</TabsTrigger>
                             <TabsTrigger value="tic-tac-toe">Tic-Tac-Toe</TabsTrigger>
+                            <TabsTrigger value="memory">Memory</TabsTrigger>
                         </TabsList>
                         <TabsContent value="snake">
                             <div className="pt-4">
@@ -46,6 +48,11 @@ export default function FunPage() {
                         <TabsContent value="tic-tac-toe">
                             <div className="pt-4">
                                 <TicTacToeGame />
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="memory">
+                            <div className="pt-4">
+                                <MemoryGame />
                             </div>
                         </TabsContent>
                     </Tabs>
