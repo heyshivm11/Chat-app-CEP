@@ -6,10 +6,10 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
-import { FileText, Workflow, BookCopy, ChevronsUpDown, Notebook } from "lucide-react";
+import { FileText, Workflow, BookCopy, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
@@ -18,8 +18,6 @@ import { AuthGate } from "./auth-gate";
 import { TypingEffect } from "./typing-effect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { RotateCcw } from "lucide-react";
-import { Textarea } from "./ui/textarea";
-import { CopyButton } from "./copy-button";
 
 
 export default function ScriptPage() {
@@ -31,7 +29,6 @@ export default function ScriptPage() {
   const [department, setDepartment] = useState("etg");
   const [agentName, setAgentName] = useState("");
   const [customerName, setCustomerName] = useState("");
-  const [roughNotes, setRoughNotes] = useState("");
   const [openingOpen, setOpeningOpen] = useState(true);
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [commonOpen, setCommonOpen] = useState(true);
@@ -142,8 +139,8 @@ export default function ScriptPage() {
         />
         <main className="container mx-auto px-4 md:px-8 py-8">
           
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8 items-stretch">
-              <div className="xl:col-span-1 flex flex-col gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
+              <div className="xl:col-span-1">
                   <Card className="glass-card">
                       <CardContent className="pt-6">
                           <div className="space-y-4">
@@ -167,28 +164,6 @@ export default function ScriptPage() {
                           </div>
                       </CardContent>
                   </Card>
-                   <Card className="glass-card flex-grow flex flex-col">
-                        <CardHeader className="flex-row items-center gap-2 space-y-0">
-                            <Notebook className="w-5 h-5 text-primary" />
-                            <CardTitle className="text-xl">Rough Notes</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex-grow flex flex-col">
-                            <div className="space-y-4 flex-grow flex flex-col">
-                                <Textarea 
-                                    placeholder="Jot down quick notes here..."
-                                    className="min-h-[120px] flex-grow"
-                                    value={roughNotes}
-                                    onChange={(e) => setRoughNotes(e.target.value)}
-                                />
-                                <div className="flex justify-end gap-2">
-                                    <Button variant="outline" size="icon" onClick={() => setRoughNotes("")}>
-                                        <RotateCcw className="h-4 w-4" />
-                                    </Button>
-                                    <CopyButton textToCopy={roughNotes}>Copy</CopyButton>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
               </div>
               <div className="xl:col-span-2">
                   <CustomerDetailsCard agentName={agentName} />

@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, LogOut, Gamepad2, Plane } from "lucide-react";
+import { Search, LogOut, Gamepad2, Plane, Notebook } from "lucide-react";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -88,6 +88,11 @@ export function PageHeader({
 
         <div className="flex items-center gap-2">
             <ThemeSwitcher />
+            <Link href="/notes" passHref>
+              <Button variant="ghost" size="icon" aria-label="Rough Notes">
+                <Notebook className="h-5 w-5" />
+              </Button>
+            </Link>
             <Link href="/fun" passHref>
               <Button variant="ghost" size="icon" aria-label="Fun Zone">
                 <Gamepad2 className="h-5 w-5" />
