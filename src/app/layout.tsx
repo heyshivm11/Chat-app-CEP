@@ -4,7 +4,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Scriptify AI',
+  title: 'CEP Scripts',
   description: 'Your smart library for customer service chat scripts.',
 };
 
