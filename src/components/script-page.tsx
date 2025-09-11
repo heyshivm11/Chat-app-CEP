@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { AuthGate } from "./auth-gate";
 import { TypingEffect } from "./typing-effect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChatAssistantDialog } from "./chat-assistant-dialog";
 
 export default function ScriptPage() {
   const router = useRouter();
@@ -236,6 +237,7 @@ export default function ScriptPage() {
               </Collapsible>
           </div>
         </main>
+        <ChatAssistantDialog />
         <footer className="container mx-auto px-4 md:px-8 py-4 text-center text-sm text-muted-foreground">
           Made with ❤️ by <a href="https://www.instagram.com/heyshivm/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Shivam</a>
         </footer>
