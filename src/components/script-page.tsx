@@ -6,7 +6,7 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { Header } from "./header";
-import { FileText, Files, RotateCcw } from "lucide-react";
+import { FileText, Files, RotateCcw, Workflow } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -92,8 +92,13 @@ export default function ScriptPage() {
     return getProcessedScripts(deptScripts, customerName, agentName);
   }, [filteredScripts, department, customerName, agentName]);
   
+  const workflowScripts = useMemo(() => {
+    const common = filteredScripts.filter(s => s.department === "common" && s.category === "Workflow");
+    return getProcessedScripts(common, customerName, agentName);
+  }, [filteredScripts, customerName, agentName]);
+
   const commonScripts = useMemo(() => {
-    const common = filteredScripts.filter(s => s.department === "common");
+    const common = filteredScripts.filter(s => s.department === "common" && s.category !== "Workflow");
     return getProcessedScripts(common, customerName, agentName);
   }, [filteredScripts, customerName, agentName]);
 
@@ -162,6 +167,14 @@ export default function ScriptPage() {
                       <h2 className="text-2xl font-bold tracking-tight text-foreground">{departmentName} Scripts</h2>
                   </div>
                   {renderScriptList(departmentScripts)}
+              </section>
+
+              <section>
+                  <div className="flex items-center gap-3 mb-6">
+                      <Workflow className="h-7 w-7 text-primary" />
+                      <h2 className="text-2xl font-bold tracking-tight text-foreground">Workflow</h2>
+                  </div>
+                  {renderScriptList(workflowScripts)}
               </section>
               
               <section>
