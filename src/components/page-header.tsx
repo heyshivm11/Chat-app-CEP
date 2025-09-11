@@ -16,6 +16,8 @@ import { scriptCategories } from "@/lib/scripts";
 import { Button } from "./ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
+import { usePageLoader } from "./providers/page-loader-provider";
+import { PageLink } from "./page-link";
 
 
 interface PageHeaderProps {
@@ -37,8 +39,10 @@ export function PageHeader({
 }: PageHeaderProps) {
   const { logout } = useAuth();
   const router = useRouter();
+  const { showLoader } = usePageLoader();
 
   const handleLogout = async () => {
+    showLoader();
     await logout();
     router.push('/login');
   };
@@ -46,10 +50,10 @@ export function PageHeader({
   return (
     <header className="sticky top-0 z-30 w-full bg-background/80 backdrop-blur-sm border-b">
       <div className="container flex h-16 items-center gap-6">
-        <Link href="/scripts" className="flex items-center gap-2 text-lg font-bold text-foreground">
+        <PageLink href="/scripts" className="flex items-center gap-2 text-lg font-bold text-foreground">
             <BookText className="h-6 w-6 text-primary" />
             <span className="hidden sm:inline-block">CEP Scripts</span>
-        </Link>
+        </PageLink>
         
         <div className="flex-1 flex items-center gap-4">
           <div className="relative w-full max-w-xs">
@@ -88,11 +92,11 @@ export function PageHeader({
 
         <div className="flex items-center gap-2">
             <ThemeSwitcher />
-            <Link href="/fun" passHref>
+            <PageLink href="/fun" passHref>
               <Button variant="ghost" size="icon" aria-label="Fun Zone">
                 <Gamepad2 className="h-5 w-5" />
               </Button>
-            </Link>
+            </PageLink>
             <Button variant="ghost" size="icon" onClick={handleLogout} className="text-red-500 hover:text-red-400 hover:bg-red-500/10" aria-label="Logout">
                 <LogOut className="h-5 w-5" />
             </Button>

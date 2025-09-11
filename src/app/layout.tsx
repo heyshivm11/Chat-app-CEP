@@ -6,6 +6,8 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/hooks/use-auth';
 import { AppLayout } from '@/components/app-layout';
+import { PageLoaderProvider } from '@/components/providers/page-loader-provider';
+import { PageLoader } from '@/components/page-loader';
 
 export default function RootLayout({
   children,
@@ -26,12 +28,15 @@ export default function RootLayout({
         <meta name="description" content="Your smart library for customer service chat scripts." />
       </head>
       <body className="font-body antialiased">
-        <AuthProvider>
-          <ThemeProvider>
-                {children}
-            <Toaster />
-          </ThemeProvider>
-        </AuthProvider>
+        <PageLoaderProvider>
+          <AuthProvider>
+            <ThemeProvider>
+                  {children}
+              <Toaster />
+              <PageLoader />
+            </ThemeProvider>
+          </AuthProvider>
+        </PageLoaderProvider>
       </body>
     </html>
   );

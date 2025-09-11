@@ -6,19 +6,19 @@ import { DinoRunGame } from "@/components/dino-run-game";
 import { TicTacToeGame } from "@/components/tic-tac-toe-game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gamepad2 } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PageLink } from "@/components/page-link";
 
 export default function FunPage() {
   return (
     <div className="min-h-screen w-full gradient-background flex flex-col items-center justify-center p-4">
         <header className="absolute top-4 left-4">
-            <Link href="/scripts">
+            <PageLink href="/scripts">
               <Button variant="ghost">
                 &larr; Back to Scripts
               </Button>
-            </Link>
+            </PageLink>
         </header>
         <main className="flex-grow flex items-center justify-center w-full">
             <Card className="glass-card w-full max-w-2xl">

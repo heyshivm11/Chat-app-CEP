@@ -264,3 +264,24 @@
 .tic-tac-toe-square:hover {
     @apply bg-background/80;
 }
+
+@keyframes fly-across {
+  0% {
+    left: -10%;
+    transform: translateY(-50%) rotate(-15deg);
+  }
+  20% {
+    transform: translateY(-50%) rotate(20deg);
+  }
+  80% {
+    transform: translateY(-50%) rotate(-5deg);
+  }
+  100% {
+    left: 110%;
+    transform: translateY(-50%) rotate(15deg);
+  }
+}
+
+.animate-fly-across {
+  animation: fly-across 2.5s ease-in-out infinite;
+}

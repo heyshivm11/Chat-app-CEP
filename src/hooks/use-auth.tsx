@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -7,6 +8,7 @@ import {
   useContext,
   ReactNode,
 } from 'react';
+import { usePageLoader } from '@/components/providers/page-loader-provider';
 
 // Simplified User interface
 export interface AppUser {

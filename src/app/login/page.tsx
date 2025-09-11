@@ -27,6 +27,7 @@ import {
 import { Controller } from 'react-hook-form';
 import { useTheme } from '@/components/providers/theme-provider';
 import { Palette } from 'lucide-react';
+import { usePageLoader } from '@/components/providers/page-loader-provider';
 
 interface IFormInput {
   firstName: string;
@@ -37,6 +38,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { login } = useAuth();
+  const { showLoader } = usePageLoader();
   const {
     register,
     handleSubmit,
@@ -47,6 +49,7 @@ export default function LoginPage() {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setIsLoading(true);
+    showLoader();
     try {
       await login(data.firstName, data.department);
       toast({
