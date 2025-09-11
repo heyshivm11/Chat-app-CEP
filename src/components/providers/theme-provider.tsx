@@ -3,12 +3,8 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
-export type Theme = "theme-default" | "theme-black-red" | "theme-black-green" | "theme-black-white" | "theme-white-red" | "theme-cyberpunk-glow" | "theme-electric-xtra" | "theme-solaris-flare" | "theme-forest-whisper";
+export type Theme = "theme-default" | "theme-black-red" | "theme-black-green" | "theme-black-white" | "theme-white-red";
 export const themeNames: { [key in Theme]: string } = {
-  "theme-electric-xtra": "Electric Xtra",
-  "theme-cyberpunk-glow": "Cyberpunk Glow",
-  "theme-solaris-flare": "Solaris Flare",
-  "theme-forest-whisper": "Forest Whisper",
   "theme-default": "Midnight Blue",
   "theme-black-red": "Crimson Night",
   "theme-black-green": "Emerald Dark",
@@ -28,7 +24,7 @@ type ThemeProviderState = {
 const ThemeProviderContext = createContext<ThemeProviderState | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("theme-electric-xtra");
+  const [theme, setTheme] = useState<Theme>("theme-default");
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("scriptify-theme") as Theme | null;
@@ -51,10 +47,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const cycleTheme = () => {
     const currentIndex = themeKeys.indexOf(theme);
-    let nextIndex;
-    do {
-      nextIndex = Math.floor(Math.random() * themeKeys.length);
-    } while (nextIndex === currentIndex);
+    const nextIndex = (currentIndex + 1) % themeKeys.length;
     setTheme(themeKeys[nextIndex]);
   };
 

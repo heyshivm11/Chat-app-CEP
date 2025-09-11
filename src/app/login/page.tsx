@@ -37,7 +37,6 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { login } = useAuth();
-  const { cycleTheme } = useTheme();
   const {
     register,
     handleSubmit,
@@ -68,11 +67,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 overflow-hidden relative gradient-background">
-      <Card className="w-full max-w-md glass-card z-10 edge-light relative">
-        <Button variant="ghost" size="icon" onClick={cycleTheme} className="absolute top-4 right-4">
-          <Palette className="h-5 w-5" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
+      <Card className="w-full max-w-md glass-card z-10 relative">
         <CardHeader className="text-center">
             <div className="mx-auto h-16 w-16 mb-4 relative">
                 <Plane className="h-16 w-16 text-primary animate-fly-login" />

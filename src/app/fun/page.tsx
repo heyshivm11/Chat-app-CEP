@@ -18,7 +18,7 @@ export default function FunPage() {
             </Link>
         </header>
         <main className="flex-grow flex items-center justify-center w-full">
-            <Card className="glass-card w-full max-w-lg edge-light">
+            <Card className="glass-card w-full max-w-lg">
                 <CardHeader className="flex flex-row items-center gap-3 space-y-0">
                     <Gamepad2 className="h-6 w-6 text-primary" />
                     <CardTitle>Fun Zone: Snake</CardTitle>
