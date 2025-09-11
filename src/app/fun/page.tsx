@@ -8,17 +8,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gamepad2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PageLink } from "@/components/page-link";
+import Link from "next/link";
 
 export default function FunPage() {
   return (
     <div className="min-h-screen w-full gradient-background flex flex-col items-center justify-center p-4">
         <header className="absolute top-4 left-4">
-            <PageLink href="/scripts">
+            <Link href="/scripts">
               <Button variant="ghost">
                 &larr; Back to Scripts
               </Button>
-            </PageLink>
+            </Link>
         </header>
         <main className="flex-grow flex items-center justify-center w-full">
             <Card className="glass-card w-full max-w-2xl">
