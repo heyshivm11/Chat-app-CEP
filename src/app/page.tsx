@@ -1,5 +1,5 @@
-import { LoginPage } from '@/components/login-page';
+import { AuthGate } from '@/components/auth-gate';
 
 export default function Home() {
-  return <LoginPage />;
+  return <AuthGate />;
 }

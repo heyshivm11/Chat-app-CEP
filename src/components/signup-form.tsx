@@ -13,20 +13,21 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Plane, LogIn } from 'lucide-react';
+import { Plane, UserPlus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import Link from 'next/link';
 
 interface IFormInput {
+  firstName: string;
   email: string;
   password: string;
 }
 
-export function LoginPage() {
+export function SignUpForm() {
   const router = useRouter();
   const { toast } = useToast();
-  const { login } = useAuth();
+  const { signup } = useAuth();
   const {
     register,
     handleSubmit,
@@ -37,16 +38,16 @@ export function LoginPage() {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setIsLoading(true);
     try {
-      await login(data.email, data.password);
+      await signup(data.email, data.password, data.firstName);
       toast({
-        title: 'Login Successful',
-        description: 'Welcome back!',
+        title: 'Account Created',
+        description: 'You have been successfully signed up!',
       });
       router.push('/scripts');
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: 'Login Failed',
+        title: 'Sign Up Failed',
         description: error.message,
       });
     } finally {
@@ -58,14 +59,31 @@ export function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md glass-card">
         <CardHeader className="text-center">
-          <div className="mx-auto h-12 w-12 plane-animation mb-4">
+          <Link href="/login" className="mx-auto h-12 w-12 plane-animation mb-4">
             <Plane className="h-12 w-12 text-primary plane-icon" />
-          </div>
-          <CardTitle className="text-2xl">CEP Scripts</CardTitle>
-          <CardDescription>Please log in to continue</CardDescription>
+          </Link>
+          <CardTitle className="text-2xl">Create an Account</CardTitle>
+          <CardDescription>
+            Enter your details to get started.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="firstName">First Name</Label>
+              <Input
+                id="firstName"
+                placeholder="Enter your first name"
+                {...register('firstName', {
+                  required: 'First name is required',
+                })}
+              />
+              {errors.firstName && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.firstName.message}
+                </p>
+              )}
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -85,8 +103,14 @@ export function LoginPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
-                {...register('password', { required: 'Password is required' })}
+                placeholder="Create a password"
+                {...register('password', {
+                  required: 'Password is required',
+                  minLength: {
+                    value: 6,
+                    message: 'Password must be at least 6 characters',
+                  },
+                })}
               />
               {errors.password && (
                 <p className="text-xs text-red-500 mt-1">
@@ -94,30 +118,21 @@ export function LoginPage() {
                 </p>
               )}
             </div>
-            <div className="flex items-center justify-between">
-                <div/>
-                <Link
-                    href="/forgot-password"
-                    className="text-sm underline"
-                >
-                    Forgot password?
-                </Link>
-            </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
-                'Logging in...'
+                'Creating account...'
               ) : (
                 <>
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Login
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Sign Up
                 </>
               )}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
-            Don't have an account?{' '}
-            <Link href="/signup" className="underline">
-              Sign up
+            Already have an account?{' '}
+            <Link href="/login" className="underline">
+              Login
             </Link>
           </div>
         </CardContent>

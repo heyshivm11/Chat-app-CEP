@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Plane } from "lucide-react";
+import { Search, Plane, LogOut } from "lucide-react";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { ThemeSwitcher } from "./theme-switcher";
 import { scriptCategories } from "@/lib/scripts";
+import { Button } from "./ui/button";
 
 interface HeaderProps {
   searchTerm: string;
@@ -20,6 +21,7 @@ interface HeaderProps {
   onCategoryChange: (category: string) => void;
   department: string;
   onDepartmentChange: (department: string) => void;
+  onLogout: () => void;
 }
 
 export function Header({ 
@@ -28,7 +30,8 @@ export function Header({
   category, 
   onCategoryChange, 
   department, 
-  onDepartmentChange 
+  onDepartmentChange,
+  onLogout,
 }: HeaderProps) {
   return (
     <header className="sticky top-0 z-10 w-full bg-background/80 backdrop-blur-sm border-b border-border/50">
@@ -77,6 +80,10 @@ export function Header({
 
         <div className="flex items-center gap-2">
             <ThemeSwitcher />
+            <Button variant="ghost" size="icon" onClick={onLogout}>
+                <LogOut className="h-5 w-5" />
+                <span className="sr-only">Logout</span>
+            </Button>
         </div>
       </div>
     </header>
