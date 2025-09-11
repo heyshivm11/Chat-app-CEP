@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
@@ -173,7 +174,7 @@ export default function ScriptPage() {
           </div>
         </main>
         <footer className="text-center py-4 text-sm text-muted-foreground">
-          Made with ❤️ by Shivam
+          Made with ❤️ by <a href="https://www.instagram.com/heyshivm/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Shivam</a>
         </footer>
       </div>
     </AuthGate>
