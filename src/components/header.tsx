@@ -38,7 +38,7 @@ export function Header({
     <header className="sticky top-0 z-10 w-full bg-background/80 backdrop-blur-sm border-b border-border/50">
       <div className="container mx-auto flex h-16 items-center gap-4 px-4 md:px-8">
         <Link href="/" className="flex items-center gap-2 text-foreground font-semibold">
-          <Image src="/plane.gif" alt="CEP Scripts Plane" width={24} height={24} className="h-6 w-6" />
+          <Image src="https://img.icons8.com/?size=100&id=qwTWxlUl2EPp&format=png&color=000000" alt="CEP Scripts Icon" width={24} height={24} className="h-6 w-6" />
           <span className="hidden md:inline">CEP Scripts</span>
         </Link>
         

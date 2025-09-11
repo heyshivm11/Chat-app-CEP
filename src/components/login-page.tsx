@@ -67,7 +67,7 @@ export function LoginPage() {
       <Card className="w-full max-w-md glass-card">
         <CardHeader className="text-center">
           <div className="mx-auto h-12 w-12 mb-4">
-            <Image src="/plane.gif" alt="CEP Scripts Plane" width={48} height={48} />
+            <Image src="https://img.icons8.com/?size=100&id=qwTWxlUl2EPp&format=png&color=000000" alt="CEP Scripts Icon" width={48} height={48} />
           </div>
           <CardTitle className="text-2xl">CEP Scripts</CardTitle>
           <CardDescription>Please log in to continue</CardDescription>
