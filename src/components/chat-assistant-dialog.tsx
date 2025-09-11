@@ -96,7 +96,7 @@ export function ChatAssistantDialog() {
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
-        <Button className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg" size="icon">
+        <Button className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50" size="icon">
           <MessageSquare className="h-7 w-7" />
           <span className="sr-only">Open Chat Assistant</span>
         </Button>
