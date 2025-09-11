@@ -32,8 +32,6 @@ export default function ScriptPage() {
     }
   }, [user]);
 
-  const departmentName = department === 'etg' ? 'ETG' : 'Booking.com';
-
   const handleDepartmentChange = (newDepartment: string) => {
     setDepartment(newDepartment);
   };
@@ -164,7 +162,7 @@ export default function ScriptPage() {
               <section>
                   <div className="flex items-center gap-3 mb-6">
                       <FileText className="h-7 w-7 text-primary" />
-                      <h2 className="text-2xl font-bold tracking-tight text-foreground">{departmentName} Scripts</h2>
+                      <h2 className="text-2xl font-bold tracking-tight text-foreground">Opening</h2>
                   </div>
                   {renderScriptList(departmentScripts)}
               </section>
