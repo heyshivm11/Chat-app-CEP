@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import {
   Card,
   CardContent,
@@ -37,7 +37,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    setValue,
+    control,
     formState: { errors },
   } = useForm<IFormInput>();
   const [isLoading, setIsLoading] = useState(false);
