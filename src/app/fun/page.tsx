@@ -2,7 +2,7 @@
 "use client";
 
 import { SnakeGame } from "@/components/snake-game";
-import { CarGame } from "@/components/car-game";
+import { PacmanGame } from "@/components/pacman-game";
 import { TicTacToeGame } from "@/components/tic-tac-toe-game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gamepad2 } from "lucide-react";
@@ -21,7 +21,7 @@ export default function FunPage() {
             </Link>
         </header>
         <main className="flex-grow flex items-center justify-center w-full">
-            <Card className="glass-card w-full max-w-2xl">
+            <Card className="glass-card w-full max-w-4xl">
                 <CardHeader className="flex flex-row items-center gap-3 space-y-0">
                     <Gamepad2 className="h-6 w-6 text-primary" />
                     <CardTitle>Fun Zone</CardTitle>
@@ -30,7 +30,7 @@ export default function FunPage() {
                     <Tabs defaultValue="snake">
                         <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="snake">Snake</TabsTrigger>
-                            <TabsTrigger value="car-game">Car Game</TabsTrigger>
+                            <TabsTrigger value="pacman">Pac-Man</TabsTrigger>
                             <TabsTrigger value="tic-tac-toe">Tic-Tac-Toe</TabsTrigger>
                         </TabsList>
                         <TabsContent value="snake">
@@ -38,9 +38,9 @@ export default function FunPage() {
                                 <SnakeGame />
                             </div>
                         </TabsContent>
-                        <TabsContent value="car-game">
-                            <div className="pt-4">
-                                <CarGame />
+                        <TabsContent value="pacman">
+                            <div className="pt-4 flex justify-center">
+                                <PacmanGame />
                             </div>
                         </TabsContent>
                         <TabsContent value="tic-tac-toe">

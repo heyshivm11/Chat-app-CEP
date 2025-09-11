@@ -298,3 +298,47 @@
 .animate-fly-across {
   animation: fly-across 2.5s ease-in-out infinite;
 }
+
+@keyframes pacman-chomp {
+  0%, 100% { clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 50% 50%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 50% 50%, 0% 50%); }
+  50% { clip-path: polygon(0% 20%, 100% 0%, 100% 50%, 50% 50%, 100% 50%, 100% 100%, 0% 80%, 0% 50%, 50% 50%, 0% 50%); }
+}
+
+.pacman-board {
+    @apply grid bg-black border-2 border-primary;
+}
+
+.pacman-tile {
+    @apply w-5 h-5 flex items-center justify-center;
+}
+
+.pacman-wall {
+    @apply bg-blue-800;
+}
+
+.pacman-pellet {
+    @apply w-1 h-1 bg-yellow-300 rounded-full;
+}
+
+.pacman-power-pellet {
+    @apply w-2 h-2 bg-yellow-300 rounded-full animate-pulse;
+}
+
+.pacman {
+    @apply w-4 h-4 bg-yellow-400 rounded-full absolute;
+    animation: pacman-chomp 0.3s infinite;
+}
+
+.ghost {
+    @apply w-4 h-4 absolute;
+}
+.ghost-blinky { background-color: red; }
+.ghost-pinky { background-color: pink; }
+.ghost-inky { background-color: cyan; }
+.ghost-clyde { background-color: orange; }
+.ghost-frightened { background-color: blue; animation: flash 0.5s infinite; }
+
+@keyframes flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
