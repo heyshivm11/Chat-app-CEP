@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { LogIn, Plane } from 'lucide-react';
+import { LogIn, BookText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import {
@@ -70,7 +70,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md glass-card z-10 relative">
         <CardHeader className="text-center">
             <div className="mx-auto h-16 w-16 mb-4 relative">
-                <Plane className="h-16 w-16 text-primary animate-fly-login" />
+                <BookText className="h-16 w-16 text-primary animate-fly-login" />
             </div>
             <CardTitle className="text-2xl">CEP Scripts</CardTitle>
             <CardDescription>Please log in to continue</CardDescription>

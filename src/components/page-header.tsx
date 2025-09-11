@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, LogOut } from "lucide-react";
+import { Search, LogOut, Gamepad2 } from "lucide-react";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -83,12 +83,14 @@ export function PageHeader({
 
         <div className="flex items-center gap-2">
             <ThemeSwitcher />
-            <Button variant="ghost" size="icon" onClick={handleLogout} className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+            <Link href="/fun" passHref>
+              <Button variant="ghost" size="icon" aria-label="Fun Zone">
+                <Gamepad2 className="h-5 w-5" />
+              </Button>
+            </Link>
+            <Button variant="ghost" size="icon" onClick={handleLogout} className="text-red-500 hover:text-red-400 hover:bg-red-500/10" aria-label="Logout">
                 <LogOut className="h-5 w-5" />
             </Button>
-            <Link href="/fun">
-              <Button>Fun Zone</Button>
-            </Link>
         </div>
       </div>
     </header>
