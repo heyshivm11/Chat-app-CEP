@@ -5,7 +5,7 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { Header } from "./header";
-import { FileText, Files, RotateCcw, LogOut } from "lucide-react";
+import { FileText, Files, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

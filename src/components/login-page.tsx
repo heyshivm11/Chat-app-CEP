@@ -16,11 +16,11 @@ import { Button } from '@/components/ui/button';
 import { Plane, LogIn } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
-import Link from 'next/link';
 
 interface IFormInput {
   email: string;
   password: string;
+  firstName: string;
 }
 
 export function LoginPage() {
@@ -37,17 +37,17 @@ export function LoginPage() {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setIsLoading(true);
     try {
-      await login(data.email, data.password);
+      await login(data.email, data.password, data.firstName);
       toast({
         title: 'Login Successful',
-        description: 'Welcome back!',
+        description: 'Welcome!',
       });
       router.push('/scripts');
     } catch (error: any) {
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: error.message,
+        description: "Please check your credentials and try again.",
       });
     } finally {
       setIsLoading(false);
@@ -67,12 +67,27 @@ export function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+                <Label htmlFor="firstName">First Name</Label>
+                <Input
+                  id="firstName"
+                  placeholder="Enter your first name"
+                  {...register('firstName', {
+                    required: 'First name is required',
+                  })}
+                />
+                {errors.firstName && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {errors.firstName.message}
+                  </p>
+                )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Employee ID (Email)</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
-                {...register('email', { required: 'Email is required' })}
+                placeholder="Enter your employee email"
+                {...register('email', { required: 'Employee ID is required' })}
               />
               {errors.email && (
                 <p className="text-xs text-red-500 mt-1">
@@ -81,11 +96,11 @@ export function LoginPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">System Password</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Enter your system password"
                 {...register('password', { required: 'Password is required' })}
               />
               {errors.password && (
@@ -93,15 +108,6 @@ export function LoginPage() {
                   {errors.password.message}
                 </p>
               )}
-            </div>
-            <div className="flex items-center justify-between">
-                <div/>
-                <Link
-                    href="/forgot-password"
-                    className="text-sm underline"
-                >
-                    Forgot password?
-                </Link>
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
@@ -114,12 +120,6 @@ export function LoginPage() {
               )}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
-            Don't have an account?{' '}
-            <Link href="/signup" className="underline">
-              Sign up
-            </Link>
-          </div>
         </CardContent>
       </Card>
     </div>
