@@ -14,7 +14,7 @@ export default function FunPage() {
   return (
     <div className="min-h-screen w-full gradient-background flex flex-col items-center justify-center p-4">
         <header className="absolute top-4 left-4">
-            <Link href="/scripts">
+            <Link href="/scripts" passHref>
               <Button variant="ghost">
                 &larr; Back to Scripts
               </Button>
