@@ -236,9 +236,6 @@ export default function ScriptPage() {
               </Collapsible>
           </div>
         </main>
-        <footer className="text-center py-4 text-sm text-muted-foreground">
-          Made with ❤️ by <a href="https://www.instagram.com/heyshivm/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Shivam</a>
-        </footer>
       </div>
     </AuthGate>
   );
