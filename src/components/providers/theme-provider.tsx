@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
-export type Theme = "theme-default" | "theme-black-red" | "theme-black-green" | "theme-black-white" | "theme-white-red" | "theme-cyberpunk-glow" | "theme-solaris-flare" | "theme-forest-whisper";
+export type Theme = "theme-default" | "theme-black-red" | "theme-black-green" | "theme-black-white" | "theme-white-red" | "theme-cyberpunk-glow" | "theme-electric-xtra" | "theme-solaris-flare" | "theme-forest-whisper";
 export const themeNames: { [key in Theme]: string } = {
   "theme-default": "Midnight Blue",
   "theme-black-red": "Crimson Night",
@@ -10,6 +10,7 @@ export const themeNames: { [key in Theme]: string } = {
   "theme-black-white": "Monochrome",
   "theme-white-red": "Scarlet Light",
   "theme-cyberpunk-glow": "Cyberpunk Glow",
+  "theme-electric-xtra": "Electric Xtra",
   "theme-solaris-flare": "Solaris Flare",
   "theme-forest-whisper": "Forest Whisper",
 };

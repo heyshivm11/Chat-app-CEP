@@ -166,6 +166,30 @@
   --ring: 180 100% 50%;
 }
 
+/* Theme: Electric Xtra (Dark Blue & Cyan/Magenta) */
+.theme-electric-xtra {
+  --background: 220 20% 10%;
+  --foreground: 180 100% 95%;
+  --card: 220 20% 13%;
+  --card-foreground: 180 100% 95%;
+  --popover: 220 20% 10%;
+  --popover-foreground: 180 100% 95%;
+  --primary: 180 100% 50%; /* Cyan */
+  --primary-foreground: 220 20% 10%;
+  --secondary: 220 20% 20%;
+  --secondary-foreground: 180 100% 95%;
+  --muted: 220 20% 20%;
+  --muted-foreground: 220 10% 60%;
+  --accent: 330 100% 50%; /* Magenta */
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 220 20% 25%;
+  --input: 220 20% 20%;
+  --ring: 180 100% 50%;
+}
+
+
 /* Theme: Solaris Flare (Black & Orange) */
 .theme-solaris-flare {
   --background: 0 0% 8%;
