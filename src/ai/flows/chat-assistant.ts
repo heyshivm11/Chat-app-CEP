@@ -10,16 +10,8 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-
-export const ChatAssistantInputSchema = z.object({
-  query: z.string().describe('The user\'s query or text to process.'),
-});
-export type ChatAssistantInput = z.infer<typeof ChatAssistantInputSchema>;
-
-export const ChatAssistantOutputSchema = z.object({
-  response: z.string().describe('The AI-generated response.'),
-});
-export type ChatAssistantOutput = z.infer<typeof ChatAssistantOutputSchema>;
+import type { ChatAssistantInput, ChatAssistantOutput } from '@/app/actions';
+import { ChatAssistantInputSchema, ChatAssistantOutputSchema } from '@/app/actions';
 
 export async function chatAssistant(input: ChatAssistantInput): Promise<ChatAssistantOutput> {
   return chatAssistantFlow(input);

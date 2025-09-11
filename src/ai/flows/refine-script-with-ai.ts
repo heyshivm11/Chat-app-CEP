@@ -1,4 +1,3 @@
-// refine-script-with-ai.ts
 'use server';
 
 /**
@@ -13,18 +12,9 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import type { RefineScriptInput, RefineScriptOutput } from '@/app/actions';
+import { RefineScriptInputSchema, RefineScriptOutputSchema } from '@/app/actions';
 
-const RefineScriptInputSchema = z.object({
-  script: z.string().describe('The chat script to refine.'),
-  context: z.string().optional().describe('The context of the chat.').default(""),
-  sentiment: z.string().optional().describe('The sentiment of the customer.').default(""),
-});
-export type RefineScriptInput = z.infer<typeof RefineScriptInputSchema>;
-
-const RefineScriptOutputSchema = z.object({
-  refinedScript: z.string().describe('The refined chat script.'),
-});
-export type RefineScriptOutput = z.infer<typeof RefineScriptOutputSchema>;
 
 export async function refineScript(input: RefineScriptInput): Promise<RefineScriptOutput> {
   return refineScriptFlow(input);
