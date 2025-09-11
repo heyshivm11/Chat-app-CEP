@@ -2,10 +2,12 @@
 "use client";
 
 import { SnakeGame } from "@/components/snake-game";
+import { DinoRunGame } from "@/components/dino-run-game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gamepad2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function FunPage() {
   return (
@@ -18,13 +20,28 @@ export default function FunPage() {
             </Link>
         </header>
         <main className="flex-grow flex items-center justify-center w-full">
-            <Card className="glass-card w-full max-w-lg">
+            <Card className="glass-card w-full max-w-2xl">
                 <CardHeader className="flex flex-row items-center gap-3 space-y-0">
                     <Gamepad2 className="h-6 w-6 text-primary" />
-                    <CardTitle>Fun Zone: Snake</CardTitle>
+                    <CardTitle>Fun Zone</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <SnakeGame />
+                    <Tabs defaultValue="snake">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="snake">Snake</TabsTrigger>
+                            <TabsTrigger value="dino-run">Dino Run</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="snake">
+                            <div className="pt-4">
+                                <SnakeGame />
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="dino-run">
+                            <div className="pt-4">
+                                <DinoRunGame />
+                            </div>
+                        </TabsContent>
+                    </Tabs>
                 </CardContent>
             </Card>
         </main>
