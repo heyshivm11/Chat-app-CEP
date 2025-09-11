@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -179,13 +179,13 @@ export function CustomerDetailsCard({ agentName }: CustomerDetailsCardProps) {
   const [form1Data, setForm1Data] = useState(initialFormState);
   const [form2Data, setForm2Data] = useState(initialFormState);
 
-  const handleForm1Change = (fieldName: keyof FormState, value: string) => {
+  const handleForm1Change = useCallback((fieldName: keyof FormState, value: string) => {
     setForm1Data(prev => ({ ...prev, [fieldName]: value }));
-  };
+  }, []);
 
-  const handleForm2Change = (fieldName: keyof FormState, value: string) => {
+  const handleForm2Change = useCallback((fieldName: keyof FormState, value: string) => {
     setForm2Data(prev => ({ ...prev, [fieldName]: value }));
-  };
+  }, []);
 
   const resetForm1 = () => setForm1Data(initialFormState);
   const resetForm2 = () => setForm2Data(initialFormState);
