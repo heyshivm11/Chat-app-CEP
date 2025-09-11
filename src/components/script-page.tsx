@@ -65,14 +65,14 @@ export default function ScriptPage() {
   const departmentScripts = filteredScripts.filter(s => s.department === department);
   const commonScripts = filteredScripts.filter(s => s.department === "common");
 
-  const renderScriptList = (scriptList: Script[], showCopyButton: boolean) => {
+  const renderScriptList = (scriptList: Script[]) => {
     if (scriptList.length === 0) {
       return <p className="text-muted-foreground text-center py-8">No scripts found.</p>;
     }
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
         {scriptList.map((script) => (
-          <ScriptCard key={script.id} script={script} showCopyButton={showCopyButton} />
+          <ScriptCard key={script.id} script={script} />
         ))}
       </div>
     );
@@ -120,7 +120,7 @@ export default function ScriptPage() {
                 {departmentName} Scripts
               </AccordionTrigger>
               <AccordionContent>
-                {renderScriptList(departmentScripts, true)}
+                {renderScriptList(departmentScripts)}
               </AccordionContent>
             </AccordionItem>
             
@@ -130,7 +130,7 @@ export default function ScriptPage() {
                 Common Scripts
               </AccordionTrigger>
               <AccordionContent>
-                {renderScriptList(commonScripts, false)}
+                {renderScriptList(commonScripts)}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
