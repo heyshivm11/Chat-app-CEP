@@ -3,7 +3,7 @@
 
 import { SnakeGame } from "@/components/snake-game";
 import { TicTacToeGame } from "@/components/tic-tac-toe-game";
-import { LudoGame } from "@/components/ludo-game";
+import { BikeRacingGame } from "@/components/bike-racing-game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gamepad2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,11 +27,11 @@ export default function FunPage() {
                     <CardTitle>Fun Zone</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Tabs defaultValue="snake" className="w-full">
+                    <Tabs defaultValue="bike-racing" className="w-full">
                         <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="snake">Snake</TabsTrigger>
                             <TabsTrigger value="tic-tac-toe">Tic-Tac-Toe</TabsTrigger>
-                            <TabsTrigger value="ludo">Ludo</TabsTrigger>
+                            <TabsTrigger value="bike-racing">Bike Racing</TabsTrigger>
                         </TabsList>
                         <TabsContent value="snake">
                             <div className="pt-4 flex justify-center">
@@ -43,9 +43,9 @@ export default function FunPage() {
                                 <TicTacToeGame />
                             </div>
                         </TabsContent>
-                        <TabsContent value="ludo">
+                        <TabsContent value="bike-racing">
                             <div className="pt-4 flex justify-center">
-                                <LudoGame />
+                                <BikeRacingGame />
                             </div>
                         </TabsContent>
                     </Tabs>
