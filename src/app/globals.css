@@ -143,6 +143,90 @@
   --ring: 0 72% 51%;
 }
 
+/* Theme: Vector Pop (Vector Art) */
+.theme-vector-pop {
+  --background: 220 20% 98%;
+  --foreground: 220 10% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 10% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 10% 10%;
+  --primary: 330 100% 50%; /* Bright Magenta */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 15% 94%;
+  --secondary-foreground: 220 10% 10%;
+  --muted: 220 15% 94%;
+  --muted-foreground: 220 10% 40%;
+  --accent: 190 100% 50%; /* Bright Cyan */
+  --accent-foreground: 220 10% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 220 15% 88%;
+  --input: 220 15% 94%;
+  --ring: 330 100% 50%;
+  --radius: 0.25rem; /* Sharper corners */
+}
+
+/* Theme: Neo 3D */
+.theme-neo-3d {
+  --background: 220 15% 15%;
+  --foreground: 220 15% 95%;
+  --card: 220 15% 18%;
+  --card-foreground: 220 15% 95%;
+  --popover: 220 15% 15%;
+  --popover-foreground: 220 15% 95%;
+  --primary: 260 85% 65%; /* Vibrant Purple */
+  --primary-foreground: 220 15% 95%;
+  --secondary: 220 15% 25%;
+  --secondary-foreground: 220 15% 95%;
+  --muted: 220 15% 25%;
+  --muted-foreground: 220 15% 65%;
+  --accent: 180 85% 55%; /* Glowing Cyan */
+  --accent-foreground: 220 15% 10%;
+  --destructive: 0 70% 55%;
+  --destructive-foreground: 220 15% 95%;
+  --border: 220 15% 30%;
+  --input: 220 15% 25%;
+  --ring: 260 85% 65%;
+  --radius: 0.75rem; /* More rounded corners */
+}
+.theme-neo-3d .glass-card {
+    box-shadow: 0 4px 20px hsl(var(--primary) / 0.2), inset 0 0 0 1px hsl(var(--border));
+}
+
+/* Theme: Paper Cut */
+.theme-paper-cut {
+  --background: 35 60% 94%; /* Creamy Off-white */
+  --foreground: 35 30% 25%;
+  --card: 35 50% 88%;
+  --card-foreground: 35 30% 25%;
+  --popover: 35 60% 94%;
+  --popover-foreground: 35 30% 25%;
+  --primary: 10 70% 55%; /* Burnt Orange */
+  --primary-foreground: 35 60% 98%;
+  --secondary: 35 40% 82%;
+  --secondary-foreground: 35 30% 25%;
+  --muted: 35 40% 82%;
+  --muted-foreground: 35 30% 55%;
+  --accent: 160 50% 45%; /* Muted Teal */
+  --accent-foreground: 35 60% 98%;
+  --destructive: 0 60% 50%;
+  --destructive-foreground: 35 60% 98%;
+  --border: 35 30% 75%;
+  --input: 35 50% 88%;
+  --ring: 10 70% 55%;
+  --radius: 0.3rem;
+}
+.theme-paper-cut .glass-card {
+  border-width: 2px;
+  box-shadow: 4px 4px 0px 0px hsl(var(--border));
+  transition: box-shadow 0.2s ease-in-out;
+}
+.theme-paper-cut .glass-card:hover {
+  box-shadow: 2px 2px 0px 0px hsl(var(--border));
+}
+
+
 @layer base {
   * {
     @apply border-border;
