@@ -9,12 +9,13 @@ import { Header } from "./header";
 import { FileText, Workflow, BookCopy, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { AuthGate } from "./auth-gate";
+import { TypingEffect } from "./typing-effect";
 
 export default function ScriptPage() {
   const router = useRouter();
@@ -25,6 +26,13 @@ export default function ScriptPage() {
   const [department, setDepartment] = useState("etg");
   const [agentName, setAgentName] = useState("");
   const [customerName, setCustomerName] = useState("");
+
+  const motivationalPhrases = [
+    "Let's provide the best experience to customers",
+    "They are not blaming you they just want's good service",
+    "Jaa Sutta maar Ke aa 🚬",
+    "Take break! Work! and Repeat",
+  ];
 
   useEffect(() => {
     if (user) {
@@ -131,12 +139,13 @@ export default function ScriptPage() {
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
               <div className="xl:col-span-1">
                   <Card className="glass-card h-full">
-                      <CardHeader>
-                          <CardTitle>Name Placeholders</CardTitle>
-                      </CardHeader>
-                      <CardContent>
+                      <CardContent className="pt-6">
                           <div className="space-y-4">
                               <div className="space-y-2">
+                                <div className="mb-4">
+                                  <h2 className="text-2xl font-bold text-foreground">Welcome {agentName}!</h2>
+                                  <TypingEffect phrases={motivationalPhrases} className="text-muted-foreground text-sm h-5" />
+                                </div>
                                   <Label htmlFor="agentName">Agent Name</Label>
                                   <Input id="agentName" value={agentName} disabled />
                               </div>
