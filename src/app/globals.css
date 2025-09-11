@@ -203,3 +203,32 @@
 .animate-fly-login {
   animation: fly-login 8s ease-in-out infinite;
 }
+
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-100px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-jump {
+  animation: jump 0.5s ease;
+}
+
+@keyframes run {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.obstacle {
+  animation: run 2s linear;
+}

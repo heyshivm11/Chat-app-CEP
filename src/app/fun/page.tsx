@@ -1,4 +1,4 @@
-import { TicTacToeGame } from '@/components/tic-tac-toe';
+import { DinoGame } from '@/components/dino-game';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function FunZonePage() {
   return (
-    <div className="min-h-screen w-full gradient-background">
+    <div className="min-h-screen w-full gradient-background flex flex-col">
       <header className="sticky top-0 z-10 w-full bg-background/80 backdrop-blur-sm border-b border-border/50">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-8">
             <Button asChild variant="ghost">
@@ -19,13 +19,13 @@ export default function FunZonePage() {
             <div className="w-24"></div>
         </div>
       </header>
-      <main className="container mx-auto px-4 md:px-8 py-8 flex justify-center items-center">
-        <Card className="w-full max-w-md glass-card">
+      <main className="container mx-auto px-4 md:px-8 py-8 flex-grow flex justify-center items-center">
+        <Card className="w-full max-w-2xl glass-card">
           <CardHeader>
-            <CardTitle className="text-center">Tic-Tac-Toe</CardTitle>
+            <CardTitle className="text-center">Dino Run</CardTitle>
           </CardHeader>
           <CardContent>
-            <TicTacToeGame />
+            <DinoGame />
           </CardContent>
         </Card>
       </main>
