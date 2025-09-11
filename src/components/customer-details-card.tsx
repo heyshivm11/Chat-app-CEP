@@ -6,11 +6,23 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CopyButton } from './copy-button';
-import { ClipboardPaste, User } from 'lucide-react';
+import { ClipboardPaste, User, RotateCcw } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronsUpDown } from 'lucide-react';
 import { Button } from './ui/button';
+
+const initialFormState = {
+  interactionId: '',
+  customerName: '',
+  callerName: '',
+  relation: '',
+  query: '',
+  resolution: '',
+  ghostline: '',
+  validatedBy: '',
+  notes: '',
+};
 
 const formFields = [
   { id: 'interactionId', label: 'Interaction ID' },
@@ -28,12 +40,14 @@ interface CustomerFormProps {
 }
 
 function CustomerForm({ agentName }: CustomerFormProps) {
-  const [formData, setFormData] = useState(
-    formFields.reduce((acc, field) => ({ ...acc, [field.id]: '' }), { notes: '' })
-  );
+  const [formData, setFormData] = useState(initialFormState);
 
   const handleInputChange = (id: string, value: string) => {
     setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
+  const resetForm = () => {
+    setFormData(initialFormState);
   };
 
   const detailsToCopy = useMemo(() => {
@@ -69,8 +83,11 @@ function CustomerForm({ agentName }: CustomerFormProps) {
           className="min-h-[100px]"
         />
       </div>
-      <div className="flex justify-end">
-        <CopyButton textToCopy={detailsToCopy} className="h-9 w-auto px-4">
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" size="icon" onClick={resetForm} aria-label="Reset form">
+          <RotateCcw className="h-4 w-4" />
+        </Button>
+        <CopyButton textToCopy={detailsToCopy} className="h-10 w-auto px-4">
           <ClipboardPaste className="mr-2 h-4 w-4" />
           Copy Details
         </CopyButton>

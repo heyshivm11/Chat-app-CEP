@@ -5,12 +5,13 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { Header } from "./header";
-import { FileText, Files } from "lucide-react";
+import { FileText, Files, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Button } from "./ui/button";
 
 export default function ScriptPage({ department: initialDepartment }: { department?: string, departmentName?: string }) {
   const router = useRouter();
@@ -119,7 +120,12 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="customerName">Customer Name</Label>
-                                <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
+                                <div className="flex items-center gap-2">
+                                    <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
+                                    <Button variant="outline" size="icon" onClick={() => setCustomerName("")} aria-label="Reset customer name">
+                                        <RotateCcw className="h-4 w-4" />
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </CardContent>
