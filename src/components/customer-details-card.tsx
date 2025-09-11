@@ -105,16 +105,9 @@ function CustomerForm({ agentName }: CustomerFormProps) {
             />
           </div>
         ))}
-
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-            <div className="flex items-center space-x-2 mb-2">
-                <Checkbox
-                    id="customer-is-caller"
-                    checked={customerIsCaller}
-                    onCheckedChange={handleCheckboxChange}
-                />
-                <Label htmlFor="customer-is-caller" className="font-normal">Customer is the caller</Label>
-            </div>
             <Label htmlFor="callerName">Caller's name</Label>
             <Input
                 id="callerName"
@@ -122,6 +115,14 @@ function CustomerForm({ agentName }: CustomerFormProps) {
                 onChange={(e) => handleInputChange('callerName', e.target.value)}
                 disabled={customerIsCaller}
             />
+            <div className="flex items-center space-x-2 pt-2">
+                <Checkbox
+                    id="customer-is-caller"
+                    checked={customerIsCaller}
+                    onCheckedChange={(checked) => handleCheckboxChange(Boolean(checked))}
+                />
+                <Label htmlFor="customer-is-caller" className="font-normal">Customer is the caller</Label>
+            </div>
         </div>
         
         {!customerIsCaller && (
