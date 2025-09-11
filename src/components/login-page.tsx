@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
@@ -13,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Plane, LogIn } from 'lucide-react';
+import { LogIn } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import {
@@ -65,8 +66,8 @@ export function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md glass-card">
         <CardHeader className="text-center">
-          <div className="mx-auto h-12 w-12 plane-animation mb-4">
-            <Plane className="h-12 w-12 text-primary plane-icon" />
+          <div className="mx-auto h-12 w-12 mb-4">
+            <Image src="/plane.gif" alt="CEP Scripts Plane" width={48} height={48} />
           </div>
           <CardTitle className="text-2xl">CEP Scripts</CardTitle>
           <CardDescription>Please log in to continue</CardDescription>

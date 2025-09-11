@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Plane, LogOut } from "lucide-react";
+import { Search, LogOut } from "lucide-react";
+import Image from "next/image";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -37,9 +38,7 @@ export function Header({
     <header className="sticky top-0 z-10 w-full bg-background/80 backdrop-blur-sm border-b border-border/50">
       <div className="container mx-auto flex h-16 items-center gap-4 px-4 md:px-8">
         <Link href="/" className="flex items-center gap-2 text-foreground font-semibold">
-          <div className="relative h-6 w-6 plane-animation">
-            <Plane className="h-6 w-6 text-primary plane-icon" />
-          </div>
+          <Image src="/plane.gif" alt="CEP Scripts Plane" width={24} height={24} className="h-6 w-6" />
           <span className="hidden md:inline">CEP Scripts</span>
         </Link>
         
