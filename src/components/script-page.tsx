@@ -142,8 +142,8 @@ export default function ScriptPage() {
         />
         <main className="container mx-auto px-4 md:px-8 py-8">
           
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8 items-start">
-              <div className="xl:col-span-1 flex flex-col gap-8 h-full">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8 items-stretch">
+              <div className="xl:col-span-1 flex flex-col gap-8">
                   <Card className="glass-card">
                       <CardContent className="pt-6">
                           <div className="space-y-4">
