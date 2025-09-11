@@ -11,9 +11,8 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-import type { RefineScriptInput, RefineScriptOutput } from '@/app/actions';
-import { RefineScriptInputSchema, RefineScriptOutputSchema } from '@/app/actions';
+import type { RefineScriptInput, RefineScriptOutput } from '@/app/ai-schemas';
+import { RefineScriptInputSchema, RefineScriptOutputSchema } from '@/app/ai-schemas';
 
 
 export async function refineScript(input: RefineScriptInput): Promise<RefineScriptOutput> {

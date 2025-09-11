@@ -9,9 +9,8 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-import type { ChatAssistantInput, ChatAssistantOutput } from '@/app/actions';
-import { ChatAssistantInputSchema, ChatAssistantOutputSchema } from '@/app/actions';
+import type { ChatAssistantInput, ChatAssistantOutput } from '@/app/ai-schemas';
+import { ChatAssistantInputSchema, ChatAssistantOutputSchema } from '@/app/ai-schemas';
 
 export async function chatAssistant(input: ChatAssistantInput): Promise<ChatAssistantOutput> {
   return chatAssistantFlow(input);
