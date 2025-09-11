@@ -5,6 +5,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/hooks/use-auth';
+import { AppLayout } from '@/components/app-layout';
 
 export default function RootLayout({
   children,
@@ -24,12 +25,12 @@ export default function RootLayout({
         <title>CEP Scripts</title>
         <meta name="description" content="Your smart library for customer service chat scripts." />
       </head>
-      <body className="font-body antialiased gradient-background">
+      <body className="font-body antialiased">
         <AuthProvider>
           <ThemeProvider>
-            <div className="flex flex-col min-h-screen">
-              <main className="flex-grow">{children}</main>
-            </div>
+            <AppLayout>
+              {children}
+            </AppLayout>
             <Toaster />
           </ThemeProvider>
         </AuthProvider>

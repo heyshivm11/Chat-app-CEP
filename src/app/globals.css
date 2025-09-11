@@ -25,6 +25,15 @@
     --input: 217 33% 17%;
     --ring: 213 94% 68%;
     --radius: 0.5rem;
+
+    --sidebar-background: 220 20% 10%;
+    --sidebar-foreground: 180 100% 95%;
+    --sidebar-primary: 180 100% 50%;
+    --sidebar-primary-foreground: 220 20% 10%;
+    --sidebar-accent: 220 20% 15%;
+    --sidebar-accent-foreground: 180 100% 95%;
+    --sidebar-border: 220 20% 25%;
+    --sidebar-ring: 180 100% 50%;
   }
 }
 
@@ -256,25 +265,27 @@
 }
 
 .gradient-background {
-  background-size: 200% 200%;
-  background-image: linear-gradient(
-    -45deg,
-    hsl(var(--background)),
-    hsl(var(--primary) / 0.2),
-    hsl(var(--background))
-  );
-  animation: gradient 15s ease infinite;
+  background-size: 400% 400%;
+  background-image: radial-gradient(circle at top right, hsl(var(--primary) / 0.1), transparent 50%),
+                    radial-gradient(circle at bottom left, hsl(var(--accent) / 0.1), transparent 50%),
+                    linear-gradient(
+                      -45deg,
+                      hsl(var(--background)),
+                      hsl(var(--background)),
+                      hsl(220 20% 15%)
+                    );
+  animation: gradient 25s ease infinite;
 }
 
 @keyframes gradient {
   0% {
-    background-position: 0% 50%;
+    background-position: 0% 50%, 0% 50%, 0% 50%;
   }
   50% {
-    background-position: 100% 50%;
+    background-position: 100% 50%, 100% 50%, 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0% 50%, 0% 50%, 0% 50%;
   }
 }
 
@@ -381,7 +392,7 @@
   bottom: 0;
   border-radius: var(--radius); 
   border: 2px solid transparent;
-  background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--primary) / 0.3), hsl(var(--primary))) border-box;
+  background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary))) border-box;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box, 
     linear-gradient(#fff 0 0);

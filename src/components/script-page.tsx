@@ -5,8 +5,8 @@ import { useState, useMemo, useEffect } from "react";
 import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
-import { Header } from "./header";
-import { FileText, Workflow, BookCopy, RotateCcw, ChevronsUpDown } from "lucide-react";
+import { PageHeader } from "./page-header";
+import { FileText, Workflow, BookCopy, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,6 +17,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { AuthGate } from "./auth-gate";
 import { TypingEffect } from "./typing-effect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { RotateCcw } from "lucide-react";
+
 
 export default function ScriptPage() {
   const router = useRouter();
@@ -131,15 +133,14 @@ export default function ScriptPage() {
   
   return (
     <AuthGate>
-      <div className="min-h-screen w-full">
-        <Header 
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 gradient-background">
+        <PageHeader 
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           category={category}
           onCategoryChange={setCategory}
           department={department}
           onDepartmentChange={handleDepartmentChange}
-          onLogout={handleLogout}
         />
         <main className="container mx-auto px-4 md:px-8 py-8">
           

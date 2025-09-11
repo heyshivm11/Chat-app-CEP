@@ -4,15 +4,15 @@ import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
 export type Theme = "theme-default" | "theme-black-red" | "theme-black-green" | "theme-black-white" | "theme-white-red" | "theme-cyberpunk-glow" | "theme-electric-xtra" | "theme-solaris-flare" | "theme-forest-whisper";
 export const themeNames: { [key in Theme]: string } = {
+  "theme-electric-xtra": "Electric Xtra",
+  "theme-cyberpunk-glow": "Cyberpunk Glow",
+  "theme-solaris-flare": "Solaris Flare",
+  "theme-forest-whisper": "Forest Whisper",
   "theme-default": "Midnight Blue",
   "theme-black-red": "Crimson Night",
   "theme-black-green": "Emerald Dark",
   "theme-black-white": "Monochrome",
   "theme-white-red": "Scarlet Light",
-  "theme-cyberpunk-glow": "Cyberpunk Glow",
-  "theme-electric-xtra": "Electric Xtra",
-  "theme-solaris-flare": "Solaris Flare",
-  "theme-forest-whisper": "Forest Whisper",
 };
 
 const themeKeys = Object.keys(themeNames) as Theme[];
@@ -27,7 +27,7 @@ type ThemeProviderState = {
 const ThemeProviderContext = createContext<ThemeProviderState | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("theme-default");
+  const [theme, setTheme] = useState<Theme>("theme-electric-xtra");
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("scriptify-theme") as Theme | null;
