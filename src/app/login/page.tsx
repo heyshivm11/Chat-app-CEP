@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 
 interface IFormInput {
   firstName: string;
@@ -64,20 +65,18 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 overflow-hidden relative">
-       {/* Decorative flying airplanes */}
-      <Plane className="absolute top-1/4 left-1/4 w-32 h-32 text-primary/10 animate-float-1" />
-      <Plane className="absolute bottom-1/4 right-1/4 w-24 h-24 text-secondary/10 animate-float-2" />
-      <Plane className="absolute bottom-1/2 right-1/3 w-16 h-16 text-primary/5 animate-float-3" />
-      <Plane className="absolute top-1/3 left-1/2 w-20 h-20 text-secondary/5 animate-float-1" />
-
-
       <Card className="w-full max-w-md glass-card z-10 edge-light">
-        <CardHeader className="text-center">
-          <div className="mx-auto h-16 w-16 mb-4 relative">
-            <Plane className="h-16 w-16 text-primary animate-fly-login" />
-          </div>
-          <CardTitle className="text-2xl">CEP Scripts</CardTitle>
-          <CardDescription>Please log in to continue</CardDescription>
+        <CardHeader>
+            <div className="flex justify-between items-start">
+                <div className="text-center w-full">
+                    <div className="mx-auto h-16 w-16 mb-4 relative">
+                        <Plane className="h-16 w-16 text-primary animate-fly-login" />
+                    </div>
+                    <CardTitle className="text-2xl">CEP Scripts</CardTitle>
+                    <CardDescription>Please log in to continue</CardDescription>
+                </div>
+                <ThemeSwitcher />
+            </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
