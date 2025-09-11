@@ -251,3 +251,16 @@
 .animate-float-3 {
   animation: float-3 10s ease-in-out infinite;
 }
+
+.tic-tac-toe-board {
+  @apply grid grid-cols-3 gap-2;
+}
+
+.tic-tac-toe-square {
+  @apply w-24 h-24 bg-background/50 rounded-md flex items-center justify-center text-4xl font-bold transition-colors;
+  border: 1px solid hsl(var(--border));
+}
+
+.tic-tac-toe-square:hover {
+    @apply bg-background/80;
+}
