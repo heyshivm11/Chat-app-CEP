@@ -25,7 +25,7 @@ export function CopyButton({ textToCopy, className, children, ...props }: Custom
         <Button
         variant="default"
         onClick={copyToClipboard}
-        className={cn("", className)}
+        className={cn("copy-cursor", className)}
         aria-label="Copy details"
         {...props}
         >
@@ -39,7 +39,7 @@ export function CopyButton({ textToCopy, className, children, ...props }: Custom
       variant="ghost"
       size="icon"
       onClick={copyToClipboard}
-      className={cn("h-7 w-7", className)}
+      className={cn("h-7 w-7 copy-cursor", className)}
       aria-label="Copy script"
       {...props}
     >
