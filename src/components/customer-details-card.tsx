@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +13,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { ChevronsUpDown } from 'lucide-react';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Checkbox } from './ui/checkbox';
 
 const initialFormState = {
   interactionId: '',
@@ -28,8 +30,6 @@ const initialFormState = {
 const formFields = [
   { id: 'interactionId', label: 'Interaction ID' },
   { id: 'customerName', label: "Customer's name" },
-  { id: 'callerName', label: "Caller's name" },
-  { id: 'relation', label: 'Relation' },
   { id: 'query', label: 'Query' },
   { id: 'resolution', label: 'Resolution' },
   { id: 'validatedBy', label: 'Validated by' },
@@ -41,6 +41,17 @@ interface CustomerFormProps {
 
 function CustomerForm({ agentName }: CustomerFormProps) {
   const [formData, setFormData] = useState(initialFormState);
+  const [customerIsCaller, setCustomerIsCaller] = useState(false);
+
+  useEffect(() => {
+    if (customerIsCaller) {
+      setFormData(prev => ({
+        ...prev,
+        callerName: prev.customerName,
+        relation: 'Self',
+      }));
+    }
+  }, [customerIsCaller, formData.customerName]);
 
   const handleInputChange = (id: string, value: string) => {
     setFormData(prev => ({ ...prev, [id]: value }));
@@ -50,15 +61,32 @@ function CustomerForm({ agentName }: CustomerFormProps) {
     setFormData(prev => ({ ...prev, [id]: value }));
   };
 
+  const handleCheckboxChange = (checked: boolean) => {
+    setCustomerIsCaller(checked);
+    if (!checked) {
+        // Clear caller name and relation when unchecked
+        setFormData(prev => ({
+            ...prev,
+            callerName: '',
+            relation: '',
+        }));
+    }
+  }
+
   const resetForm = () => {
     setFormData(initialFormState);
+    setCustomerIsCaller(false);
   };
 
   const detailsToCopy = useMemo(() => {
     let text = `Agent Name: ${agentName}\n`;
-    formFields.forEach(field => {
-      text += `${field.label}: ${formData[field.id as keyof typeof formData]}\n`;
-    });
+    text += `Interaction ID: ${formData.interactionId}\n`;
+    text += `Customer's name: ${formData.customerName}\n`;
+    text += `Caller's name: ${formData.callerName}\n`;
+    text += `Relation: ${formData.relation}\n`;
+    text += `Query: ${formData.query}\n`;
+    text += `Resolution: ${formData.resolution}\n`;
+    text += `Validated by: ${formData.validatedBy}\n`;
     text += `Ghostline: ${formData.ghostline}\n`;
     text += `Notes: ${formData.notes}`;
     return text;
@@ -77,6 +105,36 @@ function CustomerForm({ agentName }: CustomerFormProps) {
             />
           </div>
         ))}
+
+        <div className="space-y-2">
+            <div className="flex items-center space-x-2 mb-2">
+                <Checkbox
+                    id="customer-is-caller"
+                    checked={customerIsCaller}
+                    onCheckedChange={handleCheckboxChange}
+                />
+                <Label htmlFor="customer-is-caller" className="font-normal">Customer is the caller</Label>
+            </div>
+            <Label htmlFor="callerName">Caller's name</Label>
+            <Input
+                id="callerName"
+                value={formData.callerName}
+                onChange={(e) => handleInputChange('callerName', e.target.value)}
+                disabled={customerIsCaller}
+            />
+        </div>
+        
+        {!customerIsCaller && (
+            <div className="space-y-2">
+                <Label htmlFor="relation">Relation</Label>
+                <Input
+                    id="relation"
+                    value={formData.relation}
+                    onChange={(e) => handleInputChange('relation', e.target.value)}
+                />
+            </div>
+        )}
+
         <div className="space-y-2">
             <Label htmlFor="ghostline">Ghostline</Label>
             <Select
