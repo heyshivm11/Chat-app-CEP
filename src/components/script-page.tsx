@@ -53,11 +53,6 @@ export default function ScriptPage() {
     setDepartment(newDepartment);
   };
 
-  const handleLogout = async () => {
-    await logout();
-    router.push('/login');
-  };
-
   const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string) => {
     return scriptsToProcess.map(script => {
       const newScript = JSON.parse(JSON.stringify(script)); // Deep copy
@@ -133,7 +128,7 @@ export default function ScriptPage() {
   
   return (
     <AuthGate>
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 gradient-background">
+      <div className="flex-1 gradient-background">
         <PageHeader 
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
