@@ -1,0 +1,145 @@
+import type { Script } from './types';
+
+export const scripts: Script[] = [
+  // ETG Scripts
+  {
+    id: 'etg-1',
+    department: 'etg',
+    category: 'Request Not Stated & Non-Verified',
+    team: 'All',
+    title: 'Request Not Stated & Non-Verified',
+    content:
+      "Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! Before we get started, could you please provide me with your order number so I can confirm your details in our system? Great! Thank you for sharing your information. How may I assist you today?",
+  },
+  {
+    id: 'etg-2',
+    department: 'etg',
+    category: 'Request Not Stated & Verified',
+    team: 'All',
+    title: 'Request Not Stated & Verified',
+    content: "Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! How may I assist you today?",
+  },
+  {
+    id: 'etg-3',
+    department: 'etg',
+    category: 'Request Not Stated & Non-Verified',
+    team: 'All',
+    title: 'Request Stated & Non-Verified',
+    content:
+      'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! Before we get started, could you please provide me with your order number so I can confirm your details in our system? I see that you have shared your request, please give me a moment to review it.',
+  },
+  {
+    id: 'etg-4',
+    department: 'etg',
+    category: 'Request Stated & Verified',
+    team: 'All',
+    title: 'Request Stated & Verified',
+    content:
+      'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! I see that you have shared your request, please give me a moment to review it.',
+  },
+  {
+    id: 'etg-5',
+    department: 'etg',
+    category: 'Verified – Request Stated (Transferred Chat)',
+    team: 'All',
+    title: 'Verified – Request Stated (Transferred Chat)',
+    content:
+      'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! Before we get started, I see that my colleague has transferred your chat to my team for support.',
+  },
+
+  // Booking.com Scripts
+  {
+    id: 'booking-1',
+    department: 'booking',
+    category: 'Request Not Stated & Non-Verified',
+    team: 'All',
+    title: 'Request Not Stated & Non-Verified',
+    content:
+      'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!Before we get started, could you please provide me with your order number so I can confirm your details in our system? Great! Thank you for sharing your information. How may I assist you today?',
+  },
+  {
+    id: 'booking-2',
+    department: 'booking',
+    category: 'Request Not Stated & Verified',
+    team: 'All',
+    title: 'Request Not Stated & Verified',
+    content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!How may I assist you today?',
+  },
+  {
+    id: 'booking-3',
+    department: 'booking',
+    category: 'Request Stated & Non-Verified',
+    team: 'All',
+    title: 'Request Stated & Non-Verified',
+    content:
+      'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!Before we get started, could you please provide me with your order number so I can confirm your details in our system? I see that you have shared your request, please give me a moment to review it.',
+  },
+  {
+    id: 'booking-4',
+    department: 'booking',
+    category: 'Request Stated & Verified',
+    team: 'All',
+    title: 'Request Stated & Verified',
+    content:
+      'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!I see that you have shared your request, please give me a moment to review it.',
+  },
+  {
+    id: 'booking-5',
+    department: 'booking',
+    category: 'Verified – Request Stated (Transferred Chat)',
+    team: 'All',
+    title: 'Verified – Request Stated (Transferred Chat)',
+    content:
+      'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!Before we get started, I see that my colleague has transferred your chat to my team for support. I would need some time to review your request to assist you better. Is that ok?',
+  },
+
+  // Common Scripts
+  {
+    id: 'common-1',
+    department: 'common',
+    category: 'Chat Closing',
+    team: 'All',
+    title: 'Chat Closing',
+    content:
+      'Thank you for contacting us. Should you require any further assistance, please don’t hesitate to get in touch. Wishing you a wonderful day ahead!',
+  },
+  {
+    id: 'common-2',
+    department: 'common',
+    category: 'Conversation Flow',
+    team: 'All',
+    title: 'Conversation Flow',
+    content: [
+      {
+        title: 'Acknowledge initial query',
+        content: 'I understand that you need help with……..is that correct',
+      },
+      {
+        title: 'Commitment to assist',
+        content: 'You’ve come to the right place! I’ll do my best to find the most suitable solution for you!',
+      },
+      {
+        title: 'Probing',
+        content: 'Can I ask you a few questions to better understand the situation? / To better assist you / to better understand the situation, I’ll need to ask a few questions. Is that ok?',
+      },
+      {
+        title: 'Discuss Solution & Gain Agreement',
+        content: 'So, the available options are… / So, as you have mentioned, the ideal choice for you is…Is this solution clear? Do you have any questions? I just want to make sure that everything is clear before we proceed',
+      },
+      {
+        title: 'Summarize & Resolve',
+        content: 'So John, to summarize we discussed that....',
+      },
+      {
+        title: 'Further assistance',
+        content: 'I hope everything is clear. Do you have any further questions?',
+      },
+      {
+        title: 'Closure',
+        content: 'Thank you for using our service Should you require any further assistance, please don’t hesitate to get in touch. Wishing you a wonderful day ahead! / Thank you for contacting us Should you require any further assistance, please don’t hesitate to get in touch. Wishing you a wonderful day ahead!',
+      },
+    ],
+  },
+];
+
+export const scriptCategories = [...new Set(scripts.map(s => s.category))];
