@@ -142,8 +142,8 @@ export default function ScriptPage() {
         />
         <main className="container mx-auto px-4 md:px-8 py-8">
           
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
-              <div className="xl:col-span-1 flex flex-col gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8 items-start">
+              <div className="xl:col-span-1 flex flex-col gap-8 h-full">
                   <Card className="glass-card">
                       <CardContent className="pt-6">
                           <div className="space-y-4">
@@ -167,16 +167,16 @@ export default function ScriptPage() {
                           </div>
                       </CardContent>
                   </Card>
-                   <Card className="glass-card">
+                   <Card className="glass-card flex-grow flex flex-col">
                         <CardHeader className="flex-row items-center gap-2 space-y-0">
                             <Notebook className="w-5 h-5 text-primary" />
                             <CardTitle className="text-xl">Rough Notes</CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4">
+                        <CardContent className="flex-grow flex flex-col">
+                            <div className="space-y-4 flex-grow flex flex-col">
                                 <Textarea 
                                     placeholder="Jot down quick notes here..."
-                                    className="min-h-[120px]"
+                                    className="min-h-[120px] flex-grow"
                                     value={roughNotes}
                                     onChange={(e) => setRoughNotes(e.target.value)}
                                 />
