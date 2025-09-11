@@ -1,4 +1,4 @@
-import { DinoGame } from '@/components/dino-game';
+import { SnakeGame } from '@/components/snake-game';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -20,12 +20,12 @@ export default function FunZonePage() {
         </div>
       </header>
       <main className="container mx-auto px-4 md:px-8 py-8 flex-grow flex justify-center items-center">
-        <Card className="w-full max-w-2xl glass-card">
+        <Card className="w-full max-w-lg glass-card">
           <CardHeader>
-            <CardTitle className="text-center">Dino Run</CardTitle>
+            <CardTitle className="text-center">Snake Game</CardTitle>
           </CardHeader>
           <CardContent>
-            <DinoGame />
+            <SnakeGame />
           </CardContent>
         </Card>
       </main>
