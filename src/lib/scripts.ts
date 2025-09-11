@@ -1,3 +1,4 @@
+
 import type { Script } from './types';
 
 export const scripts: Script[] = [
@@ -207,8 +208,12 @@ export const scripts: Script[] = [
         content: 'I hope everything is clear. Do you have any further questions?',
       },
       {
-        title: 'Closure',
-        content: 'Thank you for using our service Should you require any further assistance, please don’t hesitate to get in touch. Wishing you a wonderful day ahead! / Thank you for contacting us Should you require any further assistance, please don’t hesitate to get in touch. Wishing you a wonderful day ahead!',
+        title: 'Closing',
+        content: 'Thank you for using our service. Should you require any further assistance, please don’t hesitate to get in touch.',
+      },
+       {
+        title: 'Wish',
+        content: 'Wishing you a wonderful day ahead!',
       },
     ],
   },
