@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { AuthGate } from "./auth-gate";
 import { TypingEffect } from "./typing-effect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChatAssistantDialog } from "./chat-assistant-dialog";
 
 export default function ScriptPage() {
   const router = useRouter();
