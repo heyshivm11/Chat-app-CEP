@@ -1,5 +1,5 @@
-import ScriptPage from '@/components/script-page';
+import { LoginPage } from '@/components/login-page';
 
 export default function Home() {
-  return <ScriptPage />;
+  return <LoginPage />;
 }

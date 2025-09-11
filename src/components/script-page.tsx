@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { Header } from "./header";
 import { FileText, Files, RotateCcw } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -15,19 +15,32 @@ import { Button } from "./ui/button";
 
 export default function ScriptPage({ department: initialDepartment }: { department?: string, departmentName?: string }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("All");
   const [department, setDepartment] = useState(initialDepartment || "etg");
+  const [agentName, setAgentName] = useState("");
+
+  useEffect(() => {
+    const agent = searchParams.get("agent");
+    if (agent) {
+      setAgentName(agent);
+    } else {
+      // Redirect to login if no agent name is provided
+      router.push('/');
+    }
+  }, [searchParams, router]);
+
 
   const [customerName, setCustomerName] = useState("");
-  const [agentName, setAgentName] = useState("Shivam");
 
   const departmentName = department === 'etg' ? 'ETG' : 'Booking.com';
 
   const handleDepartmentChange = (newDepartment: string) => {
     setDepartment(newDepartment);
-    router.push(`/scripts/${newDepartment}`, { scroll: false });
+    const newPath = newDepartment === 'etg' ? '/scripts' : `/scripts/${newDepartment}`;
+    router.push(`${newPath}?agent=${agentName}`, { scroll: false });
   };
 
   const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string) => {
@@ -37,7 +50,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       const replacePlaceholders = (text: string) => {
         return text
           .replace(/\[Customer First Name\]/g, currentCustomerName || '[Customer First Name]')
-          .replace(/\[Agent Name\]/g, currentAgentName || 'Shivam');
+          .replace(/\[Agent Name\]/g, currentAgentName || '[Agent Name]');
       };
 
       if (typeof newScript.content === 'string') {
@@ -93,9 +106,14 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       </div>
     );
   };
+
+  // Silently fail if agentName is not yet available
+  if (!agentName) {
+    return null; 
+  }
   
   return (
-    <div className="min-h-screen w-full gradient-background">
+    <div className="min-h-screen w-full">
       <Header 
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -116,7 +134,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="agentName">Agent Name</Label>
-                                <Input id="agentName" value={agentName} onChange={(e) => setAgentName(e.target.value)} />
+                                <Input id="agentName" value={agentName} disabled />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="customerName">Customer Name</Label>
