@@ -7,64 +7,60 @@ import {
   useContext,
   ReactNode,
 } from 'react';
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-  User,
-  createUserWithEmailAndPassword,
-} from 'firebase/auth';
-import { firebaseApp } from '@/lib/firebase';
-import { useRouter } from 'next/navigation';
 
-const auth = getAuth(firebaseApp);
+// Simplified User interface
+export interface AppUser {
+  displayName: string;
+  department: string;
+}
 
 interface AuthContextType {
-  user: User | null;
+  user: AppUser | null;
   loading: boolean;
-  login: (email: string, pass: string, name: string) => Promise<any>;
+  login: (name: string, department: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const USER_STORAGE_KEY = 'cep_user';
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    try {
+      const storedUser = localStorage.getItem(USER_STORAGE_KEY);
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (error) {
+      console.error('Failed to parse user from localStorage', error);
+    } finally {
       setLoading(false);
-    });
-    return () => unsubscribe();
+    }
   }, []);
 
-  const login = async (email: string, pass: string, name: string) => {
+  const login = async (name: string, department: string) => {
+    const newUser: AppUser = { displayName: name, department: department };
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, pass);
-      if (userCredential.user.displayName !== name) {
-        await updateProfile(userCredential.user, { displayName: name });
-        setUser({ ...userCredential.user, displayName: name });
-      }
-      return userCredential;
-    } catch (error: any) {
-      // If sign-in fails, try to sign up the user. This is a simplified flow.
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-        await updateProfile(userCredential.user, { displayName: name });
-        setUser({ ...userCredential.user, displayName: name });
-        return userCredential;
-      } else {
-        throw error;
-      }
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(newUser));
+      setUser(newUser);
+    } catch (error) {
+      console.error('Failed to save user to localStorage', error);
+      throw error;
     }
   };
 
-  const logout = () => {
-    return signOut(auth);
+  const logout = async () => {
+    try {
+      localStorage.removeItem(USER_STORAGE_KEY);
+      setUser(null);
+    } catch (error) {
+      console.error('Failed to remove user from localStorage', error);
+      throw error;
+    }
   };
 
   const value = {

@@ -16,11 +16,17 @@ import { Button } from '@/components/ui/button';
 import { Plane, LogIn } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select';
 
 interface IFormInput {
-  email: string;
-  password: string;
   firstName: string;
+  department: 'Frontline' | 'Schedule Change';
 }
 
 export function LoginPage() {
@@ -30,6 +36,7 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<IFormInput>();
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +44,7 @@ export function LoginPage() {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setIsLoading(true);
     try {
-      await login(data.email, data.password, data.firstName);
+      await login(data.firstName, data.department);
       toast({
         title: 'Login Successful',
         description: 'Welcome!',
@@ -47,7 +54,7 @@ export function LoginPage() {
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: "Please check your credentials and try again.",
+        description: 'An unexpected error occurred.',
       });
     } finally {
       setIsLoading(false);
@@ -67,45 +74,41 @@ export function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
-                <Input
-                  id="firstName"
-                  placeholder="Enter your first name"
-                  {...register('firstName', {
-                    required: 'First name is required',
-                  })}
-                />
-                {errors.firstName && (
-                  <p className="text-xs text-red-500 mt-1">
-                    {errors.firstName.message}
-                  </p>
-                )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Employee ID (Email)</Label>
+              <Label htmlFor="firstName">First Name</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="Enter your employee email"
-                {...register('email', { required: 'Employee ID is required' })}
+                id="firstName"
+                placeholder="Enter your first name"
+                {...register('firstName', {
+                  required: 'First name is required',
+                })}
               />
-              {errors.email && (
+              {errors.firstName && (
                 <p className="text-xs text-red-500 mt-1">
-                  {errors.email.message}
+                  {errors.firstName.message}
                 </p>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">System Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your system password"
-                {...register('password', { required: 'Password is required' })}
-              />
-              {errors.password && (
+              <Label>Department</Label>
+              <Select
+                onValueChange={(value: 'Frontline' | 'Schedule Change') => {
+                  setValue('department', value, { shouldValidate: true });
+                }}
+                {...register('department', {
+                  required: 'Department is required',
+                })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your department" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Frontline">Frontline</SelectItem>
+                  <SelectItem value="Schedule Change">Schedule Change</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.department && (
                 <p className="text-xs text-red-500 mt-1">
-                  {errors.password.message}
+                  {errors.department.message}
                 </p>
               )}
             </div>

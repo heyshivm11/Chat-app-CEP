@@ -19,6 +19,11 @@ export function AuthGate({ children }: { children?: React.ReactNode }) {
     }
   }, [user, loading, router]);
 
+  // Special case for login page to avoid redirection loop
+  if (router.pathname === '/login' && !user) {
+    return <>{children}</>;
+  }
+
   if (loading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center">

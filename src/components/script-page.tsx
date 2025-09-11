@@ -65,6 +65,8 @@ export default function ScriptPage() {
   };
 
   const filteredScripts = useMemo(() => {
+    const userDepartment = user?.department || 'All';
+
     return scripts.filter((script) => {
       const searchMatch =
         script.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -77,10 +79,12 @@ export default function ScriptPage() {
           ));
       
       const categoryMatch = category === "All" || script.category === category;
+
+      const teamMatch = script.team === 'All' || script.team === userDepartment;
       
-      return searchMatch && categoryMatch;
+      return searchMatch && categoryMatch && teamMatch;
     });
-  }, [searchTerm, category]);
+  }, [searchTerm, category, user]);
 
   const departmentScripts = useMemo(() => {
     const deptScripts = filteredScripts.filter(s => s.department === department);
