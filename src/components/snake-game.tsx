@@ -17,7 +17,7 @@ export function SnakeGame() {
   const [snake, setSnake] = useState<Position[]>(INITIAL_SNAKE);
   const [food, setFood] = useState<Position>(INITIAL_FOOD);
   const [direction, setDirection] = useState<Direction>('RIGHT');
-  const [speed, setSpeed] = useState<number | null>(200);
+  const [speed, setSpeed] = useState<number | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
 
