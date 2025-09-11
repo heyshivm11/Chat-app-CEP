@@ -11,10 +11,13 @@ export const themeNames: { [key in Theme]: string } = {
   "theme-white-red": "Scarlet Light",
 };
 
+const themeKeys = Object.keys(themeNames) as Theme[];
+
 
 type ThemeProviderState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
+  cycleTheme: () => void;
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState | undefined>(undefined);
@@ -41,7 +44,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("scriptify-theme", theme);
   }, [theme]);
 
-  const value = useMemo(() => ({ theme, setTheme }), [theme]);
+  const cycleTheme = () => {
+    const currentIndex = themeKeys.indexOf(theme);
+    let nextIndex;
+    do {
+      nextIndex = Math.floor(Math.random() * themeKeys.length);
+    } while (nextIndex === currentIndex);
+    setTheme(themeKeys[nextIndex]);
+  };
+
+  const value = useMemo(() => ({ theme, setTheme, cycleTheme }), [theme]);
 
   return (
     <ThemeProviderContext.Provider value={value}>

@@ -8,8 +8,16 @@ export const scripts: Script[] = [
     category: 'Request Not Stated & Non-Verified',
     team: 'All',
     title: 'Request Not Stated & Non-Verified',
-    content:
-      "Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! Before we get started, could you please provide me with your order number so I can confirm your details in our system? Great! Thank you for sharing your information. How may I assist you today?",
+    content: [
+        {
+          title: 'Greeting',
+          content: 'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+        },
+        {
+          title: 'Confirmation and query',
+          content: 'Great! Thank you for sharing your information. How may I assist you today?',
+        },
+    ]
   },
   {
     id: 'etg-2',
@@ -25,8 +33,16 @@ export const scripts: Script[] = [
     category: 'Request Not Stated & Non-Verified',
     team: 'All',
     title: 'Request Stated & Non-Verified',
-    content:
-      'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! Before we get started, could you please provide me with your order number so I can confirm your details in our system? I see that you have shared your request, please give me a moment to review it.',
+    content: [
+      {
+        title: 'Greeting and Verification',
+        content: 'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+      },
+      {
+        title: 'Acknowledge Request',
+        content: 'I see that you have shared your request, please give me a moment to review it.',
+      },
+    ]
   },
   {
     id: 'etg-4',
@@ -34,8 +50,16 @@ export const scripts: Script[] = [
     category: 'Request Stated & Verified',
     team: 'All',
     title: 'Request Stated & Verified',
-    content:
-      'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! I see that you have shared your request, please give me a moment to review it.',
+    content: [
+        {
+          title: 'Greeting',
+          content: 'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam!',
+        },
+        {
+          title: 'Acknowledge Request',
+          content: 'I see that you have shared your request, please give me a moment to review it.',
+        }
+    ]
   },
   {
     id: 'etg-5',
@@ -43,8 +67,16 @@ export const scripts: Script[] = [
     category: 'Verified – Request Stated (Transferred Chat)',
     team: 'All',
     title: 'Verified – Request Stated (Transferred Chat)',
-    content:
-      'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam! Before we get started, I see that my colleague has transferred your chat to my team for support.',
+    content: [
+        {
+            title: 'Greeting',
+            content: 'Welcome to Customer Care [Customer First Name], you’re speaking with Shivam!',
+        },
+        {
+            title: 'Acknowledge Transfer',
+            content: 'I see that my colleague has transferred your chat to my team for support.',
+        }
+    ]
   },
 
   // Booking.com Scripts
@@ -54,8 +86,16 @@ export const scripts: Script[] = [
     category: 'Request Not Stated & Non-Verified',
     team: 'All',
     title: 'Request Not Stated & Non-Verified',
-    content:
-      'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!Before we get started, could you please provide me with your order number so I can confirm your details in our system? Great! Thank you for sharing your information. How may I assist you today?',
+    content: [
+        {
+          title: 'Greeting and Verification',
+          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+        },
+        {
+          title: 'Confirmation and Query',
+          content: 'Great! Thank you for sharing your information. How may I assist you today?',
+        },
+    ]
   },
   {
     id: 'booking-2',
@@ -71,8 +111,16 @@ export const scripts: Script[] = [
     category: 'Request Stated & Non-Verified',
     team: 'All',
     title: 'Request Stated & Non-Verified',
-    content:
-      'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!Before we get started, could you please provide me with your order number so I can confirm your details in our system? I see that you have shared your request, please give me a moment to review it.',
+    content: [
+        {
+          title: 'Greeting and Verification',
+          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+        },
+        {
+          title: 'Acknowledge Request',
+          content: 'I see that you have shared your request, please give me a moment to review it.',
+        }
+    ]
   },
   {
     id: 'booking-4',
@@ -80,8 +128,16 @@ export const scripts: Script[] = [
     category: 'Request Stated & Verified',
     team: 'All',
     title: 'Request Stated & Verified',
-    content:
-      'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!I see that you have shared your request, please give me a moment to review it.',
+    content: [
+        {
+          title: 'Greeting',
+          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!',
+        },
+        {
+          title: 'Acknowledge Request',
+          content: 'I see that you have shared your request, please give me a moment to review it.',
+        }
+    ]
   },
   {
     id: 'booking-5',
@@ -89,8 +145,16 @@ export const scripts: Script[] = [
     category: 'Verified – Request Stated (Transferred Chat)',
     team: 'All',
     title: 'Verified – Request Stated (Transferred Chat)',
-    content:
-      'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!Before we get started, I see that my colleague has transferred your chat to my team for support. I would need some time to review your request to assist you better. Is that ok?',
+    content: [
+        {
+          title: 'Greeting',
+          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is Shivam!',
+        },
+        {
+          title: 'Acknowledge Transfer and Review',
+          content: 'Before we get started, I see that my colleague has transferred your chat to my team for support. I would need some time to review your request to assist you better. Is that ok?',
+        }
+    ]
   },
 
   // Common Scripts
@@ -100,8 +164,16 @@ export const scripts: Script[] = [
     category: 'Chat Closing',
     team: 'All',
     title: 'Chat Closing',
-    content:
-      'Thank you for contacting us. Should you require any further assistance, please don’t hesitate to get in touch. Wishing you a wonderful day ahead!',
+    content: [
+        {
+            title: 'Closing',
+            content: 'Thank you for contacting us. Should you require any further assistance, please don’t hesitate to get in touch.'
+        },
+        {
+            title: 'Wish',
+            content: 'Wishing you a wonderful day ahead!',
+        }
+    ]
   },
   {
     id: 'common-2',
@@ -128,7 +200,7 @@ export const scripts: Script[] = [
       },
       {
         title: 'Summarize & Resolve',
-        content: 'So John, to summarize we discussed that....',
+        content: 'So [Customer First Name], to summarize we discussed that....',
       },
       {
         title: 'Further assistance',
