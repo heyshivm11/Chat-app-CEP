@@ -237,7 +237,7 @@ export default function ScriptPage() {
           </div>
         </main>
         <footer className="container mx-auto px-4 md:px-8 py-4 text-center text-sm text-muted-foreground">
-          Love by <a href="https://www.instagram.com/heyshivm/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Shivam</a>.
+          Made with ❤️ by <a href="https://www.instagram.com/heyshivm/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Shivam</a>
         </footer>
       </div>
     </AuthGate>
