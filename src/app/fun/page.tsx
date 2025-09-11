@@ -3,6 +3,7 @@
 
 import { SnakeGame } from "@/components/snake-game";
 import { TicTacToeGame } from "@/components/tic-tac-toe-game";
+import { LudoGame } from "@/components/ludo-game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gamepad2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,16 +21,17 @@ export default function FunPage() {
             </Link>
         </header>
         <main className="flex-grow flex items-center justify-center w-full">
-            <Card className="glass-card w-full max-w-2xl">
+            <Card className="glass-card w-full max-w-4xl">
                 <CardHeader className="flex flex-row items-center gap-3 space-y-0">
                     <Gamepad2 className="h-6 w-6 text-primary" />
                     <CardTitle>Fun Zone</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="snake" className="w-full">
-                        <TabsList className="grid w-full grid-cols-2">
+                        <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="snake">Snake</TabsTrigger>
                             <TabsTrigger value="tic-tac-toe">Tic-Tac-Toe</TabsTrigger>
+                            <TabsTrigger value="ludo">Ludo</TabsTrigger>
                         </TabsList>
                         <TabsContent value="snake">
                             <div className="pt-4 flex justify-center">
@@ -39,6 +41,11 @@ export default function FunPage() {
                         <TabsContent value="tic-tac-toe">
                             <div className="pt-4 flex justify-center">
                                 <TicTacToeGame />
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="ludo">
+                            <div className="pt-4 flex justify-center">
+                                <LudoGame />
                             </div>
                         </TabsContent>
                     </Tabs>
