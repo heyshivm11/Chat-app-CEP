@@ -28,10 +28,13 @@ export default function ScriptPage() {
   const [customerName, setCustomerName] = useState("");
 
   const motivationalPhrases = [
-    "Let's provide the best experience to customers",
-    "They are not blaming you they just want's good service",
+    "Let's provide the best experience to customers...",
+    "Every ticket is a chance to turn frustration into gratitude.",
+    "They’re not angry at you they’re just tired of waiting...",
     "Jaa Sutta maar Ke aa 🚬",
-    "Take break! Work! and Repeat",
+    "Behind every complaint is a customer who still believes we can fix it...",
+    "If empathy were currency, you'd be rich by now...",
+    "Resolve. Recharge. Repeat.",
   ];
 
   useEffect(() => {
