@@ -160,23 +160,6 @@ export const scripts: Script[] = [
 
   // Common Scripts
   {
-    id: 'common-1',
-    department: 'common',
-    category: 'Chat Closing',
-    team: 'All',
-    title: 'Chat Closing',
-    content: [
-        {
-            title: 'Closing',
-            content: 'Thank you for contacting us. Should you require any further assistance, please don’t hesitate to get in touch.'
-        },
-        {
-            title: 'Wish',
-            content: 'Wishing you a wonderful day ahead!',
-        }
-    ]
-  },
-  {
     id: 'common-2',
     department: 'common',
     category: 'Conversation Flow',
@@ -220,7 +203,7 @@ export const scripts: Script[] = [
   {
     id: 'common-3',
     department: 'common',
-    category: 'Hold',
+    category: 'Workflow',
     team: 'All',
     title: "Customer doesn't respond 1st Warning",
     content: "Hi, I wanted to check in to see if you're still with us. Please reply so I can continue assisting you. If I don't hear from you in the next 3 minutes, the chat will close due to inactivity. \n\nDon't worry - you can always reach out again whenever you’re ready. We’re here to help!",
@@ -228,7 +211,7 @@ export const scripts: Script[] = [
   {
     id: 'common-4',
     department: 'common',
-    category: 'Hold',
+    category: 'Workflow',
     team: 'All',
     title: 'Close chat after no response for 5 min',
     content: "I still haven't received a response, and it seems that you are no longer connected. This chat will now be closed. \nIf you need further assistance, please start a new chat.\nThank you.",
@@ -236,7 +219,7 @@ export const scripts: Script[] = [
   {
     id: 'common-5',
     department: 'common',
-    category: 'Hold',
+    category: 'Workflow',
     team: 'All',
     title: 'Hold',
     content: 'Please give me a moment to review your information. I will be back shortly.',
@@ -244,7 +227,7 @@ export const scripts: Script[] = [
   {
     id: 'common-6',
     department: 'common',
-    category: 'Hold',
+    category: 'Workflow',
     team: 'All',
     title: 'Refresh Hold',
     content: 'Thank you for waiting. But I will need a few more minutes to work on your request.',
@@ -252,10 +235,27 @@ export const scripts: Script[] = [
   {
     id: 'common-7',
     department: 'common',
-    category: 'Hold',
+    category: 'Workflow',
     team: 'All',
     title: 'Consequent refresh hold',
     content: 'I am still working on your request and am almost there. I just need a few more minutes to wrap this up. I appreciate your patience while I make sure everything is handled properly.',
+  },
+  {
+    id: 'common-1',
+    department: 'common',
+    category: 'Chat Closing',
+    team: 'All',
+    title: 'Chat Closing',
+    content: [
+        {
+            title: 'Closing',
+            content: 'Thank you for contacting us. Should you require any further assistance, please don’t hesitate to get in touch.'
+        },
+        {
+            title: 'Wish',
+            content: 'Wishing you a wonderful day ahead!',
+        }
+    ]
   },
 ];
 
