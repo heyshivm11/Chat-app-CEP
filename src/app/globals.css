@@ -180,21 +180,43 @@
   }
 }
 
-@keyframes flight {
+@keyframes flight-to-book {
   0% {
-    transform: translateY(0) translateX(0) rotate(0);
+    transform: translate(0, 0) rotate(0deg);
     opacity: 1;
   }
-  50% {
-    transform: translateY(-20px) translateX(20px) rotate(-20deg);
+  20% {
+    transform: translate(60px, -30px) rotate(45deg);
+  }
+  40% {
+    transform: translate(120px, 0) rotate(90deg);
+  }
+  60% {
+    transform: translate(60px, 30px) rotate(135deg);
+  }
+  80% {
+    transform: translate(0, 0) rotate(180deg);
     opacity: 1;
+  }
+  90% {
+    transform: rotate(360deg) scale(0);
+    opacity: 0;
+  }
+  95% {
+    transform: scale(0);
+    opacity: 0;
   }
   100% {
-    transform: translateY(-20px) translateX(20px) rotate(-20deg);
+    transform: scale(1);
     opacity: 1;
   }
 }
 
-.animate-flight {
-  animation: flight 2s ease-in-out infinite;
+.animate-flight-to-book .plane-icon {
+  animation: flight-to-book 5s ease-in-out forwards;
+}
+
+.animate-flight-to-book .book-icon {
+  animation: flight-to-book 5s ease-in-out forwards;
+  animation-direction: reverse;
 }
