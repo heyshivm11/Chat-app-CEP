@@ -2,7 +2,7 @@
 "use client";
 
 import { SnakeGame } from "@/components/snake-game";
-import { DinoRunGame } from "@/components/dino-run-game";
+import { CarGame } from "@/components/car-game";
 import { TicTacToeGame } from "@/components/tic-tac-toe-game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gamepad2 } from "lucide-react";
@@ -30,7 +30,7 @@ export default function FunPage() {
                     <Tabs defaultValue="snake">
                         <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="snake">Snake</TabsTrigger>
-                            <TabsTrigger value="dino-run">Dino Run</TabsTrigger>
+                            <TabsTrigger value="car-game">Car Game</TabsTrigger>
                             <TabsTrigger value="tic-tac-toe">Tic-Tac-Toe</TabsTrigger>
                         </TabsList>
                         <TabsContent value="snake">
@@ -38,9 +38,9 @@ export default function FunPage() {
                                 <SnakeGame />
                             </div>
                         </TabsContent>
-                        <TabsContent value="dino-run">
+                        <TabsContent value="car-game">
                             <div className="pt-4">
-                                <DinoRunGame />
+                                <CarGame />
                             </div>
                         </TabsContent>
                         <TabsContent value="tic-tac-toe">

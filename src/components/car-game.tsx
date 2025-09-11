@@ -3,21 +3,20 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from './ui/button';
-import { RotateCw, Footprints, AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { RotateCw, Car, Cone } from 'lucide-react';
 
 const GAME_WIDTH = 600;
 const GAME_HEIGHT = 200;
-const DINO_WIDTH = 40;
-const DINO_HEIGHT = 40;
+const CAR_WIDTH = 50;
+const CAR_HEIGHT = 40;
 const OBSTACLE_WIDTH = 20;
 const OBSTACLE_HEIGHT = 40;
 const GRAVITY = 0.6;
 const JUMP_FORCE = -15;
 
-export function DinoRunGame() {
-  const [dinoY, setDinoY] = useState(GAME_HEIGHT - DINO_HEIGHT);
-  const [dinoVelocity, setDinoVelocity] = useState(0);
+export function CarGame() {
+  const [carY, setCarY] = useState(GAME_HEIGHT - CAR_HEIGHT);
+  const [carVelocity, setCarVelocity] = useState(0);
   const [isJumping, setIsJumping] = useState(false);
   const [obstacles, setObstacles] = useState<{ x: number; width: number; height: number }[]>([]);
   const [score, setScore] = useState(0);
@@ -32,8 +31,8 @@ export function DinoRunGame() {
   }, []);
 
   const startGame = () => {
-    setDinoY(GAME_HEIGHT - DINO_HEIGHT);
-    setDinoVelocity(0);
+    setCarY(GAME_HEIGHT - CAR_HEIGHT);
+    setCarVelocity(0);
     setIsJumping(false);
     setObstacles([{ x: GAME_WIDTH, width: OBSTACLE_WIDTH, height: OBSTACLE_HEIGHT }]);
     setScore(0);
@@ -51,7 +50,7 @@ export function DinoRunGame() {
         }
         if (!isJumping && !gameOver) {
           setIsJumping(true);
-          setDinoVelocity(JUMP_FORCE);
+          setCarVelocity(JUMP_FORCE);
         }
         if (gameOver) {
           startGame();
@@ -67,14 +66,14 @@ export function DinoRunGame() {
   const gameLoop = () => {
     if (!isRunning || gameOver) return;
 
-    // Dino physics
-    setDinoVelocity(v => {
+    // Car physics
+    setCarVelocity(v => {
         const newVelocity = v + GRAVITY;
-        setDinoY(y => {
+        setCarY(y => {
             const newY = y + newVelocity;
-            if (newY >= GAME_HEIGHT - DINO_HEIGHT) {
+            if (newY >= GAME_HEIGHT - CAR_HEIGHT) {
                 setIsJumping(false);
-                return GAME_HEIGHT - DINO_HEIGHT;
+                return GAME_HEIGHT - CAR_HEIGHT;
             }
             return newY;
         });
@@ -90,22 +89,22 @@ export function DinoRunGame() {
       if (newObstacles.length === 0 || (newObstacles[newObstacles.length - 1].x < GAME_WIDTH - 200 - Math.random() * 200)) {
         newObstacles.push({
           x: GAME_WIDTH,
-          width: 20 + Math.random() * 20,
-          height: 30 + Math.random() * 30,
+          width: 20 + Math.random() * 10,
+          height: 30 + Math.random() * 20,
         });
       }
       return newObstacles;
     });
 
     // Collision detection
-    const dinoRect = { x: 50, y: dinoY, width: DINO_WIDTH, height: DINO_HEIGHT };
+    const carRect = { x: 50, y: carY, width: CAR_WIDTH, height: CAR_HEIGHT };
     for (const obstacle of obstacles) {
       const obstacleRect = { x: obstacle.x, y: GAME_HEIGHT - obstacle.height, width: obstacle.width, height: obstacle.height };
       if (
-        dinoRect.x < obstacleRect.x + obstacleRect.width &&
-        dinoRect.x + dinoRect.width > obstacleRect.x &&
-        dinoRect.y < obstacleRect.y + obstacleRect.height &&
-        dinoRect.y + dinoRect.height > obstacleRect.y
+        carRect.x < obstacleRect.x + obstacleRect.width &&
+        carRect.x + carRect.width > obstacleRect.x &&
+        carRect.y < obstacleRect.y + obstacleRect.height &&
+        carRect.y + carRect.height > obstacleRect.y
       ) {
         setGameOver(true);
         setIsRunning(false);
@@ -126,7 +125,7 @@ export function DinoRunGame() {
         cancelAnimationFrame(gameLoopRef.current);
       }
     };
-  }, [isRunning, gameOver, dinoY, obstacles]);
+  }, [isRunning, gameOver, carY, obstacles]);
 
 
   return (
@@ -144,17 +143,17 @@ export function DinoRunGame() {
           border: '1px solid hsl(var(--border))'
         }}
       >
-        {/* Dino */}
+        {/* Car */}
         <div
-          className="absolute text-primary"
+          className="absolute text-primary animate-car-bounce"
           style={{
             left: 50,
-            bottom: GAME_HEIGHT - dinoY - DINO_HEIGHT,
-            width: DINO_WIDTH,
-            height: DINO_HEIGHT,
+            bottom: GAME_HEIGHT - carY - CAR_HEIGHT,
+            width: CAR_WIDTH,
+            height: CAR_HEIGHT,
           }}
         >
-            <Footprints className="w-full h-full" />
+            <Car className="w-full h-full" />
         </div>
         
         {/* Obstacles */}
@@ -169,7 +168,7 @@ export function DinoRunGame() {
               height: obstacle.height,
             }}
           >
-            <AlertTriangle className="w-full h-full" />
+            <Cone className="w-full h-full" />
           </div>
         ))}
         
@@ -188,7 +187,7 @@ export function DinoRunGame() {
         {/* Start Screen */}
         {!isRunning && !gameOver && (
             <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-center rounded-md">
-                <h3 className="text-xl font-bold text-foreground">Dino Run</h3>
+                <h3 className="text-xl font-bold text-foreground">Car Game</h3>
                 <p className="text-muted-foreground mt-2">Press Space or Up Arrow to Jump</p>
                 <Button onClick={startGame} variant="secondary" className="mt-4">
                     Start Game
