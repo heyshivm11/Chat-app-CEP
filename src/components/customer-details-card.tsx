@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronsUpDown } from 'lucide-react';
 import { Button } from './ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 const initialFormState = {
   interactionId: '',
@@ -19,7 +20,7 @@ const initialFormState = {
   relation: '',
   query: '',
   resolution: '',
-  ghostline: '',
+  ghostline: 'N/A',
   validatedBy: '',
   notes: '',
 };
@@ -31,7 +32,6 @@ const formFields = [
   { id: 'relation', label: 'Relation' },
   { id: 'query', label: 'Query' },
   { id: 'resolution', label: 'Resolution' },
-  { id: 'ghostline', label: 'Ghostline' },
   { id: 'validatedBy', label: 'Validated by' },
 ];
 
@@ -45,6 +45,10 @@ function CustomerForm({ agentName }: CustomerFormProps) {
   const handleInputChange = (id: string, value: string) => {
     setFormData(prev => ({ ...prev, [id]: value }));
   };
+  
+  const handleSelectChange = (id: string, value: string) => {
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
 
   const resetForm = () => {
     setFormData(initialFormState);
@@ -55,6 +59,7 @@ function CustomerForm({ agentName }: CustomerFormProps) {
     formFields.forEach(field => {
       text += `${field.label}: ${formData[field.id as keyof typeof formData]}\n`;
     });
+    text += `Ghostline: ${formData.ghostline}\n`;
     text += `Notes: ${formData.notes}`;
     return text;
   }, [formData, agentName]);
@@ -72,6 +77,22 @@ function CustomerForm({ agentName }: CustomerFormProps) {
             />
           </div>
         ))}
+        <div className="space-y-2">
+            <Label htmlFor="ghostline">Ghostline</Label>
+            <Select
+                value={formData.ghostline}
+                onValueChange={(value) => handleSelectChange('ghostline', value)}
+            >
+                <SelectTrigger id="ghostline">
+                    <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="Added">Added</SelectItem>
+                    <SelectItem value="Not Added">Not Added</SelectItem>
+                    <SelectItem value="N/A">N/A</SelectItem>
+                </SelectContent>
+            </Select>
+        </div>
       </div>
       <div className="space-y-2">
         <Label htmlFor="notes">Notes</Label>
@@ -87,7 +108,7 @@ function CustomerForm({ agentName }: CustomerFormProps) {
         <Button variant="outline" size="icon" onClick={resetForm} aria-label="Reset form">
           <RotateCcw className="h-4 w-4" />
         </Button>
-        <CopyButton textToCopy={detailsToCopy} className="h-10 w-auto px-4">
+        <CopyButton textToCopy={detailsToCopy} className="h-10 w-auto px-4 copy-cursor">
           <ClipboardPaste className="mr-2 h-4 w-4" />
           Copy Details
         </CopyButton>
