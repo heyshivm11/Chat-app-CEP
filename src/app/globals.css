@@ -342,3 +342,13 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
 }
+
+@keyframes fly {
+  0% { transform: translateX(-10px) rotate(-15deg); }
+  50% { transform: translateX(10px) rotate(15deg); }
+  100% { transform: translateX(-10px) rotate(-15deg); }
+}
+
+.animate-fly {
+  animation: fly 6s ease-in-out infinite;
+}
