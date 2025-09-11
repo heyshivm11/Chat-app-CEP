@@ -6,8 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CopyButton } from "./copy-button";
 import { AiRefineDialog } from "./ai-refine-dialog";
 import { Button } from "./ui/button";
-import { Sparkles, ChevronDown } from "lucide-react";
-import { Separator } from "./ui/separator";
+import { Sparkles } from "lucide-react";
 
 interface ScriptCardProps {
   script: Script;
@@ -21,10 +20,10 @@ export function ScriptCard({ script }: ScriptCardProps) {
 
   return (
     <>
-      <Card className="glass-card rounded-xl shadow-lg transition-all duration-300 hover:shadow-primary/20">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg font-semibold">{script.title}</CardTitle>
-          <div className="flex items-center gap-1">
+      <Card className="glass-card h-full rounded-xl shadow-lg transition-all duration-300 hover:shadow-primary/20 flex flex-col">
+        <CardHeader className="flex flex-row items-start justify-between">
+          <CardTitle className="text-lg font-semibold leading-tight pr-4">{script.title}</CardTitle>
+          <div className="flex items-center gap-1 flex-shrink-0">
             <CopyButton textToCopy={rawContent} />
             <Button
               variant="ghost"
@@ -37,7 +36,7 @@ export function ScriptCard({ script }: ScriptCardProps) {
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex-grow">
           {Array.isArray(script.content) ? (
             <div className="space-y-4">
               {script.content.map((sub, index) => (
@@ -60,7 +59,7 @@ export function ScriptCard({ script }: ScriptCardProps) {
 
 function SubScriptItem({ subScript }: { subScript: SubScript }) {
     return (
-        <div className="p-3 rounded-md bg-background/50 relative group">
+        <div className="p-3 rounded-md bg-background/50 relative group border border-transparent hover:border-primary/20 transition-colors">
             <div className="flex justify-between items-start">
                 <div className="flex-1 pr-10">
                     <h4 className="font-semibold text-sm text-primary">{subScript.title}</h4>

@@ -5,19 +5,29 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { Header } from "./header";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { FileText, Files, Plane, User, UserCog } from "lucide-react";
+import { FileText, Files, User, UserCog } from "lucide-react";
 import { Input } from "./ui/input";
 import { Card } from "./ui/card";
+import { useRouter } from "next/navigation";
 
-export default function ScriptPage() {
+export default function ScriptPage({ department: initialDepartment, departmentName: initialDepartmentName }: { department?: string, departmentName?: string }) {
+  const router = useRouter();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("All");
-  const [department, setDepartment] = useState("etg");
+  const [department, setDepartment] = useState(initialDepartment || "etg");
   const [customerName, setCustomerName] = useState("");
   const [agentName, setAgentName] = useState("Shivam");
 
   const departmentName = department === 'etg' ? 'ETG' : 'Booking.com';
+
+  const handleDepartmentChange = (newDepartment: string) => {
+    setDepartment(newDepartment);
+    // Use router to navigate without a full page reload if needed,
+    // but for this structure, just updating state is enough.
+    // router.push(`/scripts/${newDepartment}`, { scroll: false });
+  };
+
 
   const processedScripts = useMemo(() => {
     return scripts.map(script => {
@@ -43,8 +53,6 @@ export default function ScriptPage() {
 
 
   const filteredScripts = useMemo(() => {
-    if (!department) return [];
-
     return processedScripts.filter((script) => {
       const searchMatch =
         script.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -60,17 +68,17 @@ export default function ScriptPage() {
       
       return searchMatch && categoryMatch;
     });
-  }, [searchTerm, category, processedScripts, department]);
+  }, [searchTerm, category, processedScripts]);
 
   const departmentScripts = filteredScripts.filter(s => s.department === department);
   const commonScripts = filteredScripts.filter(s => s.department === "common");
 
   const renderScriptList = (scriptList: Script[]) => {
     if (scriptList.length === 0) {
-      return <p className="text-muted-foreground text-center py-8">No scripts found.</p>;
+      return <p className="text-muted-foreground text-center col-span-1 lg:col-span-2 py-8">No scripts found.</p>;
     }
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {scriptList.map((script) => (
           <ScriptCard key={script.id} script={script} />
         ))}
@@ -86,7 +94,7 @@ export default function ScriptPage() {
         category={category}
         onCategoryChange={setCategory}
         department={department}
-        onDepartmentChange={setDepartment}
+        onDepartmentChange={handleDepartmentChange}
       />
       <main className="container mx-auto px-4 md:px-8 py-8">
         <Card className="glass-card p-4 md:p-6 mb-8">
@@ -112,34 +120,23 @@ export default function ScriptPage() {
             </div>
         </Card>
 
-        {department ? (
-          <Accordion type="multiple" defaultValue={['department-scripts', 'common-scripts']} className="w-full space-y-6">
-            <AccordionItem value="department-scripts" className="border-none">
-              <AccordionTrigger className="text-2xl font-semibold hover:no-underline pb-4 flex items-center gap-3">
-                <FileText className="h-6 w-6 text-primary" />
-                {departmentName} Scripts
-              </AccordionTrigger>
-              <AccordionContent>
+        <div className="space-y-12">
+            <section>
+                <div className="flex items-center gap-3 mb-6">
+                    <FileText className="h-7 w-7 text-primary" />
+                    <h2 className="text-2xl font-bold tracking-tight text-foreground">{departmentName} Scripts</h2>
+                </div>
                 {renderScriptList(departmentScripts)}
-              </AccordionContent>
-            </AccordionItem>
+            </section>
             
-            <AccordionItem value="common-scripts" className="border-none">
-              <AccordionTrigger className="text-2xl font-semibold hover:no-underline pb-4 flex items-center gap-3">
-                <Files className="h-6 w-6 text-primary" />
-                Common Scripts
-              </AccordionTrigger>
-              <AccordionContent>
+            <section>
+                <div className="flex items-center gap-3 mb-6">
+                    <Files className="h-7 w-7 text-primary" />
+                    <h2 className="text-2xl font-bold tracking-tight text-foreground">Common Scripts</h2>
+                </div>
                 {renderScriptList(commonScripts)}
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        ) : (
-             <div className="text-center py-20">
-                <h2 className="text-2xl font-semibold text-foreground">Welcome to CEP Scripts</h2>
-                <p className="mt-2 text-muted-foreground">Please select a department to view the scripts.</p>
-             </div>
-        )}
+            </section>
+        </div>
       </main>
       <footer className="text-center py-4 text-sm text-muted-foreground">
         Made with ❤️ by Shivam
