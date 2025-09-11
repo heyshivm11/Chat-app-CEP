@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookText, Search, Plane } from "lucide-react";
+import { Search, Plane } from "lucide-react";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/select";
 import { ThemeSwitcher } from "./theme-switcher";
 import { scriptCategories } from "@/lib/scripts";
-import { useState, useEffect } from "react";
 
 interface HeaderProps {
   searchTerm: string;
@@ -31,26 +30,12 @@ export function Header({
   department, 
   onDepartmentChange 
 }: HeaderProps) {
-  const [showPlane, setShowPlane] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPlane(false);
-    }, 4500); // 90% of 5s animation
-
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <header className="sticky top-0 z-10 w-full bg-background/80 backdrop-blur-sm border-b border-border/50">
       <div className="container mx-auto flex h-16 items-center gap-4 px-4 md:px-8">
         <Link href="/" className="flex items-center gap-2 text-foreground font-semibold">
-          <div className="relative h-6 w-6 animate-flight-to-book">
-            {showPlane ? (
-              <Plane className="h-6 w-6 text-primary plane-icon" />
-            ) : (
-              <BookText className="h-6 w-6 text-primary book-icon" />
-            )}
+          <div className="relative h-6 w-6 plane-animation">
+            <Plane className="h-6 w-6 text-primary plane-icon" />
           </div>
           <span className="hidden md:inline">CEP Scripts</span>
         </Link>

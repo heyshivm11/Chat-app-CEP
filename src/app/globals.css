@@ -180,43 +180,21 @@
   }
 }
 
-@keyframes flight-to-book {
+@keyframes fly-by {
   0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 1;
-  }
-  20% {
-    transform: translate(60px, -30px) rotate(45deg);
-  }
-  40% {
-    transform: translate(120px, 0) rotate(90deg);
-  }
-  60% {
-    transform: translate(60px, 30px) rotate(135deg);
-  }
-  80% {
-    transform: translate(0, 0) rotate(180deg);
-    opacity: 1;
-  }
-  90% {
-    transform: rotate(360deg) scale(0);
+    transform: translateX(-150%);
     opacity: 0;
   }
-  95% {
-    transform: scale(0);
-    opacity: 0;
+  20%, 80% {
+    transform: translateX(0);
+    opacity: 1;
   }
   100% {
-    transform: scale(1);
-    opacity: 1;
+    transform: translateX(150%);
+    opacity: 0;
   }
 }
 
-.animate-flight-to-book .plane-icon {
-  animation: flight-to-book 5s ease-in-out forwards;
-}
-
-.animate-flight-to-book .book-icon {
-  animation: flight-to-book 5s ease-in-out forwards;
-  animation-direction: reverse;
+.plane-animation .plane-icon {
+  animation: fly-by 5s ease-in-out infinite;
 }
