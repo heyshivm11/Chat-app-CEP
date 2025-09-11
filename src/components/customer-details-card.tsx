@@ -27,6 +27,8 @@ const initialFormState = {
   notes: '',
 };
 
+type FormState = typeof initialFormState;
+
 const formFields = [
   { id: 'interactionId', label: 'Interaction ID' },
   { id: 'customerName', label: "Customer's name" },
@@ -37,46 +39,37 @@ const formFields = [
 
 interface CustomerFormProps {
   agentName: string;
+  formData: FormState;
+  onFormChange: (fieldName: keyof FormState, value: string) => void;
+  onReset: () => void;
 }
 
-function CustomerForm({ agentName }: CustomerFormProps) {
-  const [formData, setFormData] = useState(initialFormState);
-  const [customerIsCaller, setCustomerIsCaller] = useState(false);
+function CustomerForm({ agentName, formData, onFormChange, onReset }: CustomerFormProps) {
+  const [customerIsCaller, setCustomerIsCaller] = useState(formData.relation === 'Self');
 
   useEffect(() => {
     if (customerIsCaller) {
-      setFormData(prev => ({
-        ...prev,
-        callerName: prev.customerName,
-        relation: 'Self',
-      }));
+      onFormChange('callerName', formData.customerName);
+      onFormChange('relation', 'Self');
     }
-  }, [customerIsCaller, formData.customerName]);
+  }, [customerIsCaller, formData.customerName, onFormChange]);
 
   const handleInputChange = (id: string, value: string) => {
-    setFormData(prev => ({ ...prev, [id]: value }));
+    onFormChange(id as keyof FormState, value);
   };
   
   const handleSelectChange = (id: string, value: string) => {
-    setFormData(prev => ({ ...prev, [id]: value }));
+    onFormChange(id as keyof FormState, value);
   };
 
   const handleCheckboxChange = (checked: boolean) => {
     setCustomerIsCaller(checked);
     if (!checked) {
         // Clear caller name and relation when unchecked
-        setFormData(prev => ({
-            ...prev,
-            callerName: '',
-            relation: '',
-        }));
+        onFormChange('callerName', '');
+        onFormChange('relation', '');
     }
   }
-
-  const resetForm = () => {
-    setFormData(initialFormState);
-    setCustomerIsCaller(false);
-  };
 
   const detailsToCopy = useMemo(() => {
     let text = `Agent Name: ${agentName}\n`;
@@ -164,7 +157,7 @@ function CustomerForm({ agentName }: CustomerFormProps) {
         />
       </div>
       <div className="flex justify-end gap-2">
-        <Button variant="outline" size="icon" onClick={resetForm} aria-label="Reset form">
+        <Button variant="outline" size="icon" onClick={onReset} aria-label="Reset form">
           <RotateCcw className="h-4 w-4" />
         </Button>
         <CopyButton textToCopy={detailsToCopy} className="h-10 w-auto px-4 copy-cursor">
@@ -183,6 +176,19 @@ interface CustomerDetailsCardProps {
 
 export function CustomerDetailsCard({ agentName }: CustomerDetailsCardProps) {
   const [isOpen, setIsOpen] = useState(true);
+  const [form1Data, setForm1Data] = useState(initialFormState);
+  const [form2Data, setForm2Data] = useState(initialFormState);
+
+  const handleForm1Change = (fieldName: keyof FormState, value: string) => {
+    setForm1Data(prev => ({ ...prev, [fieldName]: value }));
+  };
+
+  const handleForm2Change = (fieldName: keyof FormState, value: string) => {
+    setForm2Data(prev => ({ ...prev, [fieldName]: value }));
+  };
+
+  const resetForm1 = () => setForm1Data(initialFormState);
+  const resetForm2 = () => setForm2Data(initialFormState);
 
   return (
     <Collapsible
@@ -211,10 +217,20 @@ export function CustomerDetailsCard({ agentName }: CustomerDetailsCardProps) {
                       <TabsTrigger value="customer2">Customer 2</TabsTrigger>
                   </TabsList>
                   <TabsContent value="customer1">
-                      <CustomerForm agentName={agentName} />
+                      <CustomerForm
+                        agentName={agentName}
+                        formData={form1Data}
+                        onFormChange={handleForm1Change}
+                        onReset={resetForm1}
+                      />
                   </TabsContent>
                   <TabsContent value="customer2">
-                      <CustomerForm agentName={agentName} />
+                       <CustomerForm
+                        agentName={agentName}
+                        formData={form2Data}
+                        onFormChange={handleForm2Change}
+                        onReset={resetForm2}
+                      />
                   </TabsContent>
               </Tabs>
           </CardContent>
