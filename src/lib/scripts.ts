@@ -189,7 +189,15 @@ export const scripts: Script[] = [
       },
       {
         title: 'Discuss Solution & Gain Agreement',
-        content: 'So, the available options are… / So, as you have mentioned, the ideal choice for you is…Is this solution clear? Do you have any questions? I just want to make sure that everything is clear before we proceed',
+        content: 'So [Customer First Name], the available options are…',
+      },
+       {
+        title: 'Discuss Solution & Gain Agreement',
+        content: 'So, as you have mentioned, the ideal choice for you is… Is this solution clear?',
+      },
+      {
+        title: 'Discuss Solution & Gain Agreement',
+        content: 'Do you have any questions? I just want to make sure that everything is clear before we proceed.',
       },
       {
         title: 'Summarize & Resolve',
