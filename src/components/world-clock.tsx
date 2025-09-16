@@ -56,7 +56,7 @@ function WorldClockComponent() {
       setTimeData(data);
       setCurrentTime(new Date(data.dateTime));
       setSelectedTimezone(data.timeZone);
-      setQuery(data.timeZone); // Set query to the fetched timezone for clarity
+      setQuery(""); // Reset query for new search
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       setTimeData(null);
@@ -162,7 +162,7 @@ function WorldClockComponent() {
       </div>
 
       <div className="mt-8">
-        {isLoading ? (
+        {isLoading && !timeData ? ( // Show loader only on initial load or when fetching new data without old data
           <div className="flex justify-center items-center p-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
@@ -171,7 +171,10 @@ function WorldClockComponent() {
         ) : timeData && currentTime ? (
           <Card className="text-center shadow-2xl rounded-2xl bg-card/30 backdrop-blur-sm border-white/20">
             <CardHeader>
-                <CardTitle className="text-2xl font-bold">{locationName}</CardTitle>
+                <div className="flex items-center justify-center gap-2">
+                  <CardTitle className="text-2xl font-bold">{locationName}</CardTitle>
+                  {isLoading && <Loader2 className="h-5 w-5 animate-spin text-primary" />}
+                </div>
                 <p className="text-muted-foreground">{countryName}</p>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center">
