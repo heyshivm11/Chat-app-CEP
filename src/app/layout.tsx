@@ -5,6 +5,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { AuthProvider } from '@/hooks/use-auth';
 import { Toaster } from '@/components/ui/toaster';
+import { AppLayout } from '@/components/app-layout';
 
 export default function RootLayout({
   children,
@@ -27,7 +28,9 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <AuthProvider>
             <ThemeProvider>
-                {children}
+                <AppLayout>
+                    {children}
+                </AppLayout>
                 <Toaster />
             </ThemeProvider>
         </AuthProvider>
