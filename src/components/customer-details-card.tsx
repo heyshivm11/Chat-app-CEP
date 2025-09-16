@@ -1,7 +1,7 @@
 
 "use client";
 import React from 'react';
-import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef, useReducer } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -29,6 +29,66 @@ const initialFormState = {
 
 type FormState = typeof initialFormState;
 
+// Reducer logic
+type FormAction =
+  | { type: 'UPDATE_FIELD'; payload: { fieldName: keyof FormState; value: string } }
+  | { type: 'UNDO' }
+  | { type: 'RESET' }
+  | { type: 'SET_CALLER_FROM_CUSTOMER'; payload: { customerName: string } }
+  | { type: 'CLEAR_CALLER' };
+
+interface ReducerState {
+  data: FormState;
+  history: FormState[];
+}
+
+const initialReducerState: ReducerState = {
+  data: initialFormState,
+  history: [],
+};
+
+const formReducer = (state: ReducerState, action: FormAction): ReducerState => {
+  switch (action.type) {
+    case 'UPDATE_FIELD':
+      return {
+        history: [...state.history, state.data],
+        data: { ...state.data, [action.payload.fieldName]: action.payload.value },
+      };
+    case 'UNDO': {
+      if (state.history.length === 0) return state;
+      const lastState = state.history[state.history.length - 1];
+      const newHistory = state.history.slice(0, state.history.length - 1);
+      return { data: lastState, history: newHistory };
+    }
+    case 'RESET':
+      return {
+        history: [...state.history, state.data],
+        data: initialFormState,
+      };
+    case 'SET_CALLER_FROM_CUSTOMER':
+      return {
+        history: [...state.history, state.data],
+        data: {
+          ...state.data,
+          callerName: action.payload.customerName,
+          relation: 'Self',
+        },
+      };
+    case 'CLEAR_CALLER':
+       return {
+        history: [...state.history, state.data],
+        data: {
+          ...state.data,
+          callerName: '',
+          relation: '',
+        },
+      };
+    default:
+      return state;
+  }
+};
+
+
 const formFields = [
   { id: 'interactionId', label: 'Interaction ID' },
   { id: 'customerName', label: "Customer's name" },
@@ -53,36 +113,37 @@ const getDetailsToCopy = (formData: FormState, agentName: string) => {
 
 interface CustomerFormProps {
   agentName: string;
-  formData: FormState;
-  onFormChange: (fieldName: keyof FormState, value: string) => void;
-  onUndo: () => void;
-  onReset: () => void;
-  hasHistory: boolean;
+  formState: ReducerState;
+  dispatch: React.Dispatch<FormAction>;
   onQueryChange?: (query: string) => void;
+  scheduleReminder: () => void;
 }
 
-function CustomerFormComponent({ agentName, formData, onFormChange, onUndo, onReset, hasHistory, onQueryChange }: CustomerFormProps) {
+function CustomerFormComponent({ agentName, formState, dispatch, onQueryChange, scheduleReminder }: CustomerFormProps) {
+  const { data: formData, history } = formState;
   const [customerIsCaller, setCustomerIsCaller] = useState(formData.relation === 'Self');
+  
+  useEffect(() => {
+    // Sync checkbox state if form is reset or undo changes relation
+    setCustomerIsCaller(formData.relation === 'Self');
+  }, [formData.relation]);
 
-  const handleInputChange = (id: string, value: string) => {
-    onFormChange(id as keyof FormState, value);
+  const handleInputChange = (id: keyof FormState, value: string) => {
+    dispatch({ type: 'UPDATE_FIELD', payload: { fieldName: id, value } });
     if (id === 'query' && onQueryChange) {
       onQueryChange(value);
     }
-  };
-  
-  const handleSelectChange = (id: string, value: string) => {
-    onFormChange(id as keyof FormState, value);
+    if ((id === 'query' || id === 'resolution') && value.trim()) {
+        scheduleReminder();
+    }
   };
 
   const handleCheckboxChange = (checked: boolean) => {
     setCustomerIsCaller(checked);
     if (checked) {
-      onFormChange('callerName', formData.customerName);
-      onFormChange('relation', 'Self');
+      dispatch({ type: 'SET_CALLER_FROM_CUSTOMER', payload: { customerName: formData.customerName } });
     } else {
-      onFormChange('callerName', '');
-      onFormChange('relation', '');
+      dispatch({ type: 'CLEAR_CALLER' });
     }
   }
 
@@ -93,16 +154,19 @@ function CustomerFormComponent({ agentName, formData, onFormChange, onUndo, onRe
   return (
     <div className="space-y-4 pt-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {formFields.map(field => (
-          <div key={field.id} className="space-y-2">
-            <Label htmlFor={field.id}>{field.label}</Label>
-            <Input
-              id={field.id}
-              value={formData[field.id as keyof typeof formData]}
-              onChange={(e) => handleInputChange(field.id, e.target.value)}
-            />
-          </div>
-        ))}
+        {formFields.map(fieldDef => {
+            const field = fieldDef.id as keyof FormState;
+            return (
+                <div key={field} className="space-y-2">
+                    <Label htmlFor={field}>{fieldDef.label}</Label>
+                    <Input
+                        id={field}
+                        value={formData[field]}
+                        onChange={(e) => handleInputChange(field, e.target.value)}
+                    />
+                </div>
+            );
+        })}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
@@ -138,7 +202,7 @@ function CustomerFormComponent({ agentName, formData, onFormChange, onUndo, onRe
             <Label htmlFor="ghostline">Ghostline</Label>
             <Select
                 value={formData.ghostline}
-                onValueChange={(value) => handleSelectChange('ghostline', value)}
+                onValueChange={(value) => handleInputChange('ghostline', value)}
             >
                 <SelectTrigger id="ghostline">
                     <SelectValue placeholder="Select status" />
@@ -162,10 +226,10 @@ function CustomerFormComponent({ agentName, formData, onFormChange, onUndo, onRe
         />
       </div>
       <div className="flex justify-end gap-2">
-        <Button variant="outline" size="icon" onClick={onUndo} disabled={!hasHistory} aria-label="Undo change">
+        <Button variant="outline" size="icon" onClick={() => dispatch({ type: 'UNDO' })} disabled={history.length === 0} aria-label="Undo change">
           <Undo className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="icon" onClick={onReset} aria-label="Reset form">
+        <Button variant="outline" size="icon" onClick={() => dispatch({ type: 'RESET' })} aria-label="Reset form">
           <RotateCcw className="h-4 w-4" />
         </Button>
         <CopyButton textToCopy={detailsToCopy}>
@@ -188,23 +252,25 @@ function CustomerDetailsCardComponent({
   onQueryChange?: (query: string) => void;
 }) {
   const { toast } = useToast();
-  const [form1Data, setForm1Data] = useState(initialFormState);
-  const [form1History, setForm1History] = useState<FormState[]>([]);
-  const [form2Data, setForm2Data] = useState(initialFormState);
-  const [form2History, setForm2History] = useState<FormState[]>([]);
+  const [form1State, form1Dispatch] = useReducer(formReducer, initialReducerState);
+  const [form2State, form2Dispatch] = useReducer(formReducer, initialReducerState);
 
   const reminderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const clearReminder = useCallback(() => {
+    if (reminderTimeoutRef.current) {
+      clearTimeout(reminderTimeoutRef.current);
+      reminderTimeoutRef.current = null;
+    }
+  }, []);
+
   const copyDetails = useCallback((formNumber: 1 | 2) => {
-    const dataToCopy = formNumber === 1 ? form1Data : form2Data;
+    const dataToCopy = formNumber === 1 ? form1State.data : form2State.data;
     const text = getDetailsToCopy(dataToCopy, agentName);
     navigator.clipboard.writeText(text);
     toast({ title: `Details for Customer ${formNumber} copied!` });
-    if (reminderTimeoutRef.current) {
-        clearTimeout(reminderTimeoutRef.current);
-    }
-  }, [agentName, form1Data, form2Data, toast]);
-
+    clearReminder();
+  }, [agentName, form1State.data, form2State.data, toast, clearReminder]);
 
   const triggerCopyReminder = useCallback(() => {
     toast({
@@ -225,105 +291,39 @@ function CustomerDetailsCardComponent({
   }, [toast, copyDetails]);
 
   const scheduleReminder = useCallback(() => {
-    if (reminderTimeoutRef.current) {
-        clearTimeout(reminderTimeoutRef.current);
-    }
+    clearReminder();
     reminderTimeoutRef.current = setTimeout(() => {
         triggerCopyReminder();
     }, 30000); // 30 seconds
-  }, [triggerCopyReminder]);
+  }, [clearReminder, triggerCopyReminder]);
 
   useEffect(() => {
+    // Cleanup timer on component unmount
     return () => {
-      if (reminderTimeoutRef.current) {
-        clearTimeout(reminderTimeoutRef.current);
-      }
+      clearReminder();
     };
-  }, []);
-
-
-  const handleFormChange = useCallback((
-    formIndex: 1 | 2, 
-    fieldName: keyof FormState, 
-    value: string
-  ) => {
-    const isReminderField = fieldName === 'query' || fieldName === 'resolution';
-
-    if (formIndex === 1) {
-      const oldData = form1Data;
-      setForm1History(prev => [...prev, oldData]);
-      const newData = { ...oldData, [fieldName]: value };
-      setForm1Data(newData);
-      if (onQueryChange && fieldName === 'query') {
-        onQueryChange(value);
-      }
-      if (isReminderField && value.trim() !== '') {
-          scheduleReminder();
-      }
-    } else {
-      const oldData = form2Data;
-      setForm2History(prev => [...prev, oldData]);
-      const newData = { ...oldData, [fieldName]: value };
-      setForm2Data(newData);
-      if (onQueryChange && fieldName === 'query') {
-        onQueryChange(value);
-      }
-       if (isReminderField && value.trim() !== '') {
-          scheduleReminder();
-      }
-    }
-  }, [onQueryChange, form1Data, form2Data, scheduleReminder]);
+  }, [clearReminder]);
   
-  const handleUndo = useCallback((formIndex: 1 | 2) => {
-    if (formIndex === 1) {
-      const lastState = form1History.pop();
-      if (lastState) {
-        setForm1Data(lastState);
-        setForm1History([...form1History]);
-        if(lastState.query !== form1Data.query && onQueryChange) {
-          onQueryChange(lastState.query);
-        }
-      }
-    } else {
-      const lastState = form2History.pop();
-      if (lastState) {
-        setForm2Data(lastState);
-        setForm2History([...form2History]);
-         if(lastState.query !== form2Data.query && onQueryChange) {
-          onQueryChange(lastState.query);
-        }
-      }
-    }
-  }, [form1History, form2History, onQueryChange, form1Data.query, form2Data.query]);
-
   const handleReset = useCallback((formIndex: 1 | 2) => {
-    if (reminderTimeoutRef.current) {
-        clearTimeout(reminderTimeoutRef.current);
-    }
+    clearReminder();
     if (formIndex === 1) {
-      setForm1History(prev => [...prev, form1Data]);
-      setForm1Data(initialFormState);
-       if (form1Data.query !== '' && onQueryChange) {
-        onQueryChange('');
-      }
+      if (form1State.data.query !== '' && onQueryChange) onQueryChange('');
+      form1Dispatch({ type: 'RESET' });
     } else {
-      setForm2History(prev => [...prev, form2Data]);
-      setForm2Data(initialFormState);
-      if (form2Data.query !== '' && onQueryChange) {
-        onQueryChange('');
-      }
+      if (form2State.data.query !== '' && onQueryChange) onQueryChange('');
+      form2Dispatch({ type: 'RESET' });
     }
-  }, [onQueryChange, form1Data, form2Data]);
+  }, [clearReminder, onQueryChange, form1State.data.query, form2State.data.query]);
 
   const handleTabChange = useCallback((value: string) => {
     if (onQueryChange) {
       if (value === 'customer1') {
-        onQueryChange(form1Data.query);
+        onQueryChange(form1State.data.query);
       } else {
-        onQueryChange(form2Data.query);
+        onQueryChange(form2State.data.query);
       }
     }
-  }, [onQueryChange, form1Data.query, form2Data.query]);
+  }, [onQueryChange, form1State.data.query, form2State.data.query]);
 
 
   return (
@@ -335,23 +335,19 @@ function CustomerDetailsCardComponent({
         <TabsContent value="customer1">
             <CustomerForm
               agentName={agentName}
-              formData={form1Data}
-              onFormChange={(field, value) => handleFormChange(1, field, value)}
-              onUndo={() => handleUndo(1)}
-              onReset={() => handleReset(1)}
-              hasHistory={form1History.length > 0}
+              formState={form1State}
+              dispatch={form1Dispatch}
               onQueryChange={onQueryChange}
+              scheduleReminder={scheduleReminder}
             />
         </TabsContent>
         <TabsContent value="customer2">
             <CustomerForm
               agentName={agentName}
-              formData={form2Data}
-              onFormChange={(field, value) => handleFormChange(2, field, value)}
-              onUndo={() => handleUndo(2)}
-              onReset={() => handleReset(2)}
-              hasHistory={form2History.length > 0}
+              formState={form2State}
+              dispatch={form2Dispatch}
               onQueryChange={onQueryChange}
+              scheduleReminder={scheduleReminder}
             />
         </TabsContent>
     </Tabs>
