@@ -161,7 +161,7 @@ function CustomerForm({ agentName, formData, onFormChange, onReset }: CustomerFo
         <Button variant="outline" size="icon" onClick={onReset} aria-label="Reset form">
           <RotateCcw className="h-4 w-4" />
         </Button>
-        <CopyButton textToCopy={detailsToCopy} className="h-10 w-auto px-4 copy-cursor">
+        <CopyButton textToCopy={detailsToCopy}>
           <ClipboardPaste className="mr-2 h-4 w-4" />
           Copy Details
         </CopyButton>
@@ -193,7 +193,7 @@ export function CustomerDetailsCard({ agentName }: { agentName: string }) {
       onOpenChange={setIsOpen}
       className="w-full"
     >
-      <Card className="mb-8 glass-card">
+      <Card className="mb-8">
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <User className="text-primary h-6 w-6" />

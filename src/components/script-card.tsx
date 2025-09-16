@@ -21,7 +21,7 @@ export function ScriptCard({ script }: ScriptCardProps) {
 
   return (
     <>
-      <Card className="h-full rounded-lg shadow-sm transition-all duration-300 hover:shadow-primary/10 hover:-translate-y-0.5 flex flex-col glass-card">
+      <Card className="h-full rounded-lg shadow-sm transition-all duration-300 hover:shadow-md flex flex-col">
         <CardHeader className="flex flex-row items-start justify-between pb-4">
           <CardTitle className="text-xl font-bold leading-tight pr-4">{script.title}</CardTitle>
           <div className="flex items-center gap-1 flex-shrink-0">
@@ -45,7 +45,7 @@ export function ScriptCard({ script }: ScriptCardProps) {
               ))}
             </div>
           ) : (
-            <p className="text-md text-foreground/80 whitespace-pre-wrap">{script.content}</p>
+            <p className="text-foreground/80 whitespace-pre-wrap">{script.content}</p>
           )}
         </CardContent>
       </Card>
@@ -60,11 +60,11 @@ export function ScriptCard({ script }: ScriptCardProps) {
 
 function SubScriptItem({ subScript }: { subScript: SubScript }) {
     return (
-        <div className="p-3 rounded-lg bg-background/50 relative group border hover:border-primary/30 transition-colors">
+        <div className="p-3 rounded-md bg-background/50 relative group border">
             <div className="flex justify-between items-start">
                 <div className="flex-1 pr-10">
-                    <h4 className="font-semibold text-md text-primary">{subScript.title}</h4>
-                    <p className="text-md text-foreground/80 mt-1 whitespace-pre-wrap">{subScript.content}</p>
+                    <h4 className="font-semibold text-primary">{subScript.title}</h4>
+                    <p className="text-foreground/80 mt-1 whitespace-pre-wrap">{subScript.content}</p>
                 </div>
                 <CopyButton textToCopy={subScript.content} className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>

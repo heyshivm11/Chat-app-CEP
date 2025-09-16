@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plane, LogIn } from "lucide-react";
+import { LogIn } from "lucide-react";
 
 export default function LoginPage() {
   const [name, setName] = useState('');
@@ -36,13 +36,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 login-gradient-background">
-      <Card className="w-full max-w-sm glass-card">
+    <div className="flex items-center justify-center min-h-screen bg-background p-4">
+      <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <div className="flex justify-center items-center mb-4">
-            <Plane className="h-24 w-24 text-primary animate-fly-login" />
-          </div>
-          <CardTitle className="text-3xl font-bold">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
           <CardDescription>Sign in to access the CEP scripts</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
