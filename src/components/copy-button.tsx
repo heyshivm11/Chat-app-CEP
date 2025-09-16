@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -16,8 +17,8 @@ export function CopyButton({ textToCopy, className, children, ...props }: Custom
     navigator.clipboard.writeText(textToCopy);
     setHasCopied(true);
     setTimeout(() => {
-      setHasCopied(false), 2000;
-    });
+      setHasCopied(false);
+    }, 2000);
   };
 
   if (children) {
@@ -39,7 +40,7 @@ export function CopyButton({ textToCopy, className, children, ...props }: Custom
       variant="ghost"
       size="icon"
       onClick={copyToClipboard}
-      className={cn("h-7 w-7 copy-cursor", className)}
+      className={cn("h-7 w-7 copy-cursor hover:bg-primary/10", className)}
       aria-label="Copy script"
       {...props}
     >
