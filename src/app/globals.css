@@ -125,3 +125,9 @@
     min-height: 100vh;
   }
 }
+
+@layer utilities {
+  .glass-card {
+    @apply bg-background/50 backdrop-blur-lg border rounded-xl;
+  }
+}

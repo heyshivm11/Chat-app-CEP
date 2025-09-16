@@ -15,6 +15,7 @@ import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Checkbox } from './ui/checkbox';
 import { useAuth } from '@/hooks/use-auth';
+import { cn } from '@/lib/utils';
 
 const initialFormState = {
   interactionId: '',
@@ -193,7 +194,7 @@ export function CustomerDetailsCard({ agentName }: { agentName: string }) {
       onOpenChange={setIsOpen}
       className="w-full"
     >
-      <Card className="mb-8">
+      <Card className={cn("mb-8 glass-card")}>
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <User className="text-primary h-6 w-6" />
