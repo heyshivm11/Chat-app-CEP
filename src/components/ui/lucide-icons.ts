@@ -6,7 +6,6 @@ export {
     ChevronsUpDown,
     Undo,
     Search,
-    Gamepad2,
     Plane,
     Notebook,
     LogOut,
@@ -31,4 +30,6 @@ export {
     Circle,
     Clock,
     Globe,
+    MessageCircle,
+    Send,
 } from 'lucide-react';

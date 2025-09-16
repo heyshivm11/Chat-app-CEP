@@ -16,6 +16,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import { Chatbot } from "./chatbot";
 
 const motivationalPhrases = [
   "Let's provide the best experience to customers...",
@@ -211,7 +212,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   
   return (
     <div 
-      className="flex flex-col min-h-screen relative overflow-hidden"
+      className="flex flex-col min-h-screen"
     >
         <div id="blob" ref={blobRef}></div>
         <div id="blur"></div>
@@ -356,6 +357,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                     </Collapsible>
                 </div>
             </main>
+            <Chatbot />
             <footer className="container mx-auto px-4 md:px-8 py-4 text-center text-sm text-muted-foreground">
                 Made with ❤️ by <a href="https://www.instagram.com/heyshivm/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Shivam</a>
             </footer>
