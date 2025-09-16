@@ -65,7 +65,7 @@ export default function LoginPage() {
       <div className="relative z-10 w-full p-4">
         <Card className="w-full max-w-sm mx-auto bg-background/30 backdrop-blur-sm border-white/20">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
+            <CardTitle className="text-2xl font-bold">Hey! Champ</CardTitle>
             <CardDescription>Sign in to access the CEP scripts</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
