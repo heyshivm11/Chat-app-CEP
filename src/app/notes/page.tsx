@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -50,7 +51,7 @@ function NotesPageContent() {
         onSearchChange={() => {}}
         category="All"
         onCategoryChange={() => {}}
-        department={user?.department || 'etg'}
+        department={user?.department || 'frontline'}
         onDepartmentChange={() => {}}
       />
       <main className="flex-1 flex flex-col container mx-auto px-4 md:px-8 py-8">

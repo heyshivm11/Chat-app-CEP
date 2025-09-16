@@ -2,12 +2,11 @@
 import type { Script } from './types';
 
 export const scripts: Script[] = [
-  // ETG Scripts
+  // FrontLine Scripts
   {
-    id: 'etg-1',
-    department: 'etg',
+    id: 'frontline-1',
+    department: 'frontline',
     category: 'Request Not Stated & Non-Verified',
-    team: 'All',
     title: 'Request Not Stated & Non-Verified',
     content: [
         {
@@ -21,18 +20,16 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'etg-2',
-    department: 'etg',
+    id: 'frontline-2',
+    department: 'frontline',
     category: 'Request Not Stated & Verified',
-    team: 'All',
     title: 'Request Not Stated & Verified',
     content: "Welcome to Customer Care [Customer First Name], you’re speaking with [Agent Name]! How may I assist you today?",
   },
   {
-    id: 'etg-3',
-    department: 'etg',
+    id: 'frontline-3',
+    department: 'frontline',
     category: 'Request Stated & Non-Verified',
-    team: 'All',
     title: 'Request Stated & Non-Verified',
     content: [
       {
@@ -46,10 +43,9 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'etg-4',
-    department: 'etg',
+    id: 'frontline-4',
+    department: 'frontline',
     category: 'Request Stated & Verified',
-    team: 'All',
     title: 'Request Stated & Verified',
     content: [
         {
@@ -63,10 +59,9 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'etg-5',
-    department: 'etg',
+    id: 'frontline-5',
+    department: 'frontline',
     category: 'Verified – Request Stated (Transferred Chat)',
-    team: 'All',
     title: 'Verified – Request Stated (Transferred Chat)',
     content: [
         {
@@ -80,12 +75,11 @@ export const scripts: Script[] = [
     ]
   },
 
-  // Booking.com Scripts
+  // Schedule Change Scripts
   {
-    id: 'booking-1',
-    department: 'booking',
+    id: 'schedule-change-1',
+    department: 'schedule-change',
     category: 'Request Not Stated & Non-Verified',
-    team: 'All',
     title: 'Request Not Stated & Non-Verified',
     content: [
         {
@@ -99,18 +93,16 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'booking-2',
-    department: 'booking',
+    id: 'schedule-change-2',
+    department: 'schedule-change',
     category: 'Request Not Stated & Verified',
-    team: 'All',
     title: 'Request Not Stated & Verified',
     content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is [Agent Name]!How may I assist you today?',
   },
   {
-    id: 'booking-3',
-    department: 'booking',
+    id: 'schedule-change-3',
+    department: 'schedule-change',
     category: 'Request Stated & Non-Verified',
-    team: 'All',
     title: 'Request Stated & Non-Verified',
     content: [
         {
@@ -124,10 +116,9 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'booking-4',
-    department: 'booking',
+    id: 'schedule-change-4',
+    department: 'schedule-change',
     category: 'Request Stated & Verified',
-    team: 'All',
     title: 'Request Stated & Verified',
     content: [
         {
@@ -141,10 +132,9 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'booking-5',
-    department: 'booking',
+    id: 'schedule-change-5',
+    department: 'schedule-change',
     category: 'Verified – Request Stated (Transferred Chat)',
-    team: 'All',
     title: 'Verified – Request Stated (Transferred Chat)',
     content: [
         {
@@ -163,7 +153,6 @@ export const scripts: Script[] = [
     id: 'common-2',
     department: 'common',
     category: 'Conversation Flow',
-    team: 'All',
     title: 'Conversation Flow',
     content: [
       {
@@ -204,7 +193,6 @@ export const scripts: Script[] = [
     id: 'common-3',
     department: 'common',
     category: 'Workflow',
-    team: 'All',
     title: "Customer doesn't respond 1st Warning",
     content: "Hi, I wanted to check in to see if you're still with us. Please reply so I can continue assisting you. If I don't hear from you in the next 3 minutes, the chat will close due to inactivity. \n\nDon't worry - you can always reach out again whenever you’re ready. We’re here to help!",
   },
@@ -212,7 +200,6 @@ export const scripts: Script[] = [
     id: 'common-4',
     department: 'common',
     category: 'Workflow',
-    team: 'All',
     title: 'Close chat after no response for 5 min',
     content: "I still haven't received a response, and it seems that you are no longer connected. This chat will now be closed. \nIf you need further assistance, please start a new chat.\nThank you.",
   },
@@ -220,7 +207,6 @@ export const scripts: Script[] = [
     id: 'common-5',
     department: 'common',
     category: 'Workflow',
-    team: 'All',
     title: 'Hold',
     content: 'Please give me a moment to review your information. I will be back shortly.',
   },
@@ -228,7 +214,6 @@ export const scripts: Script[] = [
     id: 'common-6',
     department: 'common',
     category: 'Workflow',
-    team: 'All',
     title: 'Refresh Hold',
     content: 'Thank you for waiting. But I will need a few more minutes to work on your request.',
   },
@@ -236,7 +221,6 @@ export const scripts: Script[] = [
     id: 'common-7',
     department: 'common',
     category: 'Workflow',
-    team: 'All',
     title: 'Consequent refresh hold',
     content: 'I am still working on your request and am almost there. I just need a few more minutes to wrap this up. I appreciate your patience while I make sure everything is handled properly.',
   },
@@ -244,7 +228,6 @@ export const scripts: Script[] = [
     id: 'common-1',
     department: 'common',
     category: 'Chat Closing',
-    team: 'All',
     title: 'Chat Closing',
     content: [
         {

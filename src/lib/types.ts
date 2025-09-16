@@ -1,3 +1,4 @@
+
 export type SubScript = {
   title: string;
   content: string;
@@ -5,9 +6,8 @@ export type SubScript = {
 
 export type Script = {
   id: string;
-  department: 'etg' | 'booking' | 'common';
+  department: 'frontline' | 'schedule-change' | 'common';
   category: string;
-  team: 'Frontline' | 'Schedule Change' | 'All';
   title: string;
   content: string | SubScript[];
 };

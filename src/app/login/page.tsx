@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -61,8 +62,8 @@ export default function LoginPage() {
                 <SelectValue placeholder="Select your department" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="etg">ETG</SelectItem>
-                <SelectItem value="booking">Booking.com</SelectItem>
+                <SelectItem value="frontline">FrontLine</SelectItem>
+                <SelectItem value="schedule-change">Schedule Changes</SelectItem>
               </SelectContent>
             </Select>
           </div>

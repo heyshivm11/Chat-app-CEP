@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -59,8 +60,8 @@ export function PageHeader({
               <SelectValue placeholder="Select Department" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="etg">ETG</SelectItem>
-              <SelectItem value="booking">Booking.com</SelectItem>
+              <SelectItem value="frontline">FrontLine</SelectItem>
+              <SelectItem value="schedule-change">Schedule Changes</SelectItem>
             </SelectContent>
           </Select>
 
