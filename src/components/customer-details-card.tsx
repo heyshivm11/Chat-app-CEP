@@ -303,7 +303,7 @@ function CustomerDetailsCardComponent({
         description: "Have you copied the customer details? They might be important for your records.",
         duration: 8000,
         action: (
-          <div className="flex items-stretch gap-2 mt-2">
+          <div className="flex flex-col sm:flex-row gap-2 mt-4">
             <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)}>
                 Copy Cust. 1
             </ToastAction>
