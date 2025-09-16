@@ -31,7 +31,7 @@ function ScriptCardComponent({ script }: ScriptCardProps) {
   const handleCopy = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if ((e.target as HTMLElement).closest('button')) return;
     navigator.clipboard.writeText(rawContent);
-    toast({ title: "Copied!" });
+    toast({ title: "Copied!", duration: 2000 });
   };
 
   return (
@@ -101,7 +101,7 @@ function SubScriptItemComponent({ subScript, onHumanizeClick }: SubScriptItemPro
         if ((e.target as HTMLElement).closest('button')) return;
 
         navigator.clipboard.writeText(subScript.content);
-        toast({ title: "Copied!" });
+        toast({ title: "Copied!", duration: 2000 });
     }
 
     return (

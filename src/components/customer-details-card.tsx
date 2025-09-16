@@ -59,11 +59,11 @@ interface CustomerFormProps {
 }
 
 function CustomerFormComponent({ agentName, formData, setFormData, history, setHistory, onQueryChange, scheduleReminder }: CustomerFormProps) {
-  const [customerIsCaller, setCustomerIsCaller] = useState(formData.relation === 'Self');
+  const [customerIsCaller, setCustomerIsCaller] = useState(false);
   
   useEffect(() => {
-    setCustomerIsCaller(formData.customerName !== '' && formData.customerName === formData.callerName && formData.relation === 'Self');
-  }, [formData.customerName, formData.callerName, formData.relation]);
+    setCustomerIsCaller(formData.customerName !== '' && formData.customerName === formData.callerName);
+  }, [formData.customerName, formData.callerName]);
 
   const updateField = useCallback((fieldName: keyof FormState, value: string) => {
     setHistory([...history, formData]);
@@ -146,7 +146,7 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
                 onChange={(e) => handleInputChange('callerName', e.target.value)}
                 disabled={customerIsCaller}
             />
-            <div className="flex items-center space-x-2 pt-2">
+             <div className="flex items-center space-x-2 pt-2">
                 <Checkbox
                     id="customer-is-caller"
                     checked={customerIsCaller}
@@ -278,6 +278,7 @@ function CustomerDetailsCardComponent({
   const [form2Data, setForm2Data] = useState<FormState>(initialFormState);
   const [history1, setHistory1] = useState<FormState[]>([]);
   const [history2, setHistory2] = useState<FormState[]>([]);
+  const [activeTab, setActiveTab] = useState('customer1');
 
   const reminderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -292,7 +293,7 @@ function CustomerDetailsCardComponent({
     const dataToCopy = formNumber === 1 ? form1Data : form2Data;
     const text = getDetailsToCopy(dataToCopy, agentName);
     navigator.clipboard.writeText(text);
-    toast({ title: `Details for Customer ${formNumber} copied!` });
+    toast({ title: `Details for Customer ${formNumber} copied!`, duration: 2000 });
     clearReminder();
   }, [agentName, form1Data, form2Data, toast, clearReminder]);
 
@@ -302,7 +303,7 @@ function CustomerDetailsCardComponent({
         description: "Have you copied the customer details? They might be important for your records.",
         duration: 8000,
         action: (
-          <div className="flex items-stretch gap-2 mt-2">
+          <div className="flex w-full items-stretch gap-2 mt-2">
             <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)}>
                 Copy Cust. 1
             </ToastAction>
@@ -329,6 +330,7 @@ function CustomerDetailsCardComponent({
   
 
   const handleTabChange = useCallback((value: string) => {
+    setActiveTab(value);
     if (onQueryChange) {
       if (value === 'customer1') {
         onQueryChange(form1Data.query);

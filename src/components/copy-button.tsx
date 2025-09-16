@@ -5,6 +5,7 @@ import { useState, useCallback } from "react";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { Check, Copy } from "@/components/ui/lucide-icons";
 import { cn } from "@/lib/utils";
+import { useToast } from '@/hooks/use-toast';
 
 interface CustomCopyButtonProps extends ButtonProps {
   textToCopy: string;
@@ -12,15 +13,17 @@ interface CustomCopyButtonProps extends ButtonProps {
 
 function CopyButtonComponent({ textToCopy, className, children, ...props }: CustomCopyButtonProps) {
   const [hasCopied, setHasCopied] = useState(false);
+  const { toast } = useToast();
 
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(textToCopy);
     setHasCopied(true);
+    toast({ title: "Copied!", duration: 2000 });
     const timer = setTimeout(() => {
       setHasCopied(false);
     }, 2000);
     return () => clearTimeout(timer);
-  }, [textToCopy]);
+  }, [textToCopy, toast]);
 
   if (children) {
     return (
