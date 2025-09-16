@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { TypingEffect } from "./typing-effect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { RotateCcw } from "lucide-react";
+import { ChevronsDownUp, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { Chatbot } from "./chatbot";
@@ -116,6 +116,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [commonOpen, setCommonOpen] = useState(false);
   const [closingOpen, setClosingOpen] = useState(true);
   
+  const [areAllSectionsOpen, setAreAllSectionsOpen] = useState(true);
+
   const blobRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -139,6 +141,16 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     setDepartment(newDepartment);
     router.push(`/scripts/${newDepartment}`);
   }, [router]);
+
+  const toggleAllSections = () => {
+    const nextState = !areAllSectionsOpen;
+    setAreAllSectionsOpen(nextState);
+    setCustomerDetailsOpen(nextState);
+    setOpeningOpen(nextState);
+    setWorkflowOpen(nextState);
+    setCommonOpen(nextState);
+    setClosingOpen(nextState);
+  };
 
   const filteredScripts = useMemo(() => {
     return scripts.filter((script) => {
@@ -199,7 +211,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     }
     
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:col-span-3 gap-6">
             {scriptList.map((script) => (
                 <ScriptCard key={script.id} script={script} />
             ))}
@@ -239,6 +251,13 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             </div>
                         </div>
                     </div>
+                </div>
+                
+                <div className="flex justify-end mb-4">
+                    <Button variant="outline" onClick={toggleAllSections}>
+                        <ChevronsDownUp className="mr-2 h-4 w-4" />
+                        {areAllSectionsOpen ? "Collapse All" : "Expand All"}
+                    </Button>
                 </div>
 
                 <div className="space-y-6">
