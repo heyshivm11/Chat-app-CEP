@@ -15,21 +15,19 @@ import { TypingEffect } from "./typing-effect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/use-auth";
 
 export default function ScriptPage({ department: initialDepartment }: { department?: string }) {
   const router = useRouter();
-  const { user } = useAuth();
   
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("All");
-  const [department, setDepartment] = useState(initialDepartment || user?.department || "etg");
+  const [department, setDepartment] = useState(initialDepartment || "etg");
   const [customerName, setCustomerName] = useState("");
   const [openingOpen, setOpeningOpen] = useState(true);
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [commonOpen, setCommonOpen] = useState(true);
 
-  const agentName = user?.firstName;
+  const agentName = 'Agent'; // Generic agent name
 
   const motivationalPhrases = [
     "Let's provide the best experience to customers...",
@@ -132,7 +130,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
               <CardHeader>
                   <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                   <div className="flex-1">
-                      <h2 className="text-3xl font-bold text-foreground">Welcome back, {agentName}!</h2>
+                      <h2 className="text-3xl font-bold text-foreground">Welcome back!</h2>
                       <TypingEffect phrases={motivationalPhrases} className="text-muted-foreground text-md h-6" />
                   </div>
                       <div className="flex items-center gap-4 w-full md:w-auto">

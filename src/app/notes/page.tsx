@@ -7,8 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Copy, RotateCcw, Notebook, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { AuthGate } from "@/components/auth-gate";
-import { useAuth } from "@/hooks/use-auth";
 
 const NOTES_STORAGE_KEY = "cep_my_notes";
 
@@ -16,7 +14,6 @@ function NotesPageContent() {
   const [notes, setNotes] = useState("");
   const { toast } = useToast();
   const router = useRouter();
-  const { user } = useAuth();
 
   useEffect(() => {
     const savedNotes = localStorage.getItem(NOTES_STORAGE_KEY);
@@ -50,7 +47,7 @@ function NotesPageContent() {
         onSearchChange={() => {}}
         category="All"
         onCategoryChange={() => {}}
-        department={user?.department || 'etg'}
+        department={'etg'}
         onDepartmentChange={() => {}}
       />
       <main className="flex-1 flex flex-col container mx-auto px-4 md:px-8 py-8">
@@ -87,8 +84,6 @@ function NotesPageContent() {
 
 export default function NotesPage() {
     return (
-        <AuthGate>
-            <NotesPageContent />
-        </AuthGate>
+        <NotesPageContent />
     )
 }
