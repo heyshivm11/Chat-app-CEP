@@ -9,6 +9,7 @@ import { AiRefineDialog } from "./ai-refine-dialog";
 import { Button } from "./ui/button";
 import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface ScriptCardProps {
   script: Script;
@@ -62,14 +63,26 @@ export function ScriptCard({ script }: ScriptCardProps) {
 }
 
 function SubScriptItem({ subScript }: { subScript: SubScript }) {
+    const { toast } = useToast();
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(subScript.content);
+        toast({ title: "Copied!" });
+    }
+
     return (
-        <div className="p-3 rounded-md bg-background/50 relative group/sub-item border transition-colors sub-item-hoverable">
+        <div 
+            className="p-3 rounded-md bg-background/50 relative group/sub-item border transition-colors sub-item-hoverable copy-cursor"
+            onClick={handleCopy}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleCopy()}}
+        >
             <div className="flex justify-between items-start">
-                <div className="flex-1 pr-10">
+                <div className="flex-1">
                     <h4 className="font-semibold text-primary transition-colors">{subScript.title}</h4>
                     <p className="text-foreground/80 mt-1 whitespace-pre-wrap">{subScript.content}</p>
                 </div>
-                <CopyButton textToCopy={subScript.content} className="absolute top-2 right-2 opacity-0 group-hover/sub-item:opacity-100 transition-opacity" />
             </div>
         </div>
     )
