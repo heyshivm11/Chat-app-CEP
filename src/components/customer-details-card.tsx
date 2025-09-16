@@ -201,7 +201,7 @@ function CustomerDetailsCardComponent({
     const dataToCopy = formNumber === 1 ? form1Data : form2Data;
     const text = getDetailsToCopy(dataToCopy, agentName);
     navigator.clipboard.writeText(text);
-    toast({ title: `Customer ${formNumber} details copied!` });
+    toast({ title: `Details for Customer ${formNumber} copied!` });
   }, [agentName, form1Data, form2Data, toast]);
 
   const triggerCopyReminder = useCallback(() => {
@@ -337,3 +337,5 @@ function CustomerDetailsCardComponent({
 }
 
 export const CustomerDetailsCard = React.memo(CustomerDetailsCardComponent);
+
+    
