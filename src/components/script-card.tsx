@@ -25,7 +25,7 @@ function ScriptCardComponent({ script }: ScriptCardProps) {
     <>
       <Card
         id={`script-card-${script.id}`}
-        className={cn("rounded-lg shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02]")}>
+        className={cn("rounded-lg shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] bg-card/50 backdrop-blur-sm border-white/20")}>
         <CardHeader className="flex flex-row items-start justify-between pb-4">
           <CardTitle className="text-xl font-bold leading-tight pr-4">{script.title}</CardTitle>
           <div className="flex items-center gap-1 flex-shrink-0">
