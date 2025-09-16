@@ -56,7 +56,7 @@ function WorldClockComponent() {
       setTimeData(data);
       setCurrentTime(new Date(data.dateTime));
       setSelectedTimezone(data.timeZone);
-      setQuery(timezone);
+      setQuery(data.timeZone); // Set query to the fetched timezone for clarity
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       setTimeData(null);
