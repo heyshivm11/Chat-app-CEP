@@ -250,14 +250,14 @@ function CustomerDetailsCardComponent({
         description: "Have you copied the customer details? They might be important for your records.",
         duration: 8000,
         action: (
-            <div className="flex items-center gap-2 mt-2">
-                <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)}>
-                    Copy Cust. 1
-                </ToastAction>
-                <ToastAction altText="Copy details for Customer 2" onClick={() => copyDetails(2)}>
-                    Copy Cust. 2
-                </ToastAction>
-            </div>
+          <div className="flex flex-col items-stretch gap-2 mt-2 w-full">
+            <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)}>
+                Copy Cust. 1
+            </ToastAction>
+            <ToastAction altText="Copy details for Customer 2" onClick={() => copyDetails(2)}>
+                Copy Cust. 2
+            </ToastAction>
+        </div>
         )
     });
   }, [toast, copyDetails]);
