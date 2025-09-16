@@ -11,7 +11,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Loader2, PersonStanding, Sparkles } from "@/components/ui/lucide-icons";
+import { Loader2, PersonStanding } from "@/components/ui/lucide-icons";
 import { getRefinedScript } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { CopyButton } from "./copy-button";
@@ -80,14 +80,6 @@ export function AiRefineDialog({ open, onOpenChange, script }: AiRefineDialogPro
                         <CopyButton textToCopy={refinedResult.refinedScript} className="absolute top-2 right-2"/>
                         <p className="text-sm text-foreground pr-8">{refinedResult.refinedScript}</p>
                     </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-sm font-semibold text-muted-foreground flex items-center gap-1.5">
-                    <Sparkles className="h-4 w-4 text-primary" />
-                    Refinement Reason
-                  </h3>
-                  <p className="text-xs p-3 bg-accent/50 rounded-md text-muted-foreground">{refinedResult.refinementReason}</p>
                 </div>
               </div>
             )}

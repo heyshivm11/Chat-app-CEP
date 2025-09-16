@@ -23,23 +23,21 @@ const refineScriptPrompt = ai.definePrompt({
   name: 'humanizeScriptPrompt',
   input: {schema: RefineScriptInputSchema},
   output: {schema: RefineScriptOutputSchema},
-  prompt: `You are an expert customer support scriptwriter and trainer. Your task is to take a customer service chat script and make it sound more human, empathetic, and conversational.
+  prompt: `You are an expert in customer support communications. Your task is to take a customer service chat script and make it sound more human, empathetic, and conversational.
 
   Analyze the original script and rewrite it to be more natural and less robotic.
   
-  - Focus on empathy, clarity, and conciseness.
+  - Focus on empathy, clarity, and a positive, helpful tone.
   - Avoid corporate jargon.
-  - Maintain a positive and helpful tone.
-  - Keep the core meaning of the original script.
+  - Maintain the core meaning of the original script.
   - Provide a creative and friendly alternative.
-  - Also, provide a brief "refinement reason" that explains why the new version is better.
 
   Original Script:
   "{{{script}}}"
   
-  Now, provide the humanized version and the reason for the refinement.`,
+  Now, provide the humanized version.`,
   config: {
-    temperature: 0.8,
+    temperature: 0.7,
   }
 });
 
