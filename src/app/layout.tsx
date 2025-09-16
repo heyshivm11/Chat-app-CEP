@@ -5,7 +5,6 @@ import './globals.css';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { AuthProvider } from '@/hooks/use-auth';
 import { Toaster } from '@/components/ui/toaster';
-import { AppLayout } from '@/components/app-layout';
 
 export default function RootLayout({
   children,
@@ -22,17 +21,15 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
           rel="stylesheet"
         />
-        <title>Homelogy</title>
-        <meta name="description" content="Your smart home system." />
+        <title>Scriptify AI</title>
+        <meta name="description" content="Your friendly AI-powered script assistant." />
       </head>
       <body className="font-body antialiased">
         <AuthProvider>
-            <ThemeProvider>
-                <AppLayout>
-                    {children}
-                </AppLayout>
-                <Toaster />
-            </ThemeProvider>
+          <ThemeProvider>
+            {children}
+            <Toaster />
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>
