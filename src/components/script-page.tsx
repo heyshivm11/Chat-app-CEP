@@ -151,64 +151,61 @@ export default function ScriptPage({ department: initialDepartment }: { departme
           <CustomerDetailsCard agentName={user?.name || 'Agent'} />
 
           <div className="space-y-12 mt-8">
-              <Collapsible open={openingOpen} onOpenChange={setOpeningOpen} asChild>
-              <section>
-                  <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                      <FileText className="h-7 w-7 text-primary" />
-                      <h2 className="text-3xl font-bold tracking-tight text-foreground">Opening</h2>
-                      </div>
+              <Collapsible open={openingOpen} onOpenChange={setOpeningOpen}>
+                <section>
+                    <div className="flex items-center justify-between mb-6">
                       <CollapsibleTrigger asChild>
-                      <Button variant="ghost" size="sm" className="w-9 p-0">
-                          <ChevronsUpDown className="h-4 w-4" />
-                          <span className="sr-only">Toggle Opening</span>
-                      </Button>
+                        <button className="flex items-center justify-between w-full group">
+                            <div className="flex items-center gap-3">
+                                <FileText className="h-7 w-7 text-primary" />
+                                <h2 className="text-3xl font-bold tracking-tight text-foreground">Opening</h2>
+                            </div>
+                            <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                        </button>
                       </CollapsibleTrigger>
-                  </div>
-                  <CollapsibleContent>
-                      {renderScriptList(departmentScripts)}
-                  </CollapsibleContent>
-              </section>
+                    </div>
+                    <CollapsibleContent>
+                        {renderScriptList(departmentScripts)}
+                    </CollapsibleContent>
+                </section>
               </Collapsible>
 
-              <Collapsible open={workflowOpen} onOpenChange={setWorkflowOpen} asChild>
-              <section>
-                  <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                      <Workflow className="h-7 w-7 text-primary" />
-                      <h2 className="text-3xl font-bold tracking-tight text-foreground">Workflow</h2>
-                      </div>
+              <Collapsible open={workflowOpen} onOpenChange={setWorkflowOpen}>
+                <section>
+                    <div className="flex items-center justify-between mb-6">
                       <CollapsibleTrigger asChild>
-                      <Button variant="ghost" size="sm" className="w-9 p-0">
-                          <ChevronsUpDown className="h-4 w-4" />
-                          <span className="sr-only">Toggle Workflow</span>
-                      </Button>
+                         <button className="flex items-center justify-between w-full group">
+                            <div className="flex items-center gap-3">
+                              <Workflow className="h-7 w-7 text-primary" />
+                              <h2 className="text-3xl font-bold tracking-tight text-foreground">Workflow</h2>
+                            </div>
+                            <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                        </button>
                       </CollapsibleTrigger>
-                  </div>
-                  <CollapsibleContent>
-                      {renderScriptList(workflowScripts)}
-                  </CollapsibleContent>
-              </section>
+                    </div>
+                    <CollapsibleContent>
+                        {renderScriptList(workflowScripts)}
+                    </CollapsibleContent>
+                </section>
               </Collapsible>
               
-              <Collapsible open={commonOpen} onOpenChange={setCommonOpen} asChild>
-              <section>
-                  <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                      <BookCopy className="h-7 w-7 text-primary" />
-                      <h2 className="text-3xl font-bold tracking-tight text-foreground">Common Scripts</h2>
-                      </div>
-                      <CollapsibleTrigger asChild>
-                      <Button variant="ghost" size="sm" className="w-9 p-0">
-                          <ChevronsUpDown className="h-4 w-4" />
-                          <span className="sr-only">Toggle Common Scripts</span>
-                      </Button>
+              <Collapsible open={commonOpen} onOpenChange={setCommonOpen}>
+                <section>
+                    <div className="flex items-center justify-between mb-6">
+                       <CollapsibleTrigger asChild>
+                         <button className="flex items-center justify-between w-full group">
+                            <div className="flex items-center gap-3">
+                                <BookCopy className="h-7 w-7 text-primary" />
+                                <h2 className="text-3xl font-bold tracking-tight text-foreground">Common Scripts</h2>
+                            </div>
+                            <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                        </button>
                       </CollapsibleTrigger>
-                  </div>
-                  <CollapsibleContent>
-                      {renderScriptList(commonScripts)}
-                  </CollapsibleContent>
-              </section>
+                    </div>
+                    <CollapsibleContent>
+                        {renderScriptList(commonScripts)}
+                    </CollapsibleContent>
+                </section>
               </Collapsible>
           </div>
       </main>
