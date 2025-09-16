@@ -82,11 +82,3 @@
   }
 }
 
-@layer components {
-    .script-card:hover {
-        @apply bg-red-100 border-red-300;
-    }
-    .dark .script-card:hover {
-        @apply bg-red-900/30 border-red-700;
-    }
-}
