@@ -94,10 +94,10 @@ function NotesPageContent() {
               className="flex-1 w-full p-4 text-lg bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
             />
             <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline" onClick={handleReset} className="border-2 border-black">
+              <Button variant="outline" onClick={handleReset}>
                 <RotateCcw className="mr-2 h-4 w-4" /> Reset
               </Button>
-              <Button onClick={handleCopy} className="btn-custom btn-secondary-custom max-w-fit">
+              <Button onClick={handleCopy}>
                 <Copy className="mr-2 h-4 w-4" /> Copy Notes
               </Button>
             </div>
