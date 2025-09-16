@@ -137,7 +137,7 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
         })}
       </div>
 
-       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
             <Label htmlFor="callerName">Caller's name</Label>
             <Input
@@ -156,16 +156,15 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
             </div>
         </div>
         
-        {!customerIsCaller && (
-            <div className="space-y-2">
-                <Label htmlFor="relation">Relation</Label>
-                <Input
-                    id="relation"
-                    value={formData.relation}
-                    onChange={(e) => handleInputChange('relation', e.target.value)}
-                />
-            </div>
-        )}
+        <div className="space-y-2">
+            <Label htmlFor="relation">Relation</Label>
+            <Input
+                id="relation"
+                value={formData.relation}
+                onChange={(e) => handleInputChange('relation', e.target.value)}
+                disabled={customerIsCaller}
+            />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
