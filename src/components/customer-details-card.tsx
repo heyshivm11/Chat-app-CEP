@@ -214,13 +214,13 @@ function CustomerDetailsCardComponent({
     }
   }, [agentName, form1Data, form2Data, toast]);
 
-  const triggerCopyReminder = useCallback((formNumber: 1 | 2) => {
+  const triggerCopyReminder = useCallback(() => {
     toast({
         title: "Don't Forget!",
         description: "Have you copied the customer details? They might be important for your records.",
         duration: 8000,
         action: (
-            <div className="flex flex-col gap-2">
+            <div className="flex gap-2 mt-2">
                 <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)}>
                     Copy Cust. 1
                 </ToastAction>
@@ -230,7 +230,7 @@ function CustomerDetailsCardComponent({
             </div>
         )
     });
-  }, [copyDetails]);
+  }, [toast, copyDetails]);
 
   const scheduleReminder = useCallback((formNumber: 1 | 2) => {
     const reminderAlreadyShown = formNumber === 1 ? form1ReminderShown : form2ReminderShown;
@@ -243,13 +243,13 @@ function CustomerDetailsCardComponent({
     }
 
     timeoutRef.current = setTimeout(() => {
-        triggerCopyReminder(formNumber);
+        triggerCopyReminder();
         if (formNumber === 1) {
             setForm1ReminderShown(true);
         } else {
             setForm2ReminderShown(true);
         }
-    }, 15000); // 15 seconds after typing
+    }, 120000); // 2 minutes
   }, [form1ReminderShown, form2ReminderShown, triggerCopyReminder]);
 
 
