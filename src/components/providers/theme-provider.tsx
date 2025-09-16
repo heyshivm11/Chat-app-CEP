@@ -3,9 +3,10 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
-export type Theme = "theme-settleup";
+export type Theme = "light" | "dark";
 export const themeNames: { [key in Theme]: string } = {
-  "theme-settleup": "SettleUp",
+  "light": "Light",
+  "dark": "Dark",
 };
 
 const themeKeys = Object.keys(themeNames) as Theme[];
@@ -20,26 +21,21 @@ type ThemeProviderState = {
 const ThemeProviderContext = createContext<ThemeProviderState | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("theme-settleup");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("cep-theme") as Theme | null;
-    if (storedTheme && Object.keys(themeNames).includes(storedTheme)) {
-      setTheme(storedTheme);
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const defaultTheme = (storedTheme || (prefersDark ? 'dark' : 'light')) as Theme;
+    
+    if (Object.keys(themeNames).includes(defaultTheme)) {
+      setTheme(defaultTheme);
     }
   }, []);
 
   useEffect(() => {
     const root = document.documentElement;
-    root.className = '';
-
-    if (theme === 'theme-settleup') {
-        // default to light theme for settleup
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-       root.classList.add('dark');
-    }
-
-
+    root.classList.remove(...themeKeys);
     root.classList.add(theme);
     localStorage.setItem("cep-theme", theme);
   }, [theme]);
