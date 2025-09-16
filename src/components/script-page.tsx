@@ -102,18 +102,25 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     });
   };
 
+  const doesScriptMatch = (script: Script, term: string) => {
+    const lowerCaseTerm = term.toLowerCase();
+    if (script.title.toLowerCase().includes(lowerCaseTerm)) return true;
+
+    if (typeof script.content === 'string') {
+      if (script.content.toLowerCase().includes(lowerCaseTerm)) return true;
+    } else if (Array.isArray(script.content)) {
+      if (script.content.some(sub => 
+        sub.title.toLowerCase().includes(lowerCaseTerm) || 
+        sub.content.toLowerCase().includes(lowerCaseTerm)
+      )) return true;
+    }
+
+    return false;
+  }
+
   const filteredScripts = useMemo(() => {
     return scripts.filter((script) => {
-      const searchMatch =
-        script.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (typeof script.content === "string" && script.content.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (Array.isArray(script.content) &&
-          script.content.some(
-            (sub) =>
-              sub.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              sub.content.toLowerCase().includes(searchTerm.toLowerCase())
-          ));
-      
+      const searchMatch = searchTerm ? doesScriptMatch(script, searchTerm) : true;
       const categoryMatch = category === "All" || script.category === category;
       const teamMatch = script.department === 'common' || script.department === department;
       
@@ -124,8 +131,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const searchSuggestions = useMemo(() => {
     if (!searchTerm) return [];
     return scripts.filter(script => 
-      script.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (script.department === 'common' || script.department === department)
+      (script.department === 'common' || script.department === department) &&
+      doesScriptMatch(script, searchTerm)
     );
   }, [searchTerm, department]);
 
@@ -319,5 +326,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
 
     
