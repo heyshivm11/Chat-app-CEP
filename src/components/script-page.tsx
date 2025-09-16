@@ -16,8 +16,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
-import { AuthGate } from "./auth-gate";
-
 
 export default function ScriptPage({ department: initialDepartment }: { department?: string }) {
   const router = useRouter();
