@@ -59,16 +59,17 @@ function WorldClockComponent() {
       setQuery(""); // Reset query for new search
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
-      setTimeData(null);
-      setCurrentTime(null);
+      // Don't clear old data on error
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchTime('Asia/Kolkata');
-  }, [fetchTime]); 
+    if (selectedTimezone) {
+        fetchTime(selectedTimezone);
+    }
+  }, []); // Changed to run only once on mount, fetchTime has selectedTimezone as default
 
   useEffect(() => {
     if (currentTime) {
@@ -95,7 +96,6 @@ function WorldClockComponent() {
   };
   
   const handleSuggestionClick = (timezone: string) => {
-    setQuery(timezone);
     fetchTime(timezone);
   };
 
@@ -186,11 +186,14 @@ function WorldClockComponent() {
             </CardContent>
           </Card>
         ) : (
-            <p className="text-center text-muted-foreground">Search for a place to see the time.</p>
+             !error && <p className="text-center text-muted-foreground">Search for a place to see the time.</p>
         )}
+         {error && timeData && <p className="text-center text-destructive mt-4">{error}</p>}
       </div>
     </div>
   );
 }
 
 export const WorldClock = memo(WorldClockComponent);
+
+    
