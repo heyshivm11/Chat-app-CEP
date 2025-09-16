@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, LogOut, Gamepad2, Plane, Notebook } from "lucide-react";
+import { Search, Gamepad2, Plane, Notebook } from "lucide-react";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -14,9 +14,6 @@ import {
 import { ThemeSwitcher } from "./theme-switcher";
 import { scriptCategories } from "@/lib/scripts";
 import { Button } from "./ui/button";
-import { useAuth } from "@/hooks/use-auth";
-import { useRouter } from "next/navigation";
-
 
 interface PageHeaderProps {
   searchTerm: string;
@@ -35,13 +32,6 @@ export function PageHeader({
   department, 
   onDepartmentChange,
 }: PageHeaderProps) {
-  const { logout } = useAuth();
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    await logout();
-    router.push('/landing');
-  };
 
   return (
     <header className="sticky top-0 z-30 w-full bg-background/80 backdrop-blur-md border-b">
@@ -98,11 +88,10 @@ export function PageHeader({
                 <Gamepad2 className="h-6 w-6" />
               </Button>
             </Link>
-            <Button variant="ghost" size="icon" onClick={handleLogout} className="text-red-500 hover:text-red-400 hover:bg-red-500/10" aria-label="Logout">
-                <LogOut className="h-6 w-6" />
-            </Button>
         </div>
       </div>
     </header>
   );
 }
+
+    

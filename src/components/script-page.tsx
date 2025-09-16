@@ -7,13 +7,11 @@ import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
 import { FileText, Workflow, BookCopy, ChevronsUpDown } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
-import { useAuth } from "@/hooks/use-auth";
 import { AuthGate } from "./auth-gate";
 import { TypingEffect } from "./typing-effect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -21,13 +19,10 @@ import { RotateCcw } from "lucide-react";
 
 
 export default function ScriptPage() {
-  const router = useRouter();
-  const { user, logout } = useAuth();
-
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("All");
   const [department, setDepartment] = useState("etg");
-  const [agentName, setAgentName] = useState("");
+  const [agentName, setAgentName] = useState("Agent");
   const [customerName, setCustomerName] = useState("");
   const [openingOpen, setOpeningOpen] = useState(true);
   const [workflowOpen, setWorkflowOpen] = useState(true);
@@ -42,13 +37,6 @@ export default function ScriptPage() {
     "If empathy were currency, you'd be rich by now...",
     "Resolve. Recharge. Repeat.",
   ];
-
-  useEffect(() => {
-    if (user) {
-      setAgentName(user.displayName || '');
-      setDepartment(user.department === 'Frontline' ? 'etg' : 'booking');
-    }
-  }, [user]);
 
   const handleDepartmentChange = (newDepartment: string) => {
     setDepartment(newDepartment);
@@ -77,8 +65,6 @@ export default function ScriptPage() {
   };
 
   const filteredScripts = useMemo(() => {
-    const userDepartment = user?.department || 'All';
-
     return scripts.filter((script) => {
       const searchMatch =
         script.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -92,11 +78,13 @@ export default function ScriptPage() {
       
       const categoryMatch = category === "All" || script.category === category;
 
-      const teamMatch = script.team === 'All' || script.team === userDepartment;
+      // Since auth is removed, teamMatch is simplified or can be removed
+      // For now, let's assume we want all scripts that are 'All' team
+      const teamMatch = script.team === 'All';
       
       return searchMatch && categoryMatch && teamMatch;
     });
-  }, [searchTerm, category, user]);
+  }, [searchTerm, category]);
 
   const departmentScripts = useMemo(() => {
     const deptScripts = filteredScripts.filter(s => s.department === department);
@@ -231,3 +219,5 @@ export default function ScriptPage() {
     </AuthGate>
   );
 }
+
+    
