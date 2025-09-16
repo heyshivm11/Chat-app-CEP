@@ -271,3 +271,4 @@ export const scripts: Script[] = [
 ];
 
 export const scriptCategories = [...new Set(scripts.map(s => s.category))];
+
