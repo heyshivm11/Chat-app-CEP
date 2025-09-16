@@ -82,31 +82,6 @@ export function WorldClock() {
     }
   }, [currentTime]);
 
-  const handleSearch = () => {
-    if (query) {
-      const lowerCaseQuery = query.toLowerCase();
-      const filtered = allTimezones
-        .filter(tz => tz.toLowerCase().includes(lowerCaseQuery))
-        .sort();
-      
-      if (filtered.length > 0) {
-        handleSelectTimezone(filtered[0]);
-      } else {
-        setError(`No timezone found for "${query}"`);
-        setSuggestions([]);
-      }
-    } else {
-      setSuggestions([]);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSearch();
-    }
-  }
-
   const handleSelectTimezone = (timezone: string) => {
     setSelectedTimezone(timezone);
     setQuery('');
@@ -114,10 +89,17 @@ export function WorldClock() {
   }
   
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setQuery(e.target.value);
-      if (e.target.value === "") {
-          setSuggestions([]);
-          setError(null);
+      const value = e.target.value;
+      setQuery(value);
+
+      if (value) {
+        const lowerCaseQuery = value.toLowerCase();
+        const filtered = allTimezones
+          .filter(tz => tz.toLowerCase().includes(lowerCaseQuery))
+          .sort();
+        setSuggestions(filtered);
+      } else {
+        setSuggestions([]);
       }
   }
 
@@ -142,7 +124,6 @@ export function WorldClock() {
           type="text"
           value={query}
           onChange={handleQueryChange}
-          onKeyDown={handleKeyDown}
           placeholder="Search for a city or timezone..."
           className="w-full pl-10 text-lg h-14 rounded-full shadow-lg"
         />
