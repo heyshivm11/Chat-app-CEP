@@ -36,7 +36,7 @@ export function PageHeader({
   const { logout } = useAuth();
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-background/80 backdrop-blur-md border-b">
+    <header className="sticky top-0 z-30 w-full bg-background/30 backdrop-blur-lg border-b">
       <div className="container flex h-20 items-center gap-6">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold text-foreground">
             <Plane className="h-8 w-8 text-primary" />
@@ -45,18 +45,18 @@ export function PageHeader({
         
         <div className="flex-1 flex items-center gap-4">
           <div className="relative w-full max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search scripts..."
-              className="pl-10 h-11 text-md rounded-full"
+              className="pl-12 h-12 text-md"
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
             />
           </div>
 
           <Select value={department} onValueChange={onDepartmentChange}>
-            <SelectTrigger className="w-[200px] h-11 text-md rounded-full">
+            <SelectTrigger className="w-[200px] h-12 text-md">
               <SelectValue placeholder="Select Department" />
             </SelectTrigger>
             <SelectContent>
@@ -66,7 +66,7 @@ export function PageHeader({
           </Select>
 
           <Select value={category} onValueChange={onCategoryChange}>
-            <SelectTrigger className="w-[220px] hidden md:flex h-11 text-md rounded-full">
+            <SelectTrigger className="w-[220px] hidden md:flex h-12 text-md">
               <SelectValue placeholder="Filter by category" />
             </SelectTrigger>
             <SelectContent>
