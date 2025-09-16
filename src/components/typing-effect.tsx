@@ -15,8 +15,8 @@ export function TypingEffect({ phrases, className }: TypingEffectProps) {
 
   useEffect(() => {
     const currentPhrase = phrases[phraseIndex];
-    const typingSpeed = 30;
-    const deletingSpeed = 15;
+    const typingSpeed = 4;
+    const deletingSpeed = 2;
     const delay = 2000;
 
     const handleTyping = () => {
