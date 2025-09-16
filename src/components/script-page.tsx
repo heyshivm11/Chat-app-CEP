@@ -151,7 +151,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
           <CustomerDetailsCard agentName={user?.name || 'Agent'} />
 
           <div className="space-y-12 mt-8">
-              <Collapsible asChild open={openingOpen} onOpenChange={setOpeningOpen} >
+              <Collapsible open={openingOpen} onOpenChange={setOpeningOpen} asChild>
               <section>
                   <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
@@ -171,7 +171,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
               </section>
               </Collapsible>
 
-              <Collapsible asChild open={workflowOpen} onOpenChange={setWorkflowOpen}>
+              <Collapsible open={workflowOpen} onOpenChange={setWorkflowOpen} asChild>
               <section>
                   <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
@@ -191,7 +191,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
               </section>
               </Collapsible>
               
-              <Collapsible asChild open={commonOpen} onOpenChange={setCommonOpen}>
+              <Collapsible open={commonOpen} onOpenChange={setCommonOpen} asChild>
               <section>
                   <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
