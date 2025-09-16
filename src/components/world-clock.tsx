@@ -9,9 +9,9 @@ import { Loader2, Search } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 
 interface TimeData {
-  datetime: string;
-  timezone: string;
-  day_of_week: number;
+  dateTime: string;
+  timeZone: string;
+  dayOfWeek: string;
 }
 
 const formatTime = (date: Date) => {
@@ -35,7 +35,7 @@ export function WorldClock() {
   useEffect(() => {
     const fetchTimezones = async () => {
       try {
-        const response = await fetch('https://worldtimeapi.org/api/timezone');
+        const response = await fetch('https://timeapi.io/api/TimeZone/AvailableTimeZones');
         if (!response.ok) throw new Error('Failed to fetch timezones');
         const data: string[] = await response.json();
         setAllTimezones(data);
@@ -50,11 +50,11 @@ export function WorldClock() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
+      const response = await fetch(`https://timeapi.io/api/time/current/zone?timeZone=${timezone}`);
       if (!response.ok) throw new Error(`Failed to fetch time for ${timezone}`);
       const data: TimeData = await response.json();
       setTimeData(data);
-      setCurrentTime(new Date(data.datetime));
+      setCurrentTime(new Date(data.dateTime));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       setTimeData(null);
@@ -161,7 +161,7 @@ export function WorldClock() {
                 {formatTime(currentTime)}
               </div>
               <p className="text-lg text-muted-foreground mt-2">{formatDate(currentTime)}</p>
-              <p className="text-sm text-muted-foreground mt-4">{timeData.timezone}</p>
+              <p className="text-sm text-muted-foreground mt-4">{timeData.timeZone}</p>
             </CardContent>
           </Card>
         ) : (
