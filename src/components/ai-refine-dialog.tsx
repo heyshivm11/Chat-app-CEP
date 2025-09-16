@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -85,7 +86,7 @@ export function AiRefineDialog({ open, onOpenChange, script }: AiRefineDialogPro
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[600px] glass-card">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="text-primary h-5 w-5" />
