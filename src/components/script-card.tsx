@@ -72,3 +72,5 @@ function SubScriptItem({ subScript }: { subScript: SubScript }) {
         </div>
     )
 }
+
+    
