@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,7 +22,7 @@ const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-export function WorldClock() {
+function WorldClockComponent() {
   const [query, setQuery] = useState('');
   const [allTimezones, setAllTimezones] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -182,3 +182,5 @@ export function WorldClock() {
     </div>
   );
 }
+
+export const WorldClock = memo(WorldClockComponent);

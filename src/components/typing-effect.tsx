@@ -1,14 +1,14 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 
 interface TypingEffectProps {
   phrases: string[];
   className?: string;
 }
 
-export function TypingEffect({ phrases, className }: TypingEffectProps) {
+function TypingEffectComponent({ phrases, className }: TypingEffectProps) {
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [text, setText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -49,3 +49,4 @@ export function TypingEffect({ phrases, className }: TypingEffectProps) {
   );
 }
 
+export const TypingEffect = memo(TypingEffectComponent);

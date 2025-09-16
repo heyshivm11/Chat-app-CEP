@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,7 +24,7 @@ interface AiRefineDialogProps {
   script: string;
 }
 
-export function AiRefineDialog({ open, onOpenChange, script }: AiRefineDialogProps) {
+function AiRefineDialogComponent({ open, onOpenChange, script }: AiRefineDialogProps) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [refinedResult, setRefinedResult] = useState<RefineScriptOutput | null>(null);
@@ -99,3 +99,5 @@ export function AiRefineDialog({ open, onOpenChange, script }: AiRefineDialogPro
     </Dialog>
   );
 }
+
+export const AiRefineDialog = memo(AiRefineDialogComponent);

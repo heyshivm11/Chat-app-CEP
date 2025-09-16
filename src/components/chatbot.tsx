@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,7 +26,7 @@ interface Message {
 
 interface ChatbotProps {}
 
-export function Chatbot({}: ChatbotProps) {
+function ChatbotComponent({}: ChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -170,3 +170,5 @@ export function Chatbot({}: ChatbotProps) {
     </>
   );
 }
+
+export const Chatbot = memo(ChatbotComponent);

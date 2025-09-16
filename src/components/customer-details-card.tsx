@@ -65,16 +65,16 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
     setCustomerIsCaller(formData.customerName !== '' && formData.customerName === formData.callerName && formData.relation === 'Self');
   }, [formData.customerName, formData.callerName, formData.relation]);
 
-  const updateField = (fieldName: keyof FormState, value: string) => {
+  const updateField = useCallback((fieldName: keyof FormState, value: string) => {
     setHistory([...history, formData]);
     const newState = { ...formData, [fieldName]: value };
     if (fieldName === 'validationNeeded' && value === 'No') {
       newState.validatedBy = '';
     }
     setFormData(newState);
-  };
+  }, [formData, history, setFormData, setHistory]);
   
-  const handleInputChange = (id: keyof FormState, value: string) => {
+  const handleInputChange = useCallback((id: keyof FormState, value: string) => {
     updateField(id, value);
     if (id === 'query' && onQueryChange) {
       onQueryChange(value);
@@ -82,9 +82,9 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
      if ((id === 'query' || id === 'resolution') && value.trim()) {
         scheduleReminder();
     }
-  };
+  }, [updateField, onQueryChange, scheduleReminder]);
 
-  const handleCheckboxChange = (checked: boolean) => {
+  const handleCheckboxChange = useCallback((checked: boolean) => {
     setCustomerIsCaller(checked);
     setHistory([...history, formData]);
     if (checked) {
@@ -100,20 +100,20 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
         relation: '',
       });
     }
-  }
+  }, [formData, history, setFormData, setHistory]);
 
-  const handleUndo = () => {
+  const handleUndo = useCallback(() => {
     if (history.length === 0) return;
     const lastState = history[history.length - 1];
     setFormData(lastState);
     setHistory(history.slice(0, history.length - 1));
-  };
+  }, [history, setFormData, setHistory]);
   
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
       setHistory([...history, formData]);
       setFormData(initialFormState);
       if(onQueryChange) onQueryChange('');
-  }
+  }, [formData, history, setFormData, setHistory, onQueryChange]);
 
   const detailsToCopy = useMemo(() => {
     return getDetailsToCopy(formData, agentName)
