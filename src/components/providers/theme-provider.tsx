@@ -3,10 +3,13 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
-export type Theme = "light" | "dark";
+export type Theme = "light" | "dark" | "theme-ocean" | "theme-forest" | "theme-slate";
 export const themeNames: { [key in Theme]: string } = {
-  "light": "Light",
-  "dark": "Dark",
+  "light": "Default Light",
+  "dark": "Default Dark",
+  "theme-ocean": "Ocean",
+  "theme-forest": "Forest",
+  "theme-slate": "Slate",
 };
 
 const themeKeys = Object.keys(themeNames) as Theme[];
@@ -35,13 +38,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove(...themeKeys, "theme-amethyst", "theme-sunrise", "theme-lime");
+    root.classList.remove(...themeKeys);
     root.classList.add(theme);
     localStorage.setItem("cep-theme", theme);
   }, [theme]);
 
   const cycleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    const currentIndex = themeKeys.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % themeKeys.length;
+    setTheme(themeKeys[nextIndex]);
   };
 
   const value = useMemo(() => ({ theme, setTheme, cycleTheme }), [theme]);
