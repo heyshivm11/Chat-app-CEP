@@ -3,16 +3,12 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
-export type Theme = "light" | "dark" | "theme-ocean" | "theme-forest" | "theme-slate" | "theme-sunset" | "theme-aurora" | "theme-monochrome";
+export type Theme = "light" | "dark" | "theme-ocean" | "theme-crimson";
 export const themeNames: { [key in Theme]: string } = {
   "light": "Default Light",
   "dark": "Default Dark",
   "theme-ocean": "Ocean",
-  "theme-forest": "Forest",
-  "theme-slate": "Slate",
-  "theme-sunset": "Sunset",
-  "theme-aurora": "Aurora",
-  "theme-monochrome": "Monochrome",
+  "theme-crimson": "Crimson",
 };
 
 const themeKeys = Object.keys(themeNames) as Theme[];
