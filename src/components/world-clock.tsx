@@ -34,7 +34,7 @@ function WorldClockComponent() {
     setError(null);
     try {
       const response = await fetch(`https://timeapi.io/api/time/current/zone?timeZone=${timezone}`);
-      if (!response.ok) throw new Error(`Failed to fetch time for ${timezone}. Please check the timezone name.`);
+      if (!response.ok) throw new Error(`Failed to fetch time for "${timezone}". Please check the timezone name (e.g., "Europe/Amsterdam").`);
       const data: TimeData = await response.json();
       setTimeData(data);
       setCurrentTime(new Date(data.dateTime));
@@ -43,13 +43,16 @@ function WorldClockComponent() {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       setTimeData(null);
       setCurrentTime(null);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
 
   useEffect(() => {
     fetchTime(selectedTimezone);
-  }, []); 
+    // This effect should only run once on mount to fetch the initial time.
+    // fetchTime is wrapped in useCallback to be stable.
+  }, [fetchTime]); 
 
   useEffect(() => {
     if (currentTime) {
@@ -100,7 +103,7 @@ function WorldClockComponent() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Search for a timezone..."
+              placeholder="Search for a timezone (e.g. America/New_York)"
               className="w-full pl-10 text-lg h-14 rounded-full shadow-lg"
             />
         </div>
