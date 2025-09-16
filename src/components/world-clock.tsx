@@ -23,10 +23,10 @@ const formatDate = (date: Date) => {
 
 function WorldClockComponent() {
   const [query, setQuery] = useState('');
-  const [selectedTimezone, setSelectedTimezone] = useState<string | null>('Asia/Kolkata');
+  const [selectedTimezone, setSelectedTimezone] = useState<string>('Asia/Kolkata');
   const [timeData, setTimeData] = useState<TimeData | null>(null);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchTime = useCallback(async (timezone: string) => {
@@ -51,7 +51,7 @@ function WorldClockComponent() {
     if (selectedTimezone) {
       fetchTime(selectedTimezone);
     }
-  }, []); // Run only once on initial load
+  }, [fetchTime]); 
 
   useEffect(() => {
     if (currentTime) {
