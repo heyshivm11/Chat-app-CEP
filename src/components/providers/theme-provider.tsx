@@ -27,7 +27,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("theme-default");
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem("scriptify-theme") as Theme | null;
+    const storedTheme = localStorage.getItem("cep-theme") as Theme | null;
     if (storedTheme && Object.keys(themeNames).includes(storedTheme)) {
       setTheme(storedTheme);
     }
@@ -35,14 +35,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.className = ''; 
+    root.className = '';
 
     if (!theme.startsWith('theme-white')) {
       root.classList.add('dark');
     }
     
     root.classList.add(theme);
-    localStorage.setItem("scriptify-theme", theme);
+    localStorage.setItem("cep-theme", theme);
   }, [theme]);
 
   const cycleTheme = () => {
