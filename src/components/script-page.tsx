@@ -6,7 +6,7 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
-import { FileText, Workflow, BookCopy, ChevronsUpDown } from "lucide-react";
+import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote } from "lucide-react";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -30,6 +30,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [openingOpen, setOpeningOpen] = useState(true);
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [commonOpen, setCommonOpen] = useState(true);
+  const [closingOpen, setClosingOpen] = useState(true);
 
   const motivationalPhrases = [
     "Let's provide the best experience to customers...",
@@ -230,12 +231,30 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                       </CollapsibleTrigger>
                     </div>
                     <CollapsibleContent>
+                        {renderScriptList(commonScripts)}
+                    </CollapsibleContent>
+                </section>
+              </Collapsible>
+
+               <Collapsible open={closingOpen} onOpenChange={setClosingOpen}>
+                <section>
+                    <div className="flex items-center justify-between mb-6">
+                       <CollapsibleTrigger asChild>
+                         <button className="flex items-center justify-between w-full group">
+                            <div className="flex items-center gap-3">
+                                <MessageSquareQuote className="h-7 w-7 text-primary" />
+                                <h2 className="text-3xl font-bold tracking-tight text-foreground">Chat Closing</h2>
+                            </div>
+                            <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                    </div>
+                    <CollapsibleContent>
                         {chatClosingScript && (
                           <div className="mb-4">
                             <ScriptCard script={chatClosingScript} />
                           </div>
                         )}
-                        {renderScriptList(commonScripts)}
                     </CollapsibleContent>
                 </section>
               </Collapsible>
@@ -247,3 +266,5 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
