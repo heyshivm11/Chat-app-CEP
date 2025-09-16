@@ -17,9 +17,16 @@ interface ScriptCardProps {
 
 function ScriptCardComponent({ script }: ScriptCardProps) {
   const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
+  const [humanizeScriptContent, setHumanizeScriptContent] = useState("");
+
   const rawContent = Array.isArray(script.content)
     ? script.content.map((s) => `${s.title}: ${s.content}`).join("\n\n")
     : script.content;
+
+  const openHumanizeDialog = (content: string) => {
+    setHumanizeScriptContent(content);
+    setIsAiDialogOpen(true);
+  }
 
   return (
     <>
@@ -30,22 +37,28 @@ function ScriptCardComponent({ script }: ScriptCardProps) {
           <CardTitle className="text-xl font-bold leading-tight pr-4">{script.title}</CardTitle>
           <div className="flex items-center gap-1 flex-shrink-0">
             <CopyButton textToCopy={rawContent} />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7"
-              onClick={() => setIsAiDialogOpen(true)}
-              aria-label="Humanize Script"
-            >
-              <PersonStanding className="h-5 w-5 text-primary" />
-            </Button>
+            {!Array.isArray(script.content) && (
+                 <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={() => openHumanizeDialog(rawContent)}
+                    aria-label="Humanize Script"
+                >
+                    <PersonStanding className="h-5 w-5 text-primary" />
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent className="pt-0">
           {Array.isArray(script.content) ? (
             <div className="space-y-4">
               {script.content.map((sub, index) => (
-                <SubScriptItem key={index} subScript={sub} />
+                <SubScriptItem 
+                    key={index} 
+                    subScript={sub} 
+                    onHumanizeClick={() => openHumanizeDialog(sub.content)}
+                />
               ))}
             </div>
           ) : (
@@ -56,16 +69,24 @@ function ScriptCardComponent({ script }: ScriptCardProps) {
       <AiRefineDialog
         open={isAiDialogOpen}
         onOpenChange={setIsAiDialogOpen}
-        script={rawContent}
+        script={humanizeScriptContent}
       />
     </>
   );
 }
 
-function SubScriptItemComponent({ subScript }: { subScript: SubScript }) {
+interface SubScriptItemProps {
+    subScript: SubScript;
+    onHumanizeClick: () => void;
+}
+
+function SubScriptItemComponent({ subScript, onHumanizeClick }: SubScriptItemProps) {
     const { toast } = useToast();
 
-    const handleCopy = () => {
+    const handleCopy = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        // Prevent humanize button click from also copying
+        if ((e.target as HTMLElement).closest('button')) return;
+
         navigator.clipboard.writeText(subScript.content);
         toast({ title: "Copied!" });
     }
@@ -76,12 +97,26 @@ function SubScriptItemComponent({ subScript }: { subScript: SubScript }) {
             onClick={handleCopy}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleCopy()}}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleCopy(e as any)}}
         >
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between items-start gap-2">
                 <div className="flex-1">
                     <h4 className="font-semibold text-primary transition-colors">{subScript.title}</h4>
                     <p className="text-foreground/80 mt-1 whitespace-pre-wrap">{subScript.content}</p>
+                </div>
+                <div className="flex-shrink-0 opacity-0 group-hover/sub-item:opacity-100 transition-opacity">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={(e) => {
+                            e.stopPropagation(); // Prevent copy when clicking button
+                            onHumanizeClick();
+                        }}
+                        aria-label="Humanize Script"
+                        >
+                        <PersonStanding className="h-5 w-5 text-primary" />
+                    </Button>
                 </div>
             </div>
         </div>
