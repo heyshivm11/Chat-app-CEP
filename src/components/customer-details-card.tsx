@@ -220,7 +220,7 @@ function CustomerDetailsCardComponent({
       toast({
         title: "Don't Forget!",
         description: "Have you copied the customer details? They might be important for your records.",
-        duration: 10000,
+        duration: 8000,
         action: (
             <div className="flex flex-col gap-2">
                 <Button onClick={() => copyDetails(detailsToCopy1)}>Copy Cust. 1</Button>
