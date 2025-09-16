@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,24 @@ export default function LoginPage() {
   const [department, setDepartment] = useState('');
   const [error, setError] = useState('');
   const { login, isLoading } = useAuth();
+  const blobRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handlePointerMove = (event: PointerEvent) => {
+      const { clientX, clientY } = event;
+      if (blobRef.current) {
+        blobRef.current.animate({
+          left: `${clientX}px`,
+          top: `${clientY}px`
+        }, { duration: 3000, fill: "forwards" });
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+    };
+  }, []);
 
   const handleLogin = () => {
     if (!name.trim() || !department) {
@@ -37,6 +55,9 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex items-center justify-center min-h-screen overflow-hidden">
+      <div id="blob" ref={blobRef}></div>
+      <div id="blur"></div>
+      
       <div className="absolute top-4 right-4 z-20">
         <ThemeSwitcher />
       </div>
@@ -78,10 +99,6 @@ export default function LoginPage() {
             </Button>
           </CardFooter>
         </Card>
-      </div>
-      
-      <div className="wave-container">
-        <div className="wave"></div>
       </div>
     </div>
   );
