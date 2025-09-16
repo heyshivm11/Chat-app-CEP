@@ -211,12 +211,10 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   }, []);
   
   return (
-    <div 
-      className="flex flex-col min-h-screen"
-    >
+    <div className="flex flex-col min-h-screen relative overflow-hidden">
         <div id="blob" ref={blobRef}></div>
         <div id="blur"></div>
-        <div className="relative z-10 flex flex-col h-full">
+        <div className="relative z-10 flex flex-col h-full flex-1">
             <PageHeader 
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
@@ -365,6 +363,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
-    
