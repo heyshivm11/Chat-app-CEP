@@ -3,10 +3,10 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { scripts } from "@/lib/scripts";
-import { Script, SubScript } from "@/lib/types";
+import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
-import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote, ChevronsDownUp, ChevronsUpDown as ChevronsUpDownIcon } from "lucide-react";
+import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote, ChevronsDownUp, ChevronsUpDown as ChevronsUpDownIcon } from "@/components/ui/lucide-icons";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -17,6 +17,55 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
+
+const motivationalPhrases = [
+  "Let's provide the best experience to customers...",
+  "Every ticket is a chance to turn frustration into gratitude.",
+  "They’re not angry at you they’re just tired of waiting...",
+  "Jaa Sutta maar Ke aa 🚬",
+  "Behind every complaint is a customer who still believes we can fix it...",
+  "If empathy were currency, you'd be rich by now...",
+  "Resolve. Recharge. Repeat.",
+];
+
+const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string, query: string) => {
+  return scriptsToProcess.map(script => {
+    const newScript = JSON.parse(JSON.stringify(script)); // Deep copy
+    
+    const replacePlaceholders = (text: string) => {
+      return text
+        .replace(/\[Customer First Name\]/g, currentCustomerName || '[Customer First Name]')
+        .replace(/\[Agent Name\]/g, currentAgentName || '[Agent Name]')
+        .replace(/\[Query\]/g, query || '...');
+    };
+
+    if (typeof newScript.content === 'string') {
+      newScript.content = replacePlaceholders(newScript.content);
+    } else if (Array.isArray(newScript.content)) {
+      newScript.content = newScript.content.map(sub => ({
+        ...sub,
+        content: replacePlaceholders(sub.content)
+      }));
+    }
+    return newScript;
+  });
+};
+
+const doesScriptMatch = (script: Script, term: string) => {
+  const lowerCaseTerm = term.toLowerCase();
+  if (script.title.toLowerCase().includes(lowerCaseTerm)) return true;
+
+  if (typeof script.content === 'string') {
+    if (script.content.toLowerCase().includes(lowerCaseTerm)) return true;
+  } else if (Array.isArray(script.content)) {
+    if (script.content.some(sub => 
+      sub.title.toLowerCase().includes(lowerCaseTerm) || 
+      sub.content.toLowerCase().includes(lowerCaseTerm)
+    )) return true;
+  }
+
+  return false;
+}
 
 export default function ScriptPage({ department: initialDepartment }: { department: string }) {
   const router = useRouter();
@@ -36,22 +85,12 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   
   const [allOpen, setAllOpen] = useState(true);
 
-  const motivationalPhrases = [
-    "Let's provide the best experience to customers...",
-    "Every ticket is a chance to turn frustration into gratitude.",
-    "They’re not angry at you they’re just tired of waiting...",
-    "Jaa Sutta maar Ke aa 🚬",
-    "Behind every complaint is a customer who still believes we can fix it...",
-    "If empathy were currency, you'd be rich by now...",
-    "Resolve. Recharge. Repeat.",
-  ];
-
-  const handleDepartmentChange = (newDepartment: string) => {
+  const handleDepartmentChange = useCallback((newDepartment: string) => {
     setDepartment(newDepartment);
     router.push(`/scripts/${newDepartment}`);
-  };
+  }, [router]);
 
-  const toggleAllSections = () => {
+  const toggleAllSections = useCallback(() => {
     const nextState = !allOpen;
     setCustomerDetailsOpen(nextState);
     setOpeningOpen(nextState);
@@ -59,51 +98,13 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     setCommonOpen(nextState);
     setClosingOpen(nextState);
     setAllOpen(nextState);
-  };
+  }, [allOpen]);
   
   useEffect(() => {
     const currentlyAllOpen = customerDetailsOpen && openingOpen && workflowOpen && commonOpen && closingOpen;
     setAllOpen(currentlyAllOpen);
   },[customerDetailsOpen, openingOpen, workflowOpen, commonOpen, closingOpen])
 
-  const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string, query: string) => {
-    return scriptsToProcess.map(script => {
-      const newScript = JSON.parse(JSON.stringify(script)); // Deep copy
-      
-      const replacePlaceholders = (text: string) => {
-        return text
-          .replace(/\[Customer First Name\]/g, currentCustomerName || '[Customer First Name]')
-          .replace(/\[Agent Name\]/g, currentAgentName || '[Agent Name]')
-          .replace(/\[Query\]/g, query || '...');
-      };
-
-      if (typeof newScript.content === 'string') {
-        newScript.content = replacePlaceholders(newScript.content);
-      } else if (Array.isArray(newScript.content)) {
-        newScript.content = newScript.content.map(sub => ({
-          ...sub,
-          content: replacePlaceholders(sub.content)
-        }));
-      }
-      return newScript;
-    });
-  };
-
-  const doesScriptMatch = (script: Script, term: string) => {
-    const lowerCaseTerm = term.toLowerCase();
-    if (script.title.toLowerCase().includes(lowerCaseTerm)) return true;
-
-    if (typeof script.content === 'string') {
-      if (script.content.toLowerCase().includes(lowerCaseTerm)) return true;
-    } else if (Array.isArray(script.content)) {
-      if (script.content.some(sub => 
-        sub.title.toLowerCase().includes(lowerCaseTerm) || 
-        sub.content.toLowerCase().includes(lowerCaseTerm)
-      )) return true;
-    }
-
-    return false;
-  }
 
   const filteredScripts = useMemo(() => {
     return scripts.filter((script) => {
@@ -115,7 +116,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     });
   }, [searchTerm, category, department]);
   
-  const handleSearchSubmit = () => {
+  const handleSearchSubmit = useCallback(() => {
     if (filteredScripts.length > 0) {
       const firstMatchId = `script-card-${filteredScripts[0].id}`;
       const element = document.getElementById(firstMatchId);
@@ -127,7 +128,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
         }, 1500);
       }
     }
-  };
+  }, [filteredScripts]);
 
   const departmentScripts = useMemo(() => {
     const deptScripts = filteredScripts.filter(s => s.department === department);
@@ -158,7 +159,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   }, [filteredScripts, customerName, user?.name, currentQuery]);
 
 
-  const renderScriptList = (scriptList: Script[]) => {
+  const renderScriptList = useCallback((scriptList: Script[]) => {
     if (scriptList.length === 0) {
       return <p className="text-muted-foreground text-center col-span-1 md:col-span-2 xl:col-span-3 py-8">No scripts found.</p>;
     }
@@ -172,9 +173,9 @@ export default function ScriptPage({ department: initialDepartment }: { departme
             ))}
         </div>
     );
-  };
+  }, []);
   
-  const renderFlexScriptList = (scriptList: Script[]) => {
+  const renderFlexScriptList = useCallback((scriptList: Script[]) => {
     if (scriptList.length === 0) {
       return <p className="text-muted-foreground text-center col-span-1 md:col-span-2 xl:col-span-3 py-8">No scripts found.</p>;
     }
@@ -188,7 +189,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
         ))}
       </div>
     );
-  };
+  }, []);
   
   return (
     <div 
@@ -225,13 +226,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
               </CardHeader>
           </Card>
 
-          <div className="mb-6 flex justify-end gap-2">
-              <Button variant="outline" onClick={toggleAllSections}>
-                  {allOpen ? <ChevronsUpDownIcon className="mr-2 h-4 w-4" /> : <ChevronsDownUp className="mr-2 h-4 w-4" />}
-                  {allOpen ? 'Collapse All' : 'Expand All'}
-              </Button>
-          </div>
-
           <div className="my-8">
             <CustomerDetailsCard 
               agentName={user?.name || 'Agent'} 
@@ -239,6 +233,13 @@ export default function ScriptPage({ department: initialDepartment }: { departme
               isOpen={customerDetailsOpen}
               onOpenChange={setCustomerDetailsOpen}
             />
+          </div>
+
+          <div className="mb-6 flex justify-end gap-2">
+              <Button variant="outline" onClick={toggleAllSections}>
+                  {allOpen ? <ChevronsUpDownIcon className="mr-2 h-4 w-4" /> : <ChevronsDownUp className="mr-2 h-4 w-4" />}
+                  {allOpen ? 'Collapse All' : 'Expand All'}
+              </Button>
           </div>
 
           <div className="space-y-12">
@@ -334,5 +335,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    

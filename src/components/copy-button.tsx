@@ -1,25 +1,26 @@
 
 "use client";
-
-import { useState } from "react";
+import React from 'react';
+import { useState, useCallback } from "react";
 import { Button, ButtonProps } from "@/components/ui/button";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy } from "@/components/ui/lucide-icons";
 import { cn } from "@/lib/utils";
 
 interface CustomCopyButtonProps extends ButtonProps {
   textToCopy: string;
 }
 
-export function CopyButton({ textToCopy, className, children, ...props }: CustomCopyButtonProps) {
+function CopyButtonComponent({ textToCopy, className, children, ...props }: CustomCopyButtonProps) {
   const [hasCopied, setHasCopied] = useState(false);
 
-  const copyToClipboard = () => {
+  const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(textToCopy);
     setHasCopied(true);
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setHasCopied(false);
     }, 2000);
-  };
+    return () => clearTimeout(timer);
+  }, [textToCopy]);
 
   if (children) {
     return (
@@ -52,3 +53,5 @@ export function CopyButton({ textToCopy, className, children, ...props }: Custom
     </Button>
   );
 }
+
+export const CopyButton = React.memo(CopyButtonComponent);

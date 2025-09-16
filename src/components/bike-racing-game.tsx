@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from './ui/button';
-import { RotateCw, Trophy } from 'lucide-react';
+import { RotateCw, Trophy } from '@/components/ui/lucide-icons';
 import { cn } from '@/lib/utils';
 import { Card } from './ui/card';
 

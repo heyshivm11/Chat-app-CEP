@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { RotateCw } from 'lucide-react';
+import { RotateCw } from '@/components/ui/lucide-icons';
 import { cn } from '@/lib/utils';
 
 function Square({ value, onSquareClick }: { value: string | null, onSquareClick: () => void }) {

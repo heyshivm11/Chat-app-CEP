@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles } from "@/components/ui/lucide-icons";
 import { getRefinedScript } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { CopyButton } from "./copy-button";

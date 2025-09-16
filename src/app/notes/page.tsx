@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, RotateCcw, Notebook, ArrowLeft } from "lucide-react";
+import { Copy, RotateCcw, Notebook, ArrowLeft } from "@/components/ui/lucide-icons";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { AuthGate } from "@/components/auth-gate";
@@ -51,6 +51,7 @@ function NotesPageContent() {
       <PageHeader
         searchTerm=""
         onSearchChange={() => {}}
+        onSearchSubmit={() => {}}
         category="All"
         onCategoryChange={() => {}}
         department={user?.department || 'frontline'}

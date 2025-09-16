@@ -3,10 +3,10 @@
 
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Gamepad2 } from "lucide-react";
+import { ArrowLeft, Gamepad2 } from "@/components/ui/lucide-icons";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { TicTacToeGame } from "@/components/tic-tac-toe-game";
 import { SnakeGame } from "@/components/snake-game";
 import { BikeRacingGame } from "@/components/bike-racing-game";
@@ -28,6 +28,7 @@ function FunZonePageContent() {
             <PageHeader 
                 searchTerm=""
                 onSearchChange={() => {}}
+                onSearchSubmit={() => {}}
                 category="All"
                 onCategoryChange={() => {}}
                 department={user?.department || 'frontline'}

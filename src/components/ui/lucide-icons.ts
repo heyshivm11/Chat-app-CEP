@@ -14,6 +14,8 @@ export {
     FileText,
     Workflow,
     BookCopy,
+    MessageSquareQuote,
+    ChevronsDownUp,
     Sparkles,
     Copy,
     Check,
@@ -28,5 +30,3 @@ export {
     ChevronRight,
     Circle,
 } from 'lucide-react';
-
-    

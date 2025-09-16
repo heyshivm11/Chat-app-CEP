@@ -1,8 +1,8 @@
 
 "use client";
-
+import React from 'react';
 import Link from "next/link";
-import { Search, Gamepad2, Plane, Notebook, LogOut } from "lucide-react";
+import { Search, Gamepad2, Plane, Notebook, LogOut } from "@/components/ui/lucide-icons";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -15,7 +15,6 @@ import { ThemeSwitcher } from "./theme-switcher";
 import { scriptCategories } from "@/lib/scripts";
 import { Button } from "./ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import type { Script } from "@/lib/types";
 
 interface PageHeaderProps {
   searchTerm: string;
@@ -27,7 +26,7 @@ interface PageHeaderProps {
   onDepartmentChange: (department: string) => void;
 }
 
-export function PageHeader({ 
+function PageHeaderComponent({ 
   searchTerm, 
   onSearchChange, 
   onSearchSubmit,
@@ -108,3 +107,5 @@ export function PageHeader({
     </header>
   );
 }
+
+export const PageHeader = React.memo(PageHeaderComponent);

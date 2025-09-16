@@ -1,13 +1,13 @@
 
 "use client";
-
+import React from 'react';
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CopyButton } from './copy-button';
-import { ClipboardPaste, User, RotateCcw, ChevronsUpDown, Undo } from 'lucide-react';
+import { ClipboardPaste, User, RotateCcw, ChevronsUpDown, Undo } from '@/components/ui/lucide-icons';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Button } from './ui/button';
@@ -48,7 +48,7 @@ interface CustomerFormProps {
   onQueryChange?: (query: string) => void;
 }
 
-function CustomerForm({ agentName, formData, onFormChange, onUndo, onReset, hasHistory, onQueryChange }: CustomerFormProps) {
+function CustomerFormComponent({ agentName, formData, onFormChange, onUndo, onReset, hasHistory, onQueryChange }: CustomerFormProps) {
   const [customerIsCaller, setCustomerIsCaller] = useState(formData.relation === 'Self');
 
   const handleInputChange = (id: string, value: string) => {
@@ -174,8 +174,10 @@ function CustomerForm({ agentName, formData, onFormChange, onUndo, onReset, hasH
   );
 }
 
+const CustomerForm = React.memo(CustomerFormComponent);
 
-export function CustomerDetailsCard({
+
+function CustomerDetailsCardComponent({
   agentName,
   onQueryChange,
   isOpen,
@@ -239,7 +241,7 @@ export function CustomerDetailsCard({
   }, [toast, detailsToCopy1, detailsToCopy2, copyDetails]);
 
 
-  const handleFormChange = (
+  const handleFormChange = useCallback((
     formIndex: 1 | 2, 
     fieldName: keyof FormState, 
     value: string
@@ -257,9 +259,9 @@ export function CustomerDetailsCard({
         onQueryChange(value);
       }
     }
-  };
+  }, [onQueryChange, form1Data, form2Data]);
   
-  const handleUndo = (formIndex: 1 | 2) => {
+  const handleUndo = useCallback((formIndex: 1 | 2) => {
     if (formIndex === 1) {
       const lastState = form1History.pop();
       if (lastState) {
@@ -279,9 +281,9 @@ export function CustomerDetailsCard({
         }
       }
     }
-  };
+  }, [form1History, form2History, onQueryChange, form1Data.query, form2Data.query]);
 
-  const handleReset = (formIndex: 1 | 2) => {
+  const handleReset = useCallback((formIndex: 1 | 2) => {
     if (formIndex === 1) {
       setForm1History(prev => [...prev, form1Data]);
       setForm1Data(initialFormState);
@@ -295,15 +297,17 @@ export function CustomerDetailsCard({
         onQueryChange('');
       }
     }
-  };
+  }, [onQueryChange, form1Data, form2Data]);
 
-  const handleTabChange = (value: string) => {
-    if (value === 'customer1') {
-      if (onQueryChange) onQueryChange(form1Data.query);
-    } else {
-      if (onQueryChange) onQueryChange(form2Data.query);
+  const handleTabChange = useCallback((value: string) => {
+    if (onQueryChange) {
+      if (value === 'customer1') {
+        onQueryChange(form1Data.query);
+      } else {
+        onQueryChange(form2Data.query);
+      }
     }
-  };
+  }, [onQueryChange, form1Data.query, form2Data.query]);
 
 
   return (
@@ -363,5 +367,4 @@ export function CustomerDetailsCard({
   );
 }
 
-    
-    
+export const CustomerDetailsCard = React.memo(CustomerDetailsCardComponent);

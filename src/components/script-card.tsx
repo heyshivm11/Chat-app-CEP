@@ -1,13 +1,13 @@
 
 "use client";
-
+import React from 'react';
 import { useState } from "react";
 import type { Script, SubScript } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CopyButton } from "./copy-button";
 import { AiRefineDialog } from "./ai-refine-dialog";
 import { Button } from "./ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@/components/ui/lucide-icons";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
@@ -15,7 +15,7 @@ interface ScriptCardProps {
   script: Script;
 }
 
-export function ScriptCard({ script }: ScriptCardProps) {
+function ScriptCardComponent({ script }: ScriptCardProps) {
   const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
   const rawContent = Array.isArray(script.content)
     ? script.content.map((s) => `${s.title}: ${s.content}`).join("\n\n")
@@ -62,7 +62,7 @@ export function ScriptCard({ script }: ScriptCardProps) {
   );
 }
 
-function SubScriptItem({ subScript }: { subScript: SubScript }) {
+function SubScriptItemComponent({ subScript }: { subScript: SubScript }) {
     const { toast } = useToast();
 
     const handleCopy = () => {
@@ -87,3 +87,6 @@ function SubScriptItem({ subScript }: { subScript: SubScript }) {
         </div>
     )
 }
+
+export const SubScriptItem = React.memo(SubScriptItemComponent);
+export const ScriptCard = React.memo(ScriptCardComponent);

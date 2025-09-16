@@ -3,7 +3,7 @@
 
 import { useTheme } from "@/components/providers/theme-provider";
 import { Button } from "@/components/ui/button";
-import { Palette } from "lucide-react";
+import { Palette } from "@/components/ui/lucide-icons";
 
 export function ThemeSwitcher() {
   const { cycleTheme } = useTheme();
