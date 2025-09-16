@@ -169,7 +169,7 @@ export const scripts: Script[] = [
     id: 'common-2',
     department: 'common',
     category: 'Conversation Flow',
-    title: 'Conversation Flow',
+    title: 'Conversation Opening',
     content: [
       {
         title: 'Acknowledge initial query',
@@ -187,7 +187,15 @@ export const scripts: Script[] = [
         title: 'Probing',
         content: 'To better understand the situation, I’ll need to ask a few questions. Is that ok?',
       },
-      {
+    ],
+  },
+  {
+    id: 'common-8',
+    department: 'common',
+    category: 'Conversation Flow',
+    title: 'Solution & Closing',
+    content: [
+       {
         title: 'Discuss Solution & Gain Agreement',
         content: 'So [Customer First Name], the available options are…',
       },
@@ -215,7 +223,7 @@ export const scripts: Script[] = [
         title: 'Wish',
         content: 'Wishing you a wonderful day ahead!',
       },
-    ],
+    ]
   },
   {
     id: 'common-3',
@@ -271,4 +279,3 @@ export const scripts: Script[] = [
 ];
 
 export const scriptCategories = [...new Set(scripts.map(s => s.category))];
-
