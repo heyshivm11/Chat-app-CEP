@@ -106,15 +106,17 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 
   const renderScriptList = (scriptList: Script[]) => {
     if (scriptList.length === 0) {
-      return <p className="text-muted-foreground text-center col-span-1 lg:col-span-2 xl:col-span-3 py-8">No scripts found.</p>;
+      return <p className="text-muted-foreground text-center col-span-1 md:col-span-2 xl:col-span-3 py-8">No scripts found.</p>;
     }
     
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
-        {scriptList.map((script) => (
-          <ScriptCard key={script.id} script={script} />
-        ))}
-      </div>
+        <div className="columns-1 md:columns-2 xl:columns-3 gap-4">
+            {scriptList.map((script) => (
+                <div key={script.id} className="break-inside-avoid mb-4">
+                    <ScriptCard script={script} />
+                </div>
+            ))}
+        </div>
     );
   };
   
@@ -217,7 +219,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
-
-    
