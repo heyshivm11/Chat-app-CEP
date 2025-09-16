@@ -38,7 +38,7 @@ export function ScriptCard({ script }: ScriptCardProps) {
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="flex-grow pt-0">
+        <CardContent className="pt-0">
           {Array.isArray(script.content) ? (
             <div className="space-y-4">
               {script.content.map((sub, index) => (
