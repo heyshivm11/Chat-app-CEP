@@ -19,7 +19,7 @@ import { RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 
-export default function ScriptPage({ department: initialDepartment, departmentName: initialDepartmentName }: { department?: string, departmentName?: string }) {
+export default function ScriptPage({ department: initialDepartment }: { department?: string }) {
   const { user, logout } = useAuth();
   const router = useRouter();
 
@@ -125,7 +125,7 @@ export default function ScriptPage({ department: initialDepartment, departmentNa
   };
   
   return (
-    <div className="flex-1">
+    <div className="flex flex-col min-h-screen">
       <PageHeader 
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -133,8 +133,9 @@ export default function ScriptPage({ department: initialDepartment, departmentNa
         onCategoryChange={setCategory}
         department={department}
         onDepartmentChange={handleDepartmentChange}
+        onLogout={handleLogout}
       />
-      <main className="container mx-auto px-4 md:px-8 py-8">
+      <main className="container mx-auto px-4 md:px-8 py-8 flex-1">
         
         <Card className="mb-8">
             <CardHeader>
@@ -152,10 +153,6 @@ export default function ScriptPage({ department: initialDepartment, departmentNa
                           </Button>
                       </div>
                   </div>
-                    <Button variant="outline" onClick={handleLogout}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Logout
-                  </Button>
                 </div>
             </CardHeader>
         </Card>

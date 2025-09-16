@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Gamepad2, Plane, Notebook } from "lucide-react";
+import { Search, Gamepad2, Plane, Notebook, LogOut } from "lucide-react";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -22,6 +22,7 @@ interface PageHeaderProps {
   onCategoryChange: (category: string) => void;
   department: string;
   onDepartmentChange: (department: string) => void;
+  onLogout: () => void;
 }
 
 export function PageHeader({ 
@@ -31,6 +32,7 @@ export function PageHeader({
   onCategoryChange, 
   department, 
   onDepartmentChange,
+  onLogout
 }: PageHeaderProps) {
 
   return (
@@ -88,10 +90,11 @@ export function PageHeader({
                 <Gamepad2 className="h-6 w-6" />
               </Button>
             </Link>
+            <Button variant="ghost" size="icon" aria-label="Logout" onClick={onLogout}>
+              <LogOut className="h-6 w-6" />
+            </Button>
         </div>
       </div>
     </header>
   );
 }
-
-    
