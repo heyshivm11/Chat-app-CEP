@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CopyButton } from "./copy-button";
 import { AiRefineDialog } from "./ai-refine-dialog";
 import { Button } from "./ui/button";
-import { Sparkles } from "@/components/ui/lucide-icons";
+import { PersonStanding } from "@/components/ui/lucide-icons";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
@@ -35,9 +35,9 @@ function ScriptCardComponent({ script }: ScriptCardProps) {
               size="icon"
               className="h-7 w-7"
               onClick={() => setIsAiDialogOpen(true)}
-              aria-label="Refine with AI"
+              aria-label="Humanize Script"
             >
-              <Sparkles className="h-5 w-5 text-primary" />
+              <PersonStanding className="h-5 w-5 text-primary" />
             </Button>
           </div>
         </CardHeader>

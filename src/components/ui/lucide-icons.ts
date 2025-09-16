@@ -32,4 +32,5 @@ export {
     Globe,
     MessageCircle,
     Send,
+    PersonStanding,
 } from 'lucide-react';

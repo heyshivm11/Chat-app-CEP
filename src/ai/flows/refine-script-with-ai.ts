@@ -20,20 +20,19 @@ export async function refineScript(input: RefineScriptInput): Promise<RefineScri
 }
 
 const refineScriptPrompt = ai.definePrompt({
-  name: 'refineScriptPrompt',
+  name: 'humanizeScriptPrompt',
   input: {schema: RefineScriptInputSchema},
   output: {schema: RefineScriptOutputSchema},
-  prompt: `You are an AI assistant specialized in refining chat scripts for customer service.
+  prompt: `You are an AI assistant specialized in making chat scripts sound more human and natural for customer service agents.
 
-  Given the following script, chat context, and customer sentiment, generate a refined version of the script that is more tailored to the situation.
+  Your goal is to rewrite the given script to be less robotic and more conversational, while keeping the original meaning intact. Provide a creative and friendly alternative.
 
   Original Script: {{{script}}}
 
-  Chat Context: {{{context}}}
-
-  Customer Sentiment: {{{sentiment}}}
-
-  Refined Script:`,
+  Humanized Script:`,
+  config: {
+    temperature: 0.9,
+  }
 });
 
 const refineScriptFlow = ai.defineFlow(
