@@ -1,18 +1,18 @@
 
+
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
-import { FileText, Workflow, BookCopy, ChevronsUpDown, LogOut } from "lucide-react";
+import { FileText, Workflow, BookCopy, ChevronsUpDown } from "lucide-react";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
-import { useAuth } from "@/hooks/use-auth";
 import { TypingEffect } from "./typing-effect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { RotateCcw } from "lucide-react";
@@ -20,7 +20,6 @@ import { useRouter } from "next/navigation";
 
 
 export default function ScriptPage({ department: initialDepartment }: { department?: string }) {
-  const { user, logout } = useAuth();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,7 +30,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [commonOpen, setCommonOpen] = useState(true);
 
-  const agentName = user?.name || "Agent";
+  const agentName = "Agent"; // Hardcoded agent name
 
   const motivationalPhrases = [
     "Let's provide the best experience to customers...",
@@ -47,11 +46,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     setDepartment(newDepartment);
     router.push(`/scripts/${newDepartment}`);
   };
-
-  const handleLogout = () => {
-    logout();
-    router.push('/login');
-  }
 
   const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string) => {
     return scriptsToProcess.map(script => {
@@ -89,11 +83,10 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       
       const categoryMatch = category === "All" || script.category === category;
       
-      const teamMatch = script.team === 'All' || script.team === user?.department;
-      
-      return searchMatch && categoryMatch && teamMatch;
+      // Removed teamMatch as user department is no longer available
+      return searchMatch && categoryMatch;
     });
-  }, [searchTerm, category, user?.department]);
+  }, [searchTerm, category]);
 
   const departmentScripts = useMemo(() => {
     const deptScripts = filteredScripts.filter(s => s.department === department);
@@ -133,7 +126,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
         onCategoryChange={setCategory}
         department={department}
         onDepartmentChange={handleDepartmentChange}
-        onLogout={handleLogout}
       />
       <main className="container mx-auto px-4 md:px-8 py-8 flex-1">
         
