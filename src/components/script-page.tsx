@@ -84,9 +84,9 @@ const BentoCard = ({
     className?: string
 }) => (
     <Collapsible open={isOpen} onOpenChange={onOpenChange} className={className}>
-        <div className="bento-card">
+        <div className="p-4 rounded-lg border border-white/20 bg-background/30 backdrop-blur-lg flex flex-col h-full">
             <CollapsibleTrigger asChild>
-                <button className="bento-card-header group">
+                <button className="flex items-center justify-between w-full pb-4 group">
                     <div className="flex items-center gap-3">
                         {icon}
                         <h2 className="text-xl font-bold tracking-tight text-foreground">{title}</h2>
@@ -95,7 +95,7 @@ const BentoCard = ({
                 </button>
             </CollapsibleTrigger>
             <CollapsibleContent asChild>
-                <div className="bento-card-content">
+                <div className="flex-1">
                     {children}
                 </div>
             </CollapsibleContent>
@@ -269,7 +269,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         title="Customer Details"
                         isOpen={customerDetailsOpen}
                         onOpenChange={setCustomerDetailsOpen}
-                        className="col-span-12 lg:col-span-12"
+                        className="col-span-12"
                     >
                          <CustomerDetailsCard 
                             agentName={user?.name || 'Agent'} 
@@ -299,7 +299,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         title="Workflow"
                         isOpen={workflowOpen}
                         onOpenChange={setWorkflowOpen}
-                        className="col-span-12 md:col-span-6 lg:col-span  -7"
+                        className="col-span-12 md:col-span-6 lg:col-span-7"
                     >
                         {renderFlexScriptList(workflowScripts)}
                     </BentoCard>
