@@ -187,8 +187,6 @@ function CustomerDetailsCardComponent({
 }: {
   agentName: string;
   onQueryChange?: (query: string) => void;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
 }) {
   const { toast } = useToast();
   const [form1Data, setForm1Data] = useState(initialFormState);
