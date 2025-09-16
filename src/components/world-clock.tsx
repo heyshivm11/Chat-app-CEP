@@ -49,6 +49,7 @@ function WorldClockComponent() {
     setIsLoading(true);
     setError(null);
     setSuggestions([]);
+    setQuery(""); // Reset query for new search
     try {
       const response = await fetch(`https://timeapi.io/api/time/current/zone?timeZone=${timezone}`);
       if (!response.ok) throw new Error(`Failed to fetch time for "${timezone}". Please check the timezone name (e.g., "Europe/Amsterdam").`);
@@ -56,7 +57,6 @@ function WorldClockComponent() {
       setTimeData(data);
       setCurrentTime(new Date(data.dateTime));
       setSelectedTimezone(data.timeZone);
-      setQuery(""); // Reset query for new search
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       // Don't clear old data on error
@@ -66,10 +66,8 @@ function WorldClockComponent() {
   }, []);
 
   useEffect(() => {
-    if (selectedTimezone) {
-        fetchTime(selectedTimezone);
-    }
-  }, []); // Changed to run only once on mount, fetchTime has selectedTimezone as default
+    fetchTime(selectedTimezone);
+  }, []); 
 
   useEffect(() => {
     if (currentTime) {
@@ -100,7 +98,11 @@ function WorldClockComponent() {
   };
 
   const handleSearch = () => {
-    if (query.trim()) {
+    if (suggestions.length > 0) {
+      // If there are suggestions, use the top one
+      fetchTime(suggestions[0]);
+    } else if (query.trim()) {
+      // Otherwise, use the raw query text
       fetchTime(query.trim());
     }
   }
@@ -140,7 +142,7 @@ function WorldClockComponent() {
                   className="w-full pl-10 text-lg h-14 rounded-full shadow-lg"
                 />
             </div>
-            <Button onClick={handleSearch} disabled={isLoading || !query.trim()} className="h-14 rounded-full px-6">
+            <Button onClick={handleSearch} disabled={isLoading || (!query.trim() && suggestions.length === 0)} className="h-14 rounded-full px-6">
                 <Search className="h-5 w-5" />
             </Button>
         </div>
@@ -195,5 +197,3 @@ function WorldClockComponent() {
 }
 
 export const WorldClock = memo(WorldClockComponent);
-
-    
