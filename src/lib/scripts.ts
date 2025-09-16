@@ -181,7 +181,11 @@ export const scripts: Script[] = [
       },
       {
         title: 'Probing',
-        content: 'Can I ask you a few questions to better understand the situation? / To better assist you / to better understand the situation, I’ll need to ask a few questions. Is that ok?',
+        content: 'Can I ask you a few questions to better understand the situation?',
+      },
+      {
+        title: 'Probing',
+        content: 'To better assist you / to better understand the situation, I’ll need to ask a few questions. Is that ok?',
       },
       {
         title: 'Discuss Solution & Gain Agreement',
