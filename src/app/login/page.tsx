@@ -18,26 +18,6 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const { login, isLoading } = useAuth();
 
-  useEffect(() => {
-    const blob = document.getElementById("blob");
-    if (!blob) return;
-
-    const handlePointerMove = (event: PointerEvent) => { 
-      const { clientX, clientY } = event;
-      
-      blob.animate({
-        left: `${clientX}px`,
-        top: `${clientY}px`
-      }, { duration: 3000, fill: "forwards" });
-    }
-
-    window.addEventListener('pointermove', handlePointerMove);
-
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-    }
-  }, []);
-
   const handleLogin = () => {
     if (!name.trim() || !department) {
       setError('Please enter your name and select a department.');
@@ -57,10 +37,7 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex items-center justify-center min-h-screen p-4 overflow-hidden">
-       <div id="blob"></div>
-       <div id="blur"></div>
-       
-       <div className="absolute top-4 right-4 z-10">
+      <div className="absolute top-4 right-4 z-10">
         <ThemeSwitcher />
       </div>
 
@@ -100,6 +77,10 @@ export default function LoginPage() {
           </Button>
         </CardFooter>
       </Card>
+      
+      <div className="wave-container">
+        <div className="wave"></div>
+      </div>
     </div>
   );
 }
