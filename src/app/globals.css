@@ -90,3 +90,8 @@
     background-position: 0% 50%;
   }
 }
+
+.glass-card {
+  @apply bg-card/60 backdrop-blur-lg border border-white/10;
+}
+
