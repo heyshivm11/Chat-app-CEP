@@ -40,7 +40,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm glass-card">
         <CardHeader className="text-center">
           <div className="flex justify-center items-center mb-4">
-            <Plane className="h-12 w-12 text-primary" />
+            <Plane className="h-24 w-24 text-primary animate-fly-login" />
           </div>
           <CardTitle className="text-3xl font-bold">Welcome Back</CardTitle>
           <CardDescription>Sign in to access the CEP scripts</CardDescription>
