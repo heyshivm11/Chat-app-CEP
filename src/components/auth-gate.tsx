@@ -4,7 +4,6 @@ import { useAuth } from '@/hooks/use-auth';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
-import { LoginPage } from './login-page';
 
 export function AuthGate({ children }: { children?: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -13,15 +12,15 @@ export function AuthGate({ children }: { children?: React.ReactNode }) {
 
   useEffect(() => {
     if (!loading) {
-      if (!user && pathname !== '/login') {
-        router.push('/login');
-      } else if (user && pathname === '/login') {
-        router.push('/scripts');
+      if (!user && pathname !== '/login' && pathname !== '/landing') {
+        router.push('/landing');
+      } else if (user && (pathname === '/login' || pathname === '/landing')) {
+        router.push('/');
       }
     }
   }, [user, loading, router, pathname]);
   
-  if (loading) {
+  if (loading || (!user && (pathname !== '/login' && pathname !== '/landing'))) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -30,7 +29,9 @@ export function AuthGate({ children }: { children?: React.ReactNode }) {
   }
 
   if (!user) {
-    return <LoginPage />;
+    // This case should ideally not be hit if routing logic is correct,
+    // as login page has its own layout. But as a fallback:
+    return <>{children}</>;
   }
 
   return <>{children}</>;

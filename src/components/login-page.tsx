@@ -50,7 +50,7 @@ export function LoginPage() {
         title: 'Login Successful',
         description: 'Welcome!',
       });
-      router.push('/scripts');
+      router.push('/');
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -63,28 +63,20 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 overflow-hidden relative">
-       {/* Decorative shapes */}
-      <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/10 rounded-full animate-float-1"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-secondary/10 rounded-xl animate-float-2"></div>
-      <div className="absolute bottom-1/2 right-1/3 w-16 h-16 bg-primary/5 rounded-full animate-float-3"></div>
-      <div className="absolute top-1/3 left-1/2 w-20 h-20 bg-secondary/5 rounded-lg animate-float-1"></div>
-
-      <Card className="w-full max-w-md glass-card z-10">
+    <div className="min-h-screen flex items-center justify-center p-4 grid-background">
+      <Card className="w-full max-w-md z-10 border-2 border-black rounded-lg shadow-[8px_8px_0px_#000]">
         <CardHeader className="text-center">
-          <div className="mx-auto h-16 w-16 mb-4 relative">
-            <Plane className="h-16 w-16 text-primary animate-fly-login" />
-          </div>
-          <CardTitle className="text-2xl">CEP Scripts</CardTitle>
-          <CardDescription>Please log in to continue</CardDescription>
+          <CardTitle className="text-3xl font-bold">Agent Login</CardTitle>
+          <CardDescription>Enter your details to access the scripts</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName" className="font-semibold">First Name</Label>
               <Input
                 id="firstName"
                 placeholder="Enter your first name"
+                className="border-2 border-black"
                 {...register('firstName', {
                   required: 'First name is required',
                 })}
@@ -96,7 +88,7 @@ export function LoginPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label>Department</Label>
+              <Label className="font-semibold">Department</Label>
               <Select
                 onValueChange={(value: 'Frontline' | 'Schedule Change') => {
                   setValue('department', value, { shouldValidate: true });
@@ -105,10 +97,10 @@ export function LoginPage() {
                   required: 'Department is required',
                 })}
               >
-                <SelectTrigger>
+                <SelectTrigger className="border-2 border-black">
                   <SelectValue placeholder="Select your department" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="border-2 border-black">
                   <SelectItem value="Frontline">Frontline</SelectItem>
                   <SelectItem value="Schedule Change">Schedule Change</SelectItem>
                 </SelectContent>
@@ -119,7 +111,7 @@ export function LoginPage() {
                 </p>
               )}
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full btn-custom btn-primary-custom" disabled={isLoading}>
               {isLoading ? (
                 'Logging in...'
               ) : (
