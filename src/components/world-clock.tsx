@@ -49,7 +49,7 @@ function WorldClockComponent() {
 
   useEffect(() => {
     fetchTime(selectedTimezone);
-  }, [fetchTime]); 
+  }, []); 
 
   useEffect(() => {
     if (currentTime) {
