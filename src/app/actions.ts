@@ -2,8 +2,7 @@
 
 import { refineScript } from "@/ai/flows/refine-script-with-ai";
 import { chat } from "@/ai/flows/chatbot-flow";
-import type { RefineScriptInput } from "./ai-schemas";
-import type { ChatInput } from "@/ai/flows/chatbot-flow";
+import type { RefineScriptInput, ChatInput } from "./ai-schemas";
 
 
 export async function getRefinedScript(input: RefineScriptInput) {

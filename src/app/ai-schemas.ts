@@ -12,3 +12,14 @@ export const RefineScriptOutputSchema = z.object({
   refinedScript: z.string().describe('The refined chat script.'),
 });
 export type RefineScriptOutput = z.infer<typeof RefineScriptOutputSchema>;
+
+// Schema for chatbot
+export const ChatInputSchema = z.object({
+    message: z.string().describe('The user message.'),
+});
+export type ChatInput = z.infer<typeof ChatInputSchema>;
+
+export const ChatOutputSchema = z.object({
+    message: z.string().describe('The AI response.'),
+});
+export type ChatOutput = z.infer<typeof ChatOutputSchema>;
