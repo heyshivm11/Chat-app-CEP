@@ -24,6 +24,7 @@ const initialFormState = {
   resolution: '',
   ghostline: 'N/A',
   notes: '',
+  validationNeeded: 'No',
   validatedBy: '',
 };
 
@@ -38,7 +39,10 @@ const getDetailsToCopy = (formData: FormState, agentName: string) => {
     text += `Relation: ${formData.relation}\n`;
     text += `Query: ${formData.query}\n`;
     text += `Resolution: ${formData.resolution}\n`;
-    text += `Validated by: ${formData.validatedBy}\n`;
+    text += `Validation needed: ${formData.validationNeeded}\n`;
+    if (formData.validationNeeded === 'Yes') {
+      text += `Validated by: ${formData.validatedBy}\n`;
+    }
     text += `Ghostline: ${formData.ghostline}\n`;
     text += `Notes: ${formData.notes}`;
     return text;
@@ -63,7 +67,11 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
 
   const updateField = (fieldName: keyof FormState, value: string) => {
     setHistory([...history, formData]);
-    setFormData({ ...formData, [fieldName]: value });
+    const newState = { ...formData, [fieldName]: value };
+    if (fieldName === 'validationNeeded' && value === 'No') {
+      newState.validatedBy = '';
+    }
+    setFormData(newState);
   };
   
   const handleInputChange = (id: keyof FormState, value: string) => {
@@ -114,7 +122,7 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
   return (
     <div className="space-y-4 pt-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {formFields.map(fieldDef => {
+        {formFields.slice(0, 2).map(fieldDef => {
             const field = fieldDef.id as keyof FormState;
             return (
                 <div key={field} className="space-y-2">
@@ -128,7 +136,8 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
             );
         })}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
             <Label htmlFor="callerName">Caller's name</Label>
             <Input
@@ -157,8 +166,53 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
                 />
             </div>
         )}
+      </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {formFields.slice(2).map(fieldDef => {
+              const field = fieldDef.id as keyof FormState;
+              return (
+                  <div key={field} className="space-y-2">
+                      <Label htmlFor={field}>{fieldDef.label}</Label>
+                      <Input
+                          id={field}
+                          value={formData[field]}
+                          onChange={(e) => handleInputChange(field, e.target.value)}
+                      />
+                  </div>
+              );
+          })}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
+            <Label htmlFor="validationNeeded">Validation needed</Label>
+            <Select
+                value={formData.validationNeeded}
+                onValueChange={(value) => handleInputChange('validationNeeded', value)}
+            >
+                <SelectTrigger id="validationNeeded">
+                    <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                </SelectContent>
+            </Select>
+        </div>
+        {formData.validationNeeded === 'Yes' && (
+          <div className="space-y-2">
+              <Label htmlFor="validatedBy">Validated by</Label>
+              <Input
+                  id="validatedBy"
+                  value={formData.validatedBy}
+                  onChange={(e) => handleInputChange('validatedBy', e.target.value)}
+              />
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-2">
             <Label htmlFor="ghostline">Ghostline</Label>
             <Select
                 value={formData.ghostline}
@@ -174,7 +228,7 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
                 </SelectContent>
             </Select>
         </div>
-      </div>
+
       <div className="space-y-2">
         <Label htmlFor="notes">Notes</Label>
         <Textarea
@@ -206,7 +260,6 @@ const formFields = [
   { id: 'customerName', label: "Customer's name" },
   { id: 'query', label: 'Query' },
   { id: 'resolution', label: 'Resolution' },
-  { id: 'validatedBy', label: 'Validated by' },
 ];
 
 
@@ -250,7 +303,7 @@ function CustomerDetailsCardComponent({
         description: "Have you copied the customer details? They might be important for your records.",
         duration: 8000,
         action: (
-          <div className="flex flex-col items-stretch gap-2 mt-2 w-full">
+          <div className="flex items-stretch gap-2 mt-2">
             <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)}>
                 Copy Cust. 1
             </ToastAction>
