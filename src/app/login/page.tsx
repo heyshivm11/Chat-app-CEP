@@ -57,8 +57,8 @@ export default function LoginPage() {
         priority
       />
       <Image
-        src="https://storage.googleapis.com/project-spark-348216/815/studio/assets/y8wz6S_r4.jpg"
-        alt="Airplane wing over a city at night - Dark Mode"
+        src="https://storage.googleapis.com/project-spark-348216/815/studio/assets/1l_Gk7Lz1.jpg"
+        alt="Airplane flying over a city at night - Dark Mode"
         fill
         className={cn(
             "object-cover -z-10 transition-opacity duration-1000",
