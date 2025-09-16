@@ -260,7 +260,7 @@ export const scripts: Script[] = [
     content: [
         {
             title: 'Closing',
-            content: 'Thank you for contacting us. Should you require any further assistance, please don’t hesitate to get in touch.'
+            content: 'Thank you for using our service. Should you require any further assistance, please don’t hesitate to get in touch.'
         },
         {
             title: 'Wish',
