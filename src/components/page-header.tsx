@@ -60,8 +60,8 @@ export function PageHeader({
               <SelectValue placeholder="Select Department" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="frontline">FrontLine</SelectItem>
-              <SelectItem value="schedule-change">Schedule Chnage</SelectItem>
+              <SelectItem value="etg">ETG</SelectItem>
+              <SelectItem value="bookingcom">Booking.com</SelectItem>
             </SelectContent>
           </Select>
 

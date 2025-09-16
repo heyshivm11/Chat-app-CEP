@@ -2,10 +2,10 @@
 import type { Script } from './types';
 
 export const scripts: Script[] = [
-  // FrontLine Scripts
+  // ETG Scripts
   {
-    id: 'frontline-1',
-    department: 'frontline',
+    id: 'etg-1',
+    department: 'etg',
     category: 'Request Not Stated & Non-Verified',
     title: 'Request Not Stated & Non-Verified',
     content: [
@@ -20,15 +20,15 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'frontline-2',
-    department: 'frontline',
+    id: 'etg-2',
+    department: 'etg',
     category: 'Request Not Stated & Verified',
     title: 'Request Not Stated & Verified',
     content: "Welcome to Customer Care [Customer First Name], you’re speaking with [Agent Name]! How may I assist you today?",
   },
   {
-    id: 'frontline-3',
-    department: 'frontline',
+    id: 'etg-3',
+    department: 'etg',
     category: 'Request Stated & Non-Verified',
     title: 'Request Stated & Non-Verified',
     content: [
@@ -43,8 +43,8 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'frontline-4',
-    department: 'frontline',
+    id: 'etg-4',
+    department: 'etg',
     category: 'Request Stated & Verified',
     title: 'Request Stated & Verified',
     content: [
@@ -59,8 +59,8 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'frontline-5',
-    department: 'frontline',
+    id: 'etg-5',
+    department: 'etg',
     category: 'Verified – Request Stated (Transferred Chat)',
     title: 'Verified – Request Stated (Transferred Chat)',
     content: [
@@ -75,10 +75,10 @@ export const scripts: Script[] = [
     ]
   },
 
-  // Schedule Change Scripts
+  // Booking.com Scripts
   {
-    id: 'schedule-change-1',
-    department: 'schedule-change',
+    id: 'bookingcom-1',
+    department: 'bookingcom',
     category: 'Request Not Stated & Non-Verified',
     title: 'Request Not Stated & Non-Verified',
     content: [
@@ -93,15 +93,15 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'schedule-change-2',
-    department: 'schedule-change',
+    id: 'bookingcom-2',
+    department: 'bookingcom',
     category: 'Request Not Stated & Verified',
     title: 'Request Not Stated & Verified',
     content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is [Agent Name]!How may I assist you today?',
   },
   {
-    id: 'schedule-change-3',
-    department: 'schedule-change',
+    id: 'bookingcom-3',
+    department: 'bookingcom',
     category: 'Request Stated & Non-Verified',
     title: 'Request Stated & Non-Verified',
     content: [
@@ -116,8 +116,8 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'schedule-change-4',
-    department: 'schedule-change',
+    id: 'bookingcom-4',
+    department: 'bookingcom',
     category: 'Request Stated & Verified',
     title: 'Request Stated & Verified',
     content: [
@@ -132,8 +132,8 @@ export const scripts: Script[] = [
     ]
   },
   {
-    id: 'schedule-change-5',
-    department: 'schedule-change',
+    id: 'bookingcom-5',
+    department: 'bookingcom',
     category: 'Verified – Request Stated (Transferred Chat)',
     title: 'Verified – Request Stated (Transferred Chat)',
     content: [

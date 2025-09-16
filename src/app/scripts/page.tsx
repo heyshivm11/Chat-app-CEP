@@ -5,14 +5,14 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
 
-// This page's purpose is to redirect from /scripts to /scripts/frontline
+// This page's purpose is to redirect from /scripts to /scripts/etg
 export default function ScriptsRedirectPage() {
   const router = useRouter();
   const { isLoading, user } = useAuth();
 
   useEffect(() => {
     if (!isLoading) {
-        const targetDepartment = user?.department || 'frontline';
+        const targetDepartment = user?.department || 'etg';
         router.replace(`/scripts/${targetDepartment}`);
     }
   }, [router, isLoading, user]);

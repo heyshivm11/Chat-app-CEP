@@ -25,7 +25,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("All");
-  const [department, setDepartment] = useState(initialDepartment || user?.department || "frontline");
+  const [department, setDepartment] = useState(initialDepartment || user?.department || "etg");
   const [customerName, setCustomerName] = useState("");
   const [openingOpen, setOpeningOpen] = useState(true);
   const [workflowOpen, setWorkflowOpen] = useState(true);
