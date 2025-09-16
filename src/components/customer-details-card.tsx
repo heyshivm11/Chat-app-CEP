@@ -190,37 +190,29 @@ function CustomerDetailsCardComponent({
   const { toast } = useToast();
   const [form1Data, setForm1Data] = useState(initialFormState);
   const [form1History, setForm1History] = useState<FormState[]>([]);
-  const [form1ReminderShown, setForm1ReminderShown] = useState(false);
-  
   const [form2Data, setForm2Data] = useState(initialFormState);
   const [form2History, setForm2History] = useState<FormState[]>([]);
-  const [form2ReminderShown, setForm2ReminderShown] = useState(false);
 
-  const reminderTimeoutRef1 = useRef<NodeJS.Timeout>();
-  const reminderTimeoutRef2 = useRef<NodeJS.Timeout>();
+  const reminderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const copyDetails = useCallback((formNumber: 1 | 2) => {
     const dataToCopy = formNumber === 1 ? form1Data : form2Data;
     const text = getDetailsToCopy(dataToCopy, agentName);
     navigator.clipboard.writeText(text);
     toast({ title: `Details for Customer ${formNumber} copied!` });
-
-    if (formNumber === 1) {
-      if (reminderTimeoutRef1.current) clearTimeout(reminderTimeoutRef1.current);
-      setForm1ReminderShown(true);
-    } else {
-      if (reminderTimeoutRef2.current) clearTimeout(reminderTimeoutRef2.current);
-      setForm2ReminderShown(true);
+    if (reminderTimeoutRef.current) {
+        clearTimeout(reminderTimeoutRef.current);
     }
   }, [agentName, form1Data, form2Data, toast]);
 
-  const triggerCopyReminder = useCallback((formNumber: 1 | 2) => {
+
+  const triggerCopyReminder = useCallback(() => {
     toast({
         title: "Don't Forget!",
         description: "Have you copied the customer details? They might be important for your records.",
         duration: 8000,
         action: (
-            <div className="flex gap-2 mt-2 w-full">
+            <div className="flex flex-row gap-2 mt-2 w-full">
                 <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)}>
                     Copy Cust. 1
                 </ToastAction>
@@ -232,31 +224,20 @@ function CustomerDetailsCardComponent({
     });
   }, [toast, copyDetails]);
 
-  const scheduleReminder = useCallback((formNumber: 1 | 2) => {
-    const reminderAlreadyShown = formNumber === 1 ? form1ReminderShown : form2ReminderShown;
-    const timeoutRef = formNumber === 1 ? reminderTimeoutRef1 : reminderTimeoutRef2;
-    
-    if (reminderAlreadyShown) return;
-    
-    if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+  const scheduleReminder = useCallback(() => {
+    if (reminderTimeoutRef.current) {
+        clearTimeout(reminderTimeoutRef.current);
     }
-
-    timeoutRef.current = setTimeout(() => {
-        triggerCopyReminder(formNumber);
-        if (formNumber === 1) {
-            setForm1ReminderShown(true);
-        } else {
-            setForm2ReminderShown(true);
-        }
+    reminderTimeoutRef.current = setTimeout(() => {
+        triggerCopyReminder();
     }, 30000); // 30 seconds
-  }, [form1ReminderShown, form2ReminderShown, triggerCopyReminder]);
-
+  }, [triggerCopyReminder]);
 
   useEffect(() => {
     return () => {
-      if (reminderTimeoutRef1.current) clearTimeout(reminderTimeoutRef1.current);
-      if (reminderTimeoutRef2.current) clearTimeout(reminderTimeoutRef2.current);
+      if (reminderTimeoutRef.current) {
+        clearTimeout(reminderTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -266,23 +247,29 @@ function CustomerDetailsCardComponent({
     fieldName: keyof FormState, 
     value: string
   ) => {
+    const isReminderField = fieldName === 'query' || fieldName === 'resolution';
+
     if (formIndex === 1) {
-      setForm1History(prev => [...prev, form1Data]);
-      setForm1Data(prev => ({ ...prev, [fieldName]: value }));
-      if (fieldName === 'query' || fieldName === 'resolution') {
-        scheduleReminder(1);
-      }
-      if (fieldName === 'query' && onQueryChange) {
+      const oldData = form1Data;
+      setForm1History(prev => [...prev, oldData]);
+      const newData = { ...oldData, [fieldName]: value };
+      setForm1Data(newData);
+      if (onQueryChange && fieldName === 'query') {
         onQueryChange(value);
+      }
+      if (isReminderField && value.trim() !== '') {
+          scheduleReminder();
       }
     } else {
-      setForm2History(prev => [...prev, form2Data]);
-      setForm2Data(prev => ({ ...prev, [fieldName]: value }));
-      if (fieldName === 'query' || fieldName === 'resolution') {
-        scheduleReminder(2);
-      }
-      if (fieldName === 'query' && onQueryChange) {
+      const oldData = form2Data;
+      setForm2History(prev => [...prev, oldData]);
+      const newData = { ...oldData, [fieldName]: value };
+      setForm2Data(newData);
+      if (onQueryChange && fieldName === 'query') {
         onQueryChange(value);
+      }
+       if (isReminderField && value.trim() !== '') {
+          scheduleReminder();
       }
     }
   }, [onQueryChange, form1Data, form2Data, scheduleReminder]);
@@ -310,19 +297,18 @@ function CustomerDetailsCardComponent({
   }, [form1History, form2History, onQueryChange, form1Data.query, form2Data.query]);
 
   const handleReset = useCallback((formIndex: 1 | 2) => {
+    if (reminderTimeoutRef.current) {
+        clearTimeout(reminderTimeoutRef.current);
+    }
     if (formIndex === 1) {
       setForm1History(prev => [...prev, form1Data]);
       setForm1Data(initialFormState);
-      if (reminderTimeoutRef1.current) clearTimeout(reminderTimeoutRef1.current);
-      setForm1ReminderShown(false);
        if (form1Data.query !== '' && onQueryChange) {
         onQueryChange('');
       }
     } else {
       setForm2History(prev => [...prev, form2Data]);
       setForm2Data(initialFormState);
-      if (reminderTimeoutRef2.current) clearTimeout(reminderTimeoutRef2.current);
-      setForm2ReminderShown(false);
       if (form2Data.query !== '' && onQueryChange) {
         onQueryChange('');
       }
@@ -373,3 +359,5 @@ function CustomerDetailsCardComponent({
 }
 
 export const CustomerDetailsCard = React.memo(CustomerDetailsCardComponent);
+
+    
