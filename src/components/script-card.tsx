@@ -36,7 +36,6 @@ function ScriptCardComponent({ script }: ScriptCardProps) {
         <CardHeader className="flex flex-row items-start justify-between pb-4">
           <CardTitle className="text-xl font-bold leading-tight pr-4">{script.title}</CardTitle>
           <div className="flex items-center gap-1 flex-shrink-0">
-            <CopyButton textToCopy={rawContent} />
             {!Array.isArray(script.content) && (
                  <Button
                     variant="ghost"
