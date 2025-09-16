@@ -6,7 +6,7 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
-import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote } from "lucide-react";
+import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote, ChevronsDownUp, ChevronsUpDown as ChevronsUpDownIcon } from "lucide-react";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -45,6 +45,20 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const handleDepartmentChange = (newDepartment: string) => {
     setDepartment(newDepartment);
     router.push(`/scripts/${newDepartment}`);
+  };
+
+  const expandAll = () => {
+    setOpeningOpen(true);
+    setWorkflowOpen(true);
+    setCommonOpen(true);
+    setClosingOpen(true);
+  };
+
+  const collapseAll = () => {
+    setOpeningOpen(false);
+    setWorkflowOpen(false);
+    setCommonOpen(false);
+    setClosingOpen(false);
   };
 
   const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string, query: string) => {
@@ -172,6 +186,16 @@ export default function ScriptPage({ department: initialDepartment }: { departme
             <CustomerDetailsCard agentName={user?.name || 'Agent'} onQueryChange={setCurrentQuery} />
           </div>
 
+          <div className="mb-6 flex justify-end gap-2">
+              <Button variant="outline" onClick={expandAll}>
+                  <ChevronsDownUp className="mr-2 h-4 w-4" />
+                  Expand All
+              </Button>
+              <Button variant="outline" onClick={collapseAll}>
+                  <ChevronsUpDownIcon className="mr-2 h-4 w-4" />
+                  Collapse All
+              </Button>
+          </div>
 
           <div className="space-y-12">
               <Collapsible open={openingOpen} onOpenChange={setOpeningOpen}>
@@ -266,5 +290,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
 
     
