@@ -22,7 +22,7 @@ export function ScriptCard({ script }: ScriptCardProps) {
 
   return (
     <>
-      <Card 
+      <Card
         id={`script-card-${script.id}`}
         className={cn("rounded-lg shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02]")}>
         <CardHeader className="flex flex-row items-start justify-between pb-4">
@@ -42,7 +42,7 @@ export function ScriptCard({ script }: ScriptCardProps) {
         </CardHeader>
         <CardContent className="pt-0">
           {Array.isArray(script.content) ? (
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="space-y-4">
               {script.content.map((sub, index) => (
                 <SubScriptItem key={index} subScript={sub} />
               ))}
@@ -63,8 +63,8 @@ export function ScriptCard({ script }: ScriptCardProps) {
 
 function SubScriptItem({ subScript }: { subScript: SubScript }) {
     return (
-        <div className="p-3 rounded-md bg-background/50 relative group/sub-item border transition-colors sub-item-hoverable flex-1 flex flex-col">
-            <div className="flex justify-between items-start flex-1">
+        <div className="p-3 rounded-md bg-background/50 relative group/sub-item border transition-colors sub-item-hoverable">
+            <div className="flex justify-between items-start">
                 <div className="flex-1 pr-10">
                     <h4 className="font-semibold text-primary transition-colors">{subScript.title}</h4>
                     <p className="text-foreground/80 mt-1 whitespace-pre-wrap">{subScript.content}</p>
