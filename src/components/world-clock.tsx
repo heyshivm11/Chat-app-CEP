@@ -151,7 +151,7 @@ export function WorldClock() {
         ) : error ? (
           <p className="text-center text-destructive">{error}</p>
         ) : timeData && currentTime ? (
-          <Card className="text-center shadow-2xl rounded-2xl bg-card/80 backdrop-blur-sm">
+          <Card className="text-center shadow-2xl rounded-2xl bg-card/30 backdrop-blur-sm border-white/20">
             <CardHeader>
                 <CardTitle className="text-2xl font-bold">{locationName}</CardTitle>
                 <p className="text-muted-foreground">{countryName}</p>

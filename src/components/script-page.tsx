@@ -235,7 +235,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
             />
           </div>
 
-          <div className="mb-6 flex justify-end gap-2">
+          <div className="mb-6 flex justify-end">
               <Button variant="outline" onClick={toggleAllSections}>
                   {allOpen ? <ChevronsUpDownIcon className="mr-2 h-4 w-4" /> : <ChevronsDownUp className="mr-2 h-4 w-4" />}
                   {allOpen ? 'Collapse All' : 'Expand All'}
