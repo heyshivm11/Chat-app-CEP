@@ -48,6 +48,72 @@
     --input: 240 3.7% 15.9%;
     --ring: 250 80% 60%;
   }
+
+  .theme-amethyst {
+    --background: 275 80% 98%;
+    --foreground: 275 10% 3.9%;
+    --card: 275 80% 98%;
+    --card-foreground: 275 10% 3.9%;
+    --popover: 275 80% 98%;
+    --popover-foreground: 275 10% 3.9%;
+    --primary: 275 96% 70%;
+    --primary-foreground: 275 40% 98%;
+    --secondary: 275 4.8% 95.9%;
+    --secondary-foreground: 275 5.9% 10%;
+    --muted: 275 4.8% 95.9%;
+    --muted-foreground: 275 3.8% 46.1%;
+    --accent: 275 4.8% 95.9%;
+    --accent-foreground: 275 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 40% 98%;
+    --border: 275 5.9% 90%;
+    --input: 275 5.9% 90%;
+    --ring: 275 96% 70%;
+  }
+
+  .theme-sunrise {
+    --background: 30 80% 98%;
+    --foreground: 30 10% 3.9%;
+    --card: 30 80% 98%;
+    --card-foreground: 30 10% 3.9%;
+    --popover: 30 80% 98%;
+    --popover-foreground: 30 10% 3.9%;
+    --primary: 30 96% 63%;
+    --primary-foreground: 30 40% 98%;
+    --secondary: 30 4.8% 95.9%;
+    --secondary-foreground: 30 5.9% 10%;
+    --muted: 30 4.8% 95.9%;
+    --muted-foreground: 30 3.8% 46.1%;
+    --accent: 30 4.8% 95.9%;
+    --accent-foreground: 30 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 40% 98%;
+    --border: 30 5.9% 90%;
+    --input: 30 5.9% 90%;
+    --ring: 30 96% 63%;
+  }
+
+  .theme-lime {
+    --background: 88 80% 98%;
+    --foreground: 88 10% 3.9%;
+    --card: 88 80% 98%;
+    --card-foreground: 88 10% 3.9%;
+    --popover: 88 80% 98%;
+    --popover-foreground: 88 10% 3.9%;
+    --primary: 88 96% 63%;
+    --primary-foreground: 88 40% 98%;
+    --secondary: 88 4.8% 95.9%;
+    --secondary-foreground: 88 5.9% 10%;
+    --muted: 88 4.8% 95.9%;
+    --muted-foreground: 88 3.8% 46.1%;
+    --accent: 88 4.8% 95.9%;
+    --accent-foreground: 88 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 40% 98%;
+    --border: 88 5.9% 90%;
+    --input: 88 5.9% 90%;
+    --ring: 88 96% 63%;
+  }
 }
 
 
