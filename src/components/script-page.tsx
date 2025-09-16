@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
@@ -84,6 +84,25 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [closingOpen, setClosingOpen] = useState(true);
   
   const [allOpen, setAllOpen] = useState(true);
+
+  const blobRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handlePointerMove = (event: PointerEvent) => {
+      const { clientX, clientY } = event;
+      if (blobRef.current) {
+        blobRef.current.animate({
+          left: `${clientX}px`,
+          top: `${clientY}px`
+        }, { duration: 3000, fill: "forwards" });
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+    };
+  }, []);
 
   const handleDepartmentChange = useCallback((newDepartment: string) => {
     setDepartment(newDepartment);
@@ -193,145 +212,151 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   
   return (
     <div 
-      className="flex flex-col min-h-screen bg-background"
+      className="flex flex-col min-h-screen relative overflow-hidden"
     >
-      <PageHeader 
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          onSearchSubmit={handleSearchSubmit}
-          category={category}
-          onCategoryChange={setCategory}
-          department={department}
-          onDepartmentChange={handleDepartmentChange}
-      />
-      <main className="container mx-auto px-4 md:px-8 py-8 flex-1">
-          
-          <Card className="mb-8">
-              <CardHeader>
-                  <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div className="flex-1">
-                      <h2 className="text-3xl font-bold text-foreground">Welcome back, {user?.name || 'Agent'}!</h2>
-                      <TypingEffect phrases={motivationalPhrases} className="text-muted-foreground text-md h-6" />
-                  </div>
-                      <div className="flex items-center gap-4 w-full md:w-auto">
-                      <Label htmlFor="customerName" className="text-md whitespace-nowrap font-bold">Customer Name:</Label>
-                      <div className="flex items-center gap-2 w-full">
-                          <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
-                          <Button variant="outline" size="icon" onClick={() => setCustomerName("")} aria-label="Reset customer name">
-                              <RotateCcw className="h-4 w-4" />
-                          </Button>
-                      </div>
-                  </div>
-                  </div>
-              </CardHeader>
-          </Card>
-
-          <div className="my-8">
-            <CustomerDetailsCard 
-              agentName={user?.name || 'Agent'} 
-              onQueryChange={setCurrentQuery}
-              isOpen={customerDetailsOpen}
-              onOpenChange={setCustomerDetailsOpen}
+        <div id="blob" ref={blobRef}></div>
+        <div id="blur"></div>
+        <div className="relative z-10 flex flex-col h-full">
+            <PageHeader 
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                onSearchSubmit={handleSearchSubmit}
+                category={category}
+                onCategoryChange={setCategory}
+                department={department}
+                onDepartmentChange={handleDepartmentChange}
             />
-          </div>
-
-          <div className="mb-6 flex justify-end">
-              <Button variant="outline" onClick={toggleAllSections}>
-                  {allOpen ? <ChevronsUpDownIcon className="mr-2 h-4 w-4" /> : <ChevronsDownUp className="mr-2 h-4 w-4" />}
-                  {allOpen ? 'Collapse All' : 'Expand All'}
-              </Button>
-          </div>
-
-          <div className="space-y-12">
-              <Collapsible open={openingOpen} onOpenChange={setOpeningOpen}>
-                <section>
-                    <div className="flex items-center justify-between mb-6">
-                      <CollapsibleTrigger asChild>
-                        <button className="flex items-center justify-between w-full group">
-                            <div className="flex items-center gap-3">
-                                <FileText className="h-7 w-7 text-primary" />
-                                <h2 className="text-3xl font-bold tracking-tight text-foreground">Opening</h2>
+            <main className="container mx-auto px-4 md:px-8 py-8 flex-1">
+                
+                <Card className="mb-8 bg-background/30 backdrop-blur-sm border-white/20">
+                    <CardHeader>
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex-1">
+                            <h2 className="text-3xl font-bold text-foreground">Welcome back, {user?.name || 'Agent'}!</h2>
+                            <TypingEffect phrases={motivationalPhrases} className="text-muted-foreground text-md h-6" />
+                        </div>
+                            <div className="flex items-center gap-4 w-full md:w-auto">
+                            <Label htmlFor="customerName" className="text-md whitespace-nowrap font-bold">Customer Name:</Label>
+                            <div className="flex items-center gap-2 w-full">
+                                <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
+                                <Button variant="outline" size="icon" onClick={() => setCustomerName("")} aria-label="Reset customer name">
+                                    <RotateCcw className="h-4 w-4" />
+                                </Button>
                             </div>
-                            <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-                        </button>
-                      </CollapsibleTrigger>
-                    </div>
-                    <CollapsibleContent>
-                        {requestStatedVerifiedScript && (
-                          <div className="mb-4">
-                            <ScriptCard script={requestStatedVerifiedScript} />
-                          </div>
-                        )}
-                        {renderScriptList(otherDepartmentScripts)}
-                    </CollapsibleContent>
-                </section>
-              </Collapsible>
+                        </div>
+                        </div>
+                    </CardHeader>
+                </Card>
 
-              <Collapsible open={workflowOpen} onOpenChange={setWorkflowOpen}>
-                <section>
-                    <div className="flex items-center justify-between mb-6">
-                      <CollapsibleTrigger asChild>
-                         <button className="flex items-center justify-between w-full group">
-                            <div className="flex items-center gap-3">
-                              <Workflow className="h-7 w-7 text-primary" />
-                              <h2 className="text-3xl font-bold tracking-tight text-foreground">Workflow</h2>
-                            </div>
-                            <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-                        </button>
-                      </CollapsibleTrigger>
-                    </div>
-                    <CollapsibleContent>
-                        {renderScriptList(workflowScripts)}
-                    </CollapsibleContent>
-                </section>
-              </Collapsible>
-              
-              <Collapsible open={commonOpen} onOpenChange={setCommonOpen}>
-                <section>
-                    <div className="flex items-center justify-between mb-6">
-                       <CollapsibleTrigger asChild>
-                         <button className="flex items-center justify-between w-full group">
-                            <div className="flex items-center gap-3">
-                                <BookCopy className="h-7 w-7 text-primary" />
-                                <h2 className="text-3xl font-bold tracking-tight text-foreground">Common Scripts</h2>
-                            </div>
-                            <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-                        </button>
-                      </CollapsibleTrigger>
-                    </div>
-                    <CollapsibleContent>
-                        {renderFlexScriptList(commonScripts)}
-                    </CollapsibleContent>
-                </section>
-              </Collapsible>
+                <div className="my-8">
+                    <CustomerDetailsCard 
+                    agentName={user?.name || 'Agent'} 
+                    onQueryChange={setCurrentQuery}
+                    isOpen={customerDetailsOpen}
+                    onOpenChange={setCustomerDetailsOpen}
+                    />
+                </div>
 
-               <Collapsible open={closingOpen} onOpenChange={setClosingOpen}>
-                <section>
-                    <div className="flex items-center justify-between mb-6">
-                       <CollapsibleTrigger asChild>
-                         <button className="flex items-center justify-between w-full group">
-                            <div className="flex items-center gap-3">
-                                <MessageSquareQuote className="h-7 w-7 text-primary" />
-                                <h2 className="text-3xl font-bold tracking-tight text-foreground">Chat Closing</h2>
+                <div className="mb-6 flex justify-end">
+                    <Button variant="outline" onClick={toggleAllSections}>
+                        {allOpen ? <ChevronsUpDownIcon className="mr-2 h-4 w-4" /> : <ChevronsDownUp className="mr-2 h-4 w-4" />}
+                        {allOpen ? 'Collapse All' : 'Expand All'}
+                    </Button>
+                </div>
+
+                <div className="space-y-12">
+                    <Collapsible open={openingOpen} onOpenChange={setOpeningOpen}>
+                        <section>
+                            <div className="flex items-center justify-between mb-6">
+                            <CollapsibleTrigger asChild>
+                                <button className="flex items-center justify-between w-full group">
+                                    <div className="flex items-center gap-3">
+                                        <FileText className="h-7 w-7 text-primary" />
+                                        <h2 className="text-3xl font-bold tracking-tight text-foreground">Opening</h2>
+                                    </div>
+                                    <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                                </button>
+                            </CollapsibleTrigger>
                             </div>
-                            <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-                        </button>
-                      </CollapsibleTrigger>
-                    </div>
-                    <CollapsibleContent>
-                        {chatClosingScript && (
-                          <div className="mb-4">
-                            <ScriptCard script={chatClosingScript} />
-                          </div>
-                        )}
-                    </CollapsibleContent>
-                </section>
-              </Collapsible>
-          </div>
-      </main>
-      <footer className="container mx-auto px-4 md:px-8 py-4 text-center text-sm text-muted-foreground">
-          Made with ❤️ by <a href="https://www.instagram.com/heyshivm/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Shivam</a>
-      </footer>
+                            <CollapsibleContent>
+                                {requestStatedVerifiedScript && (
+                                <div className="mb-4">
+                                    <ScriptCard script={requestStatedVerifiedScript} />
+                                </div>
+                                )}
+                                {renderScriptList(otherDepartmentScripts)}
+                            </CollapsibleContent>
+                        </section>
+                    </Collapsible>
+
+                    <Collapsible open={workflowOpen} onOpenChange={setWorkflowOpen}>
+                        <section>
+                            <div className="flex items-center justify-between mb-6">
+                            <CollapsibleTrigger asChild>
+                                <button className="flex items-center justify-between w-full group">
+                                    <div className="flex items-center gap-3">
+                                    <Workflow className="h-7 w-7 text-primary" />
+                                    <h2 className="text-3xl font-bold tracking-tight text-foreground">Workflow</h2>
+                                    </div>
+                                    <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                                </button>
+                            </CollapsibleTrigger>
+                            </div>
+                            <CollapsibleContent>
+                                {renderScriptList(workflowScripts)}
+                            </CollapsibleContent>
+                        </section>
+                    </Collapsible>
+                    
+                    <Collapsible open={commonOpen} onOpenChange={setCommonOpen}>
+                        <section>
+                            <div className="flex items-center justify-between mb-6">
+                            <CollapsibleTrigger asChild>
+                                <button className="flex items-center justify-between w-full group">
+                                    <div className="flex items-center gap-3">
+                                        <BookCopy className="h-7 w-7 text-primary" />
+                                        <h2 className="text-3xl font-bold tracking-tight text-foreground">Common Scripts</h2>
+                                    </div>
+                                    <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                                </button>
+                            </CollapsibleTrigger>
+                            </div>
+                            <CollapsibleContent>
+                                {renderFlexScriptList(commonScripts)}
+                            </CollapsibleContent>
+                        </section>
+                    </Collapsible>
+
+                    <Collapsible open={closingOpen} onOpenChange={setClosingOpen}>
+                        <section>
+                            <div className="flex items-center justify-between mb-6">
+                            <CollapsibleTrigger asChild>
+                                <button className="flex items-center justify-between w-full group">
+                                    <div className="flex items-center gap-3">
+                                        <MessageSquareQuote className="h-7 w-7 text-primary" />
+                                        <h2 className="text-3xl font-bold tracking-tight text-foreground">Chat Closing</h2>
+                                    </div>
+                                    <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                                </button>
+                            </CollapsibleTrigger>
+                            </div>
+                            <CollapsibleContent>
+                                {chatClosingScript && (
+                                <div className="mb-4">
+                                    <ScriptCard script={chatClosingScript} />
+                                </div>
+                                )}
+                            </CollapsibleContent>
+                        </section>
+                    </Collapsible>
+                </div>
+            </main>
+            <footer className="container mx-auto px-4 md:px-8 py-4 text-center text-sm text-muted-foreground">
+                Made with ❤️ by <a href="https://www.instagram.com/heyshivm/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Shivam</a>
+            </footer>
+        </div>
     </div>
   );
 }
+
+    
