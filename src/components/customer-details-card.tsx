@@ -175,9 +175,17 @@ function CustomerForm({ agentName, formData, onFormChange, onUndo, onReset, hasH
 }
 
 
-export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: string, onQueryChange?: (query: string) => void }) {
-  const [isOpen, setIsOpen] = useState(true);
-  
+export function CustomerDetailsCard({
+  agentName,
+  onQueryChange,
+  isOpen,
+  onOpenChange
+}: {
+  agentName: string;
+  onQueryChange?: (query: string) => void;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const [form1Data, setForm1Data] = useState(initialFormState);
   const [form1History, setForm1History] = useState<FormState[]>([]);
   
@@ -301,7 +309,7 @@ export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: s
   return (
     <Collapsible
       open={isOpen}
-      onOpenChange={setIsOpen}
+      onOpenChange={onOpenChange}
       className="w-full"
     >
       <section>
@@ -355,4 +363,5 @@ export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: s
   );
 }
 
+    
     

@@ -27,10 +27,14 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [department, setDepartment] = useState(initialDepartment || user?.department || "etg");
   const [customerName, setCustomerName] = useState("");
   const [currentQuery, setCurrentQuery] = useState("");
+
+  const [customerDetailsOpen, setCustomerDetailsOpen] = useState(true);
   const [openingOpen, setOpeningOpen] = useState(true);
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [commonOpen, setCommonOpen] = useState(true);
   const [closingOpen, setClosingOpen] = useState(true);
+  
+  const [allOpen, setAllOpen] = useState(true);
 
   const motivationalPhrases = [
     "Let's provide the best experience to customers...",
@@ -47,19 +51,21 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     router.push(`/scripts/${newDepartment}`);
   };
 
-  const expandAll = () => {
-    setOpeningOpen(true);
-    setWorkflowOpen(true);
-    setCommonOpen(true);
-    setClosingOpen(true);
+  const toggleAllSections = () => {
+    const nextState = !allOpen;
+    setCustomerDetailsOpen(nextState);
+    setOpeningOpen(nextState);
+    setWorkflowOpen(nextState);
+    setCommonOpen(nextState);
+    setClosingOpen(nextState);
+    setAllOpen(nextState);
   };
+  
+  useEffect(() => {
+    const currentlyAllOpen = customerDetailsOpen && openingOpen && workflowOpen && commonOpen && closingOpen;
+    setAllOpen(currentlyAllOpen);
+  },[customerDetailsOpen, openingOpen, workflowOpen, commonOpen, closingOpen])
 
-  const collapseAll = () => {
-    setOpeningOpen(false);
-    setWorkflowOpen(false);
-    setCommonOpen(false);
-    setClosingOpen(false);
-  };
 
   const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string, query: string) => {
     return scriptsToProcess.map(script => {
@@ -183,17 +189,18 @@ export default function ScriptPage({ department: initialDepartment }: { departme
           </Card>
 
           <div className="my-8">
-            <CustomerDetailsCard agentName={user?.name || 'Agent'} onQueryChange={setCurrentQuery} />
+            <CustomerDetailsCard 
+              agentName={user?.name || 'Agent'} 
+              onQueryChange={setCurrentQuery}
+              isOpen={customerDetailsOpen}
+              onOpenChange={setCustomerDetailsOpen}
+            />
           </div>
 
           <div className="mb-6 flex justify-end gap-2">
-              <Button variant="outline" onClick={expandAll}>
-                  <ChevronsDownUp className="mr-2 h-4 w-4" />
-                  Expand All
-              </Button>
-              <Button variant="outline" onClick={collapseAll}>
-                  <ChevronsUpDownIcon className="mr-2 h-4 w-4" />
-                  Collapse All
+              <Button variant="outline" onClick={toggleAllSections}>
+                  {allOpen ? <ChevronsUpDownIcon className="mr-2 h-4 w-4" /> : <ChevronsDownUp className="mr-2 h-4 w-4" />}
+                  {allOpen ? 'Collapse All' : 'Expand All'}
               </Button>
           </div>
 
@@ -290,6 +297,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
 
     
 
