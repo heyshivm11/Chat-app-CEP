@@ -63,7 +63,7 @@ export default function LoginPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="frontline">FrontLine</SelectItem>
-                <SelectItem value="schedule-change">Schedule Changes</SelectItem>
+                <SelectItem value="schedule-change">Schedule Chnage</SelectItem>
               </SelectContent>
             </Select>
           </div>
