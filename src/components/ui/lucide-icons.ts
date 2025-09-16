@@ -29,4 +29,5 @@ export {
     ChevronLeft,
     ChevronRight,
     Circle,
+    Clock,
 } from 'lucide-react';
