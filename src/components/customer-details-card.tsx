@@ -293,7 +293,7 @@ function CustomerDetailsCardComponent({
     const dataToCopy = formNumber === 1 ? form1Data : form2Data;
     const text = getDetailsToCopy(dataToCopy, agentName);
     navigator.clipboard.writeText(text);
-    toast({ title: `Details for Customer ${formNumber} copied!`, duration: 2000 });
+    toast({ title: `Details for Customer ${formNumber} copied!` });
     clearReminder();
   }, [agentName, form1Data, form2Data, toast, clearReminder]);
 
@@ -303,7 +303,7 @@ function CustomerDetailsCardComponent({
         description: "Have you copied the customer details? They might be important for your records.",
         duration: 8000,
         action: (
-          <div className="flex w-full items-stretch gap-2 mt-2">
+          <div className="flex items-stretch gap-2 mt-2">
             <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)}>
                 Copy Cust. 1
             </ToastAction>

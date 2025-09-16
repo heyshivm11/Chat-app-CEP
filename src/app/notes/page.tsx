@@ -52,7 +52,6 @@ function NotesPageContent() {
     navigator.clipboard.writeText(notes);
     toast({
       title: "Copied to clipboard!",
-      duration: 2000,
     });
   };
 

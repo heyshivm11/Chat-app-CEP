@@ -18,7 +18,7 @@ function CopyButtonComponent({ textToCopy, className, children, ...props }: Cust
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(textToCopy);
     setHasCopied(true);
-    toast({ title: "Copied!", duration: 2000 });
+    toast({ title: "Copied!" });
     const timer = setTimeout(() => {
       setHasCopied(false);
     }, 2000);
