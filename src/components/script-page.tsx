@@ -99,8 +99,13 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   }, [filteredScripts, customerName, user?.name, currentQuery]);
 
   const commonScripts = useMemo(() => {
-    const common = filteredScripts.filter(s => s.department === "common" && s.category !== "Workflow");
+    const common = filteredScripts.filter(s => s.department === "common" && s.category !== "Workflow" && s.category !== "Chat Closing");
     return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
+  }, [filteredScripts, customerName, user?.name, currentQuery]);
+
+  const chatClosingScript = useMemo(() => {
+    const closingScript = filteredScripts.find(s => s.category === "Chat Closing");
+    return closingScript ? getProcessedScripts([closingScript], customerName, user?.name || 'Agent', currentQuery)[0] : null;
   }, [filteredScripts, customerName, user?.name, currentQuery]);
 
 
@@ -207,6 +212,11 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                       </CollapsibleTrigger>
                     </div>
                     <CollapsibleContent>
+                        {chatClosingScript && (
+                          <div className="mb-4">
+                            <ScriptCard script={chatClosingScript} />
+                          </div>
+                        )}
                         {renderScriptList(commonScripts)}
                     </CollapsibleContent>
                 </section>
