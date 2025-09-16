@@ -24,7 +24,7 @@ export default function LoginPage() {
       return;
     }
     login(name, department);
-    router.push('/');
+    // The useAuth hook will handle the redirection.
   };
 
   if (isLoading) {
@@ -59,8 +59,8 @@ export default function LoginPage() {
                 <SelectValue placeholder="Select your department" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="etg">ETG</SelectItem>
-                <SelectItem value="bookingcom">Booking.com</SelectItem>
+                <SelectItem value="etg">FrontLine</SelectItem>
+                <SelectItem value="bookingcom">Schedule Change</SelectItem>
               </SelectContent>
             </Select>
           </div>
