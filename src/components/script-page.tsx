@@ -92,6 +92,14 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     const deptScripts = filteredScripts.filter(s => s.department === department);
     return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent', currentQuery);
   }, [filteredScripts, department, customerName, user?.name, currentQuery]);
+
+  const requestStatedVerifiedScript = useMemo(() => {
+    return departmentScripts.find(s => s.title === 'Request Stated & Verified');
+  }, [departmentScripts]);
+
+  const otherDepartmentScripts = useMemo(() => {
+      return departmentScripts.filter(s => s.title !== 'Request Stated & Verified');
+  }, [departmentScripts]);
   
   const workflowScripts = useMemo(() => {
     const common = filteredScripts.filter(s => s.department === "common" && s.category === "Workflow");
@@ -174,7 +182,12 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                       </CollapsibleTrigger>
                     </div>
                     <CollapsibleContent>
-                        {renderScriptList(departmentScripts)}
+                        {requestStatedVerifiedScript && (
+                          <div className="mb-4">
+                            <ScriptCard script={requestStatedVerifiedScript} />
+                          </div>
+                        )}
+                        {renderScriptList(otherDepartmentScripts)}
                     </CollapsibleContent>
                 </section>
               </Collapsible>
