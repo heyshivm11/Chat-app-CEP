@@ -18,7 +18,7 @@ import { RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 
-export default function ScriptPage({ department: initialDepartment }: { department?: string }) {
+export default function ScriptPage({ department: initialDepartment }: { department: string }) {
   const router = useRouter();
   const { user } = useAuth();
   
