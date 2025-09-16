@@ -14,7 +14,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { LogIn } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import {
@@ -73,7 +72,7 @@ export function LoginPage() {
             <div className="space-y-2">
               <Input
                 id="firstName"
-                placeholder="Email"
+                placeholder="First Name"
                 className="bg-transparent border-primary-foreground/30 placeholder:text-primary-foreground/60 h-12 rounded-xl"
                 {...register('firstName', {
                   required: 'First name is required',
@@ -84,14 +83,6 @@ export function LoginPage() {
                   {errors.firstName.message}
                 </p>
               )}
-            </div>
-             <div className="space-y-2">
-              <Input
-                id="password"
-                type="password"
-                placeholder="Password"
-                className="bg-transparent border-primary-foreground/30 placeholder:text-primary-foreground/60 h-12 rounded-xl"
-              />
             </div>
             <div className="space-y-2">
               <Label className="font-semibold sr-only">Department</Label>
