@@ -61,6 +61,17 @@ interface CustomerFormProps {
 function CustomerFormComponent({ agentName, formData, setFormData, history, setHistory, onQueryChange, scheduleReminder }: CustomerFormProps) {
   const [customerIsCaller, setCustomerIsCaller] = useState(false);
   
+  // Refs for inputs
+  const interactionIdRef = useRef<HTMLInputElement>(null);
+  const customerNameRef = useRef<HTMLInputElement>(null);
+  const callerNameRef = useRef<HTMLInputElement>(null);
+  const relationRef = useRef<HTMLInputElement>(null);
+  const queryRef = useRef<HTMLInputElement>(null);
+  const resolutionRef = useRef<HTMLInputElement>(null);
+  const validatedByRef = useRef<HTMLInputElement>(null);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
+
+
   useEffect(() => {
     setCustomerIsCaller(formData.customerName !== '' && formData.customerName === formData.callerName);
   }, [formData.customerName, formData.callerName]);
@@ -83,6 +94,21 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
         scheduleReminder();
     }
   }, [updateField, onQueryChange, scheduleReminder]);
+  
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>, nextFieldRef: React.RefObject<HTMLElement> | null) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (nextFieldRef && nextFieldRef.current) {
+        // For shadcn Select, we need to focus the trigger button
+        if (nextFieldRef.current.getAttribute('role') === 'combobox') {
+             (nextFieldRef.current as HTMLButtonElement).focus();
+        } else {
+             (nextFieldRef.current as HTMLElement).focus();
+        }
+      }
+    }
+  };
+
 
   const handleCheckboxChange = useCallback((checked: boolean) => {
     setCustomerIsCaller(checked);
@@ -122,19 +148,26 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
   return (
     <div className="space-y-4 pt-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {formFields.slice(0, 2).map(fieldDef => {
-            const field = fieldDef.id as keyof FormState;
-            return (
-                <div key={field} className="space-y-2">
-                    <Label htmlFor={field}>{fieldDef.label}</Label>
-                    <Input
-                        id={field}
-                        value={formData[field]}
-                        onChange={(e) => handleInputChange(field, e.target.value)}
-                    />
-                </div>
-            );
-        })}
+        <div className="space-y-2">
+            <Label htmlFor="interactionId">Interaction ID</Label>
+            <Input
+                id="interactionId"
+                ref={interactionIdRef}
+                value={formData.interactionId}
+                onChange={(e) => handleInputChange('interactionId', e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, customerNameRef)}
+            />
+        </div>
+        <div className="space-y-2">
+            <Label htmlFor="customerName">Customer's name</Label>
+            <Input
+                id="customerName"
+                ref={customerNameRef}
+                value={formData.customerName}
+                onChange={(e) => handleInputChange('customerName', e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, callerNameRef)}
+            />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -142,9 +175,11 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
             <Label htmlFor="callerName">Caller's name</Label>
             <Input
                 id="callerName"
+                ref={callerNameRef}
                 value={formData.callerName}
                 onChange={(e) => handleInputChange('callerName', e.target.value)}
                 disabled={customerIsCaller}
+                onKeyDown={(e) => handleKeyDown(e, relationRef)}
             />
              <div className="flex items-center space-x-2 pt-2">
                 <Checkbox
@@ -160,27 +195,36 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
             <Label htmlFor="relation">Relation</Label>
             <Input
                 id="relation"
+                ref={relationRef}
                 value={formData.relation}
                 onChange={(e) => handleInputChange('relation', e.target.value)}
                 disabled={customerIsCaller}
+                onKeyDown={(e) => handleKeyDown(e, queryRef)}
             />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {formFields.slice(2).map(fieldDef => {
-              const field = fieldDef.id as keyof FormState;
-              return (
-                  <div key={field} className="space-y-2">
-                      <Label htmlFor={field}>{fieldDef.label}</Label>
-                      <Input
-                          id={field}
-                          value={formData[field]}
-                          onChange={(e) => handleInputChange(field, e.target.value)}
-                      />
-                  </div>
-              );
-          })}
+          <div className="space-y-2">
+              <Label htmlFor="query">Query</Label>
+              <Input
+                  id="query"
+                  ref={queryRef}
+                  value={formData.query}
+                  onChange={(e) => handleInputChange('query', e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, resolutionRef)}
+              />
+          </div>
+          <div className="space-y-2">
+              <Label htmlFor="resolution">Resolution</Label>
+              <Input
+                  id="resolution"
+                  ref={resolutionRef}
+                  value={formData.resolution}
+                  onChange={(e) => handleInputChange('resolution', e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, notesRef)}
+              />
+          </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -204,8 +248,10 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
               <Label htmlFor="validatedBy">Validated by</Label>
               <Input
                   id="validatedBy"
+                  ref={validatedByRef}
                   value={formData.validatedBy}
                   onChange={(e) => handleInputChange('validatedBy', e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, notesRef)}
               />
           </div>
         )}
@@ -232,6 +278,7 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
         <Label htmlFor="notes">Notes</Label>
         <Textarea
           id="notes"
+          ref={notesRef}
           placeholder="Add your notes here..."
           value={formData.notes}
           onChange={(e) => handleInputChange('notes', e.target.value)}
@@ -254,12 +301,7 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
   );
 }
 
-const formFields = [
-  { id: 'interactionId', label: 'Interaction ID' },
-  { id: 'customerName', label: "Customer's name" },
-  { id: 'query', label: 'Query' },
-  { id: 'resolution', label: 'Resolution' },
-];
+
 
 
 const CustomerForm = React.memo(CustomerFormComponent);
@@ -303,7 +345,7 @@ function CustomerDetailsCardComponent({
         description: "Have you copied the customer details? They might be important for your records.",
         duration: 8000,
         action: (
-          <div className="flex flex-col sm:flex-row gap-2 mt-2 w-full">
+          <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0 w-full">
             <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)} className="w-full sm:w-auto">
                 Copy Cust. 1
             </ToastAction>
