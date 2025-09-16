@@ -165,9 +165,12 @@ export default function ScriptPage({ department: initialDepartment }: { departme
               </CardHeader>
           </Card>
 
-          <CustomerDetailsCard agentName={user?.name || 'Agent'} onQueryChange={setCurrentQuery} />
+          <div className="my-8">
+            <CustomerDetailsCard agentName={user?.name || 'Agent'} onQueryChange={setCurrentQuery} />
+          </div>
 
-          <div className="space-y-12 mt-8">
+
+          <div className="space-y-12">
               <Collapsible open={openingOpen} onOpenChange={setOpeningOpen}>
                 <section>
                     <div className="flex items-center justify-between mb-6">

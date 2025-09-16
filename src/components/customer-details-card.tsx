@@ -308,52 +308,53 @@ export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: s
       onOpenChange={setIsOpen}
       className="w-full"
     >
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div className="flex items-center gap-2">
-            <User className="text-primary h-6 w-6" />
-            <CardTitle>Customer Details</CardTitle>
+      <section>
+          <div className="flex items-center justify-between mb-6">
+            <CollapsibleTrigger asChild>
+              <button className="flex items-center justify-between w-full group">
+                  <div className="flex items-center gap-3">
+                      <User className="h-7 w-7 text-primary" />
+                      <h2 className="text-3xl font-bold tracking-tight text-foreground">Customer Details</h2>
+                  </div>
+                  <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+              </button>
+            </CollapsibleTrigger>
           </div>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="sm" className="w-9 p-0">
-              <ChevronsUpDown className="h-4 w-4" />
-              <span className="sr-only">Toggle</span>
-            </Button>
-          </CollapsibleTrigger>
-        </CardHeader>
-        <CollapsibleContent>
-          <CardContent>
-              <Tabs defaultValue="customer1" className="w-full" onValueChange={handleTabChange}>
-                  <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="customer1">Customer 1</TabsTrigger>
-                      <TabsTrigger value="customer2">Customer 2</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="customer1">
-                      <CustomerForm
-                        agentName={agentName}
-                        formData={form1Data}
-                        onFormChange={(field, value) => handleFormChange(1, field, value)}
-                        onUndo={() => handleUndo(1)}
-                        onReset={() => handleReset(1)}
-                        hasHistory={form1History.length > 0}
-                        onQueryChange={onQueryChange}
-                      />
-                  </TabsContent>
-                  <TabsContent value="customer2">
-                       <CustomerForm
-                        agentName={agentName}
-                        formData={form2Data}
-                        onFormChange={(field, value) => handleFormChange(2, field, value)}
-                        onUndo={() => handleUndo(2)}
-                        onReset={() => handleReset(2)}
-                        hasHistory={form2History.length > 0}
-                        onQueryChange={onQueryChange}
-                      />
-                  </TabsContent>
-              </Tabs>
-          </CardContent>
-        </CollapsibleContent>
-      </Card>
+          <CollapsibleContent>
+            <Card>
+              <CardContent className="pt-6">
+                  <Tabs defaultValue="customer1" className="w-full" onValueChange={handleTabChange}>
+                      <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="customer1">Customer 1</TabsTrigger>
+                          <TabsTrigger value="customer2">Customer 2</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="customer1">
+                          <CustomerForm
+                            agentName={agentName}
+                            formData={form1Data}
+                            onFormChange={(field, value) => handleFormChange(1, field, value)}
+                            onUndo={() => handleUndo(1)}
+                            onReset={() => handleReset(1)}
+                            hasHistory={form1History.length > 0}
+                            onQueryChange={onQueryChange}
+                          />
+                      </TabsContent>
+                      <TabsContent value="customer2">
+                          <CustomerForm
+                            agentName={agentName}
+                            formData={form2Data}
+                            onFormChange={(field, value) => handleFormChange(2, field, value)}
+                            onUndo={() => handleUndo(2)}
+                            onReset={() => handleReset(2)}
+                            hasHistory={form2History.length > 0}
+                            onQueryChange={onQueryChange}
+                          />
+                      </TabsContent>
+                  </Tabs>
+              </CardContent>
+            </Card>
+          </CollapsibleContent>
+      </section>
     </Collapsible>
   );
 }
