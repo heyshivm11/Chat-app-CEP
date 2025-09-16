@@ -13,6 +13,7 @@ import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Checkbox } from './ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
+import { ToastAction } from './ui/toast';
 
 
 const initialFormState = {
@@ -36,6 +37,20 @@ const formFields = [
   { id: 'resolution', label: 'Resolution' },
   { id: 'validatedBy', label: 'Validated by' },
 ];
+
+const getDetailsToCopy = (formData: FormState, agentName: string) => {
+    let text = `Agent Name: ${agentName}\n`;
+    text += `Interaction ID: ${formData.interactionId}\n`;
+    text += `Customer's name: ${formData.customerName}\n`;
+    text += `Caller's name: ${formData.callerName}\n`;
+    text += `Relation: ${formData.relation}\n`;
+    text += `Query: ${formData.query}\n`;
+    text += `Resolution: ${formData.resolution}\n`;
+    text += `Validated by: ${formData.validatedBy}\n`;
+    text += `Ghostline: ${formData.ghostline}\n`;
+    text += `Notes: ${formData.notes}`;
+    return text;
+};
 
 interface CustomerFormProps {
   agentName: string;
@@ -73,17 +88,7 @@ function CustomerFormComponent({ agentName, formData, onFormChange, onUndo, onRe
   }
 
   const detailsToCopy = useMemo(() => {
-    let text = `Agent Name: ${agentName}\n`;
-    text += `Interaction ID: ${formData.interactionId}\n`;
-    text += `Customer's name: ${formData.customerName}\n`;
-    text += `Caller's name: ${formData.callerName}\n`;
-    text += `Relation: ${formData.relation}\n`;
-    text += `Query: ${formData.query}\n`;
-    text += `Resolution: ${formData.resolution}\n`;
-    text += `Validated by: ${formData.validatedBy}\n`;
-    text += `Ghostline: ${formData.ghostline}\n`;
-    text += `Notes: ${formData.notes}`;
-    return text;
+    return getDetailsToCopy(formData, agentName)
   }, [formData, agentName]);
 
   return (
@@ -179,14 +184,13 @@ const CustomerForm = React.memo(CustomerFormComponent);
 function CustomerDetailsCardComponent({
   agentName,
   onQueryChange,
-  onTriggerCopyReminder
 }: {
   agentName: string;
   onQueryChange?: (query: string) => void;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onTriggerCopyReminder: () => void;
 }) {
+  const { toast } = useToast();
   const [form1Data, setForm1Data] = useState(initialFormState);
   const [form1History, setForm1History] = useState<FormState[]>([]);
   
@@ -195,9 +199,34 @@ function CustomerDetailsCardComponent({
 
   const reminderInterval = useRef<NodeJS.Timeout>();
 
+  const copyDetails = useCallback((formNumber: 1 | 2) => {
+    const dataToCopy = formNumber === 1 ? form1Data : form2Data;
+    const text = getDetailsToCopy(dataToCopy, agentName);
+    navigator.clipboard.writeText(text);
+    toast({ title: `Customer ${formNumber} details copied!` });
+  }, [agentName, form1Data, form2Data, toast]);
+
+  const triggerCopyReminder = useCallback(() => {
+    toast({
+        title: "Don't Forget!",
+        description: "Have you copied the customer details? They might be important for your records.",
+        duration: 8000,
+        action: (
+            <div className="flex flex-col gap-2">
+                <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)}>
+                    Copy Cust. 1
+                </ToastAction>
+                <ToastAction altText="Copy details for Customer 2" onClick={() => copyDetails(2)}>
+                    Copy Cust. 2
+                </ToastAction>
+            </div>
+        )
+    });
+  }, [toast, copyDetails]);
+
   useEffect(() => {
     reminderInterval.current = setInterval(() => {
-        onTriggerCopyReminder();
+        triggerCopyReminder();
     }, 120000); // 2 minutes
 
     return () => {
@@ -205,7 +234,7 @@ function CustomerDetailsCardComponent({
         clearInterval(reminderInterval.current);
       }
     };
-  }, [onTriggerCopyReminder]);
+  }, [triggerCopyReminder]);
 
 
   const handleFormChange = useCallback((
@@ -310,5 +339,3 @@ function CustomerDetailsCardComponent({
 }
 
 export const CustomerDetailsCard = React.memo(CustomerDetailsCardComponent);
-
-    

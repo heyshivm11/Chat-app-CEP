@@ -109,7 +109,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [department, setDepartment] = useState(initialDepartment || user?.department || "etg");
   const [customerName, setCustomerName] = useState("");
   const [currentQuery, setCurrentQuery] = useState("");
-  const [showCopyReminder, setShowCopyReminder] = useState(false);
 
   const [customerDetailsOpen, setCustomerDetailsOpen] = useState(true);
   const [openingOpen, setOpeningOpen] = useState(true);
@@ -120,13 +119,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [areAllSectionsOpen, setAreAllSectionsOpen] = useState(true);
 
   const blobRef = useRef<HTMLDivElement>(null);
-  
-  const handleTriggerCopyReminder = useCallback(() => {
-    setShowCopyReminder(true);
-    setTimeout(() => {
-        setShowCopyReminder(false);
-    }, 8000); // Show reminder for 8 seconds
-  }, []);
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
@@ -280,7 +272,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             onQueryChange={setCurrentQuery}
                             isOpen={customerDetailsOpen}
                             onOpenChange={setCustomerDetailsOpen}
-                            onTriggerCopyReminder={handleTriggerCopyReminder}
                         />
                     </SectionCard>
 
@@ -328,7 +319,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                     </SectionCard>
                 </div>
             </main>
-            <Chatbot showCopyReminder={showCopyReminder} />
+            <Chatbot />
             <footer className="container mx-auto px-4 md:px-8 py-4 text-center text-sm text-muted-foreground">
                 Made with ❤️ by <a href="https://www.instagram.com/heyshivm/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Shivam</a>
             </footer>
@@ -336,5 +327,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    

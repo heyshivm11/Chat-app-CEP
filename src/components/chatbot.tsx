@@ -24,11 +24,9 @@ interface Message {
   content: string;
 }
 
-interface ChatbotProps {
-    showCopyReminder: boolean;
-}
+interface ChatbotProps {}
 
-export function Chatbot({ showCopyReminder }: ChatbotProps) {
+export function Chatbot({}: ChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -80,7 +78,6 @@ export function Chatbot({ showCopyReminder }: ChatbotProps) {
   return (
     <>
       <div className="fixed bottom-8 right-8 z-50">
-        <div className={cn("absolute inset-0 rounded-full", showCopyReminder && "animate-sonar")}></div>
         <Button
           onClick={() => setIsOpen(true)}
           className="relative h-16 w-16 rounded-full shadow-lg"
@@ -173,5 +170,3 @@ export function Chatbot({ showCopyReminder }: ChatbotProps) {
     </>
   );
 }
-
-    
