@@ -103,6 +103,13 @@ export function WorldClock() {
       }
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && suggestions.length > 0) {
+        e.preventDefault(); // Prevent form submission if it's inside a form
+        handleSelectTimezone(suggestions[0]);
+    }
+  };
+
   const locationName = useMemo(() => {
       if (!selectedTimezone) return "";
       const parts = selectedTimezone.split('/');
@@ -124,6 +131,7 @@ export function WorldClock() {
           type="text"
           value={query}
           onChange={handleQueryChange}
+          onKeyDown={handleKeyDown}
           placeholder="Search for a city or timezone..."
           className="w-full pl-10 text-lg h-14 rounded-full shadow-lg"
         />
