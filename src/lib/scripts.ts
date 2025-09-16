@@ -11,7 +11,11 @@ export const scripts: Script[] = [
     content: [
         {
           title: 'Greeting',
-          content: 'Welcome to Customer Care [Customer First Name], you’re speaking with [Agent Name]! Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+          content: 'Welcome to Customer Care [Customer First Name], you’re speaking with [Agent Name]!',
+        },
+        {
+          title: 'Verification Request',
+          content: 'Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
         },
         {
           title: 'Confirmation and query',
