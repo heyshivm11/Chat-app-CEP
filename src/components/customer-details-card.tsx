@@ -25,6 +25,7 @@ const initialFormState = {
   resolution: '',
   ghostline: 'N/A',
   notes: '',
+  validatedBy: '',
 };
 
 type FormState = typeof initialFormState;
@@ -248,6 +249,9 @@ export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: s
     } else {
       setForm2History(prev => [...prev, form2Data]);
       setForm2Data(prev => ({ ...prev, [fieldName]: value }));
+      if (fieldName === 'query' && onQueryChange) {
+        onQueryChange(value);
+      }
     }
   };
   
@@ -266,6 +270,9 @@ export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: s
       if (lastState) {
         setForm2Data(lastState);
         setForm2History([...form2History]);
+         if(lastState.query !== form2Data.query && onQueryChange) {
+          onQueryChange(lastState.query);
+        }
       }
     }
   };
@@ -280,6 +287,17 @@ export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: s
     } else {
       setForm2History(prev => [...prev, form2Data]);
       setForm2Data(initialFormState);
+      if (form2Data.query !== '' && onQueryChange) {
+        onQueryChange('');
+      }
+    }
+  };
+
+  const handleTabChange = (value: string) => {
+    if (value === 'customer1') {
+      if (onQueryChange) onQueryChange(form1Data.query);
+    } else {
+      if (onQueryChange) onQueryChange(form2Data.query);
     }
   };
 
@@ -305,7 +323,7 @@ export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: s
         </CardHeader>
         <CollapsibleContent>
           <CardContent>
-              <Tabs defaultValue="customer1" className="w-full">
+              <Tabs defaultValue="customer1" className="w-full" onValueChange={handleTabChange}>
                   <TabsList className="grid w-full grid-cols-2">
                       <TabsTrigger value="customer1">Customer 1</TabsTrigger>
                       <TabsTrigger value="customer2">Customer 2</TabsTrigger>
@@ -329,6 +347,7 @@ export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: s
                         onUndo={() => handleUndo(2)}
                         onReset={() => handleReset(2)}
                         hasHistory={form2History.length > 0}
+                        onQueryChange={onQueryChange}
                       />
                   </TabsContent>
               </Tabs>
@@ -338,7 +357,3 @@ export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: s
     </Collapsible>
   );
 }
-
-    
-
-    
