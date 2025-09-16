@@ -193,7 +193,7 @@ export const scripts: Script[] = [
     id: 'common-8',
     department: 'common',
     category: 'Conversation Flow',
-    title: 'Solution & Closing',
+    title: 'Solutions',
     content: [
        {
         title: 'Discuss Solution & Gain Agreement',
@@ -214,14 +214,6 @@ export const scripts: Script[] = [
       {
         title: 'Further assistance',
         content: 'I hope everything is clear. Do you have any further questions?',
-      },
-      {
-        title: 'Closing',
-        content: 'Thank you for using our service. Should you require any further assistance, please don’t hesitate to get in touch.',
-      },
-       {
-        title: 'Wish',
-        content: 'Wishing you a wonderful day ahead!',
       },
     ]
   },
