@@ -17,7 +17,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function ScriptPage({ department: initialDepartment }: { department: string }) {
   const router = useRouter();
@@ -31,24 +30,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [openingOpen, setOpeningOpen] = useState(true);
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [commonOpen, setCommonOpen] = useState(true);
-  const isMobile = useIsMobile();
-  const [numColumns, setNumColumns] = useState(3);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 1024) {
-        setNumColumns(1);
-      } else if (window.innerWidth < 1280) {
-        setNumColumns(2);
-      } else {
-        setNumColumns(3);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Set initial number of columns
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
 
   const motivationalPhrases = [
     "Let's provide the best experience to customers...",
@@ -128,20 +109,10 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       return <p className="text-muted-foreground text-center col-span-1 lg:col-span-2 xl:col-span-3 py-8">No scripts found.</p>;
     }
     
-    // Create columns for masonry layout
-    const columns: Script[][] = Array.from({ length: numColumns }, () => []);
-    scriptList.forEach((script, index) => {
-      columns[index % numColumns].push(script);
-    });
-
     return (
-      <div className="flex flex-row gap-4 items-start">
-        {columns.map((column, colIndex) => (
-          <div key={colIndex} className="flex flex-col gap-4 w-full">
-            {column.map((script) => (
-              <ScriptCard key={script.id} script={script} />
-            ))}
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
+        {scriptList.map((script) => (
+          <ScriptCard key={script.id} script={script} />
         ))}
       </div>
     );
@@ -246,5 +217,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
 
     
