@@ -87,10 +87,10 @@ export function Chatbot() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Sparkles className="text-primary h-5 w-5" />
-              AI Assistant
+              Sarthi
             </DialogTitle>
             <DialogDescription>
-              Ask me anything about scripts, customer interactions, or policies.
+              Your personal AI assistant. Ask Sarthi anything about scripts, customer interactions, or policies.
             </DialogDescription>
           </DialogHeader>
 
