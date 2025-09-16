@@ -3,12 +3,15 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from './ui/button';
-import { RotateCw } from 'lucide-react';
+import { RotateCw, Trophy } from 'lucide-react';
+import { Card } from './ui/card';
 
 const BOARD_SIZE = 20;
 const TILE_SIZE = 20;
 const INITIAL_SNAKE = [{ x: 10, y: 10 }];
 const INITIAL_FOOD = { x: 15, y: 15 };
+const INITIAL_SPEED = 200;
+const SPEED_INCREMENT = 0.98;
 
 type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 type Position = { x: number; y: number };
@@ -31,7 +34,7 @@ export function SnakeGame() {
     setSnake(INITIAL_SNAKE);
     setFood(INITIAL_FOOD);
     setDirection('RIGHT');
-    setSpeed(200);
+    setSpeed(INITIAL_SPEED);
     setGameOver(false);
     setScore(0);
     boardRef.current?.focus();
@@ -61,43 +64,44 @@ export function SnakeGame() {
   };
 
   const moveSnake = () => {
-    const newSnake = [...snake];
-    const head = { ...newSnake[0] };
+    setSnake(prevSnake => {
+      const newSnake = [...prevSnake];
+      const head = { ...newSnake[0] };
 
-    switch (direction) {
-      case 'UP': head.y -= 1; break;
-      case 'DOWN': head.y += 1; break;
-      case 'LEFT': head.x -= 1; break;
-      case 'RIGHT': head.x += 1; break;
-    }
-    
-    // Wall collision
-    if (head.x < 0 || head.x >= BOARD_SIZE || head.y < 0 || head.y >= BOARD_SIZE) {
-      setGameOver(true);
-      return;
-    }
-
-    // Self collision
-    for (const segment of newSnake) {
-      if (head.x === segment.x && head.y === segment.y) {
-        setGameOver(true);
-        return;
+      switch (direction) {
+        case 'UP': head.y -= 1; break;
+        case 'DOWN': head.y += 1; break;
+        case 'LEFT': head.x -= 1; break;
+        case 'RIGHT': head.x += 1; break;
       }
-    }
+      
+      // Wall collision
+      if (head.x < 0 || head.x >= BOARD_SIZE || head.y < 0 || head.y >= BOARD_SIZE) {
+        setGameOver(true);
+        return prevSnake;
+      }
 
-    newSnake.unshift(head);
+      // Self collision
+      for (const segment of newSnake) {
+        if (head.x === segment.x && head.y === segment.y) {
+          setGameOver(true);
+          return prevSnake;
+        }
+      }
 
-    // Food collision
-    if (head.x === food.x && head.y === food.y) {
-      setScore(s => s + 1);
-      // Increase speed slightly
-      setSpeed(s => s ? Math.max(50, s * 0.95) : null);
-      generateFood(newSnake);
-    } else {
-      newSnake.pop();
-    }
-    
-    setSnake(newSnake);
+      newSnake.unshift(head);
+
+      // Food collision
+      if (head.x === food.x && head.y === food.y) {
+        setScore(s => s + 1);
+        setSpeed(s => s ? Math.max(50, s * SPEED_INCREMENT) : null);
+        generateFood(newSnake);
+      } else {
+        newSnake.pop();
+      }
+      
+      return newSnake;
+    })
   };
 
 
@@ -112,7 +116,7 @@ export function SnakeGame() {
         }
 
         if (speed === null && e.key !== ' ') {
-            setSpeed(200);
+            setSpeed(INITIAL_SPEED);
         }
 
         switch (e.key) {
@@ -123,71 +127,69 @@ export function SnakeGame() {
         }
     };
     
-    const board = boardRef.current;
-    board?.addEventListener('keydown', handleKeyDown);
-    return () => board?.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [direction, gameOver, speed]);
 
 
   return (
-    <div className="flex flex-col items-center">
-        <div className="flex justify-between w-full mb-2 text-sm text-muted-foreground">
-            <span>Score: {score}</span>
-        </div>
+    <div className="flex flex-col items-center gap-4">
+        <Card className="p-2 px-6 rounded-full border-2 border-black">
+            <div className="text-xl font-bold">Score: {score}</div>
+        </Card>
       <div 
         ref={boardRef}
         tabIndex={0}
-        className="relative bg-background/50 rounded-md outline-none"
+        className="relative bg-background/50 rounded-xl outline-none border-2 border-black"
         style={{ 
           width: BOARD_SIZE * TILE_SIZE, 
           height: BOARD_SIZE * TILE_SIZE,
-          border: '1px solid hsl(var(--border))'
         }}
       >
         {snake.map((segment, index) => (
           <div
             key={index}
-            className="absolute bg-primary rounded"
+            className="absolute rounded"
             style={{
               left: segment.x * TILE_SIZE,
               top: segment.y * TILE_SIZE,
-              width: TILE_SIZE,
-              height: TILE_SIZE,
-              backgroundColor: index === 0 ? 'hsl(var(--primary))' : 'hsl(var(--primary) / 0.8)',
+              width: TILE_SIZE -1,
+              height: TILE_SIZE -1,
+              backgroundColor: index === 0 ? 'hsl(var(--primary))' : `hsl(var(--primary) / ${1 - index/snake.length * 0.5})`,
+              transition: 'all 0.1s linear',
             }}
           />
         ))}
         <div
           className="absolute bg-destructive rounded-full"
           style={{
-            left: food.x * TILE_SIZE,
-            top: food.y * TILE_SIZE,
-            width: TILE_SIZE,
-            height: TILE_SIZE,
+            left: food.x * TILE_SIZE + TILE_SIZE / 4,
+            top: food.y * TILE_SIZE + TILE_SIZE / 4,
+            width: TILE_SIZE / 2,
+            height: TILE_SIZE / 2,
           }}
         />
 
-        {gameOver && (
-            <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-center rounded-md">
-                <h3 className="text-2xl font-bold text-destructive-foreground">Game Over</h3>
-                <p className="text-destructive-foreground">Your Score: {score}</p>
-                <Button onClick={startGame} variant="secondary" className="mt-4">
+        {(!gameStarted || gameOver) && (
+            <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-center rounded-md z-10">
+                {gameOver ? (
+                    <>
+                        <h3 className="text-3xl font-bold text-white">Game Over</h3>
+                        <p className="text-xl text-white flex items-center gap-2 mt-2">
+                           <Trophy className="text-yellow-400" /> Final Score: {score}
+                        </p>
+                    </>
+                ) : (
+                    <h3 className="text-3xl font-bold text-white">Snake</h3>
+                )}
+                <Button onClick={startGame} className="mt-6 btn-custom btn-secondary-custom">
                     <RotateCw className="mr-2 h-4 w-4" />
-                    Play Again
+                    {gameOver ? "Play Again" : "Start Game"}
                 </Button>
             </div>
         )}
-        {!gameOver && speed === null && (
-            <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-center rounded-md">
-                <h3 className="text-xl font-bold text-foreground">Snake Game</h3>
-                <p className="text-muted-foreground mt-2">Use arrow keys to move</p>
-                <Button onClick={() => setSpeed(200)} variant="secondary" className="mt-4">
-                    Start Game
-                </Button>
-            </div>
-        )}
-
       </div>
+       <div className="text-sm text-muted-foreground">Use Arrow keys to move.</div>
     </div>
   );
 }

@@ -10,7 +10,8 @@ function Square({ value, onSquareClick }: { value: string | null, onSquareClick:
     return (
         <button 
             className={cn(
-                "tic-tac-toe-square",
+                "h-16 w-16 md:h-24 md:w-24 m-1 border-2 border-border flex items-center justify-center text-3xl md:text-5xl font-bold rounded-lg transition-all duration-200",
+                "hover:bg-accent/50",
                 value === 'X' ? 'text-primary' : 'text-destructive'
             )}
             onClick={onSquareClick}
@@ -136,14 +137,14 @@ export function TicTacToeGame() {
 
     return (
         <div className="flex flex-col items-center">
-            <div className="mb-4 text-lg font-semibold">{status}</div>
-            <div className="tic-tac-toe-board">
+            <div className="mb-4 text-xl font-semibold">{status}</div>
+            <div className="grid grid-cols-3">
                 {squares.map((square, i) => (
                     <Square key={i} value={square} onSquareClick={() => handleClick(i)} />
                 ))}
             </div>
             <p className="text-sm text-muted-foreground mt-4">You are X. The bot is O.</p>
-            <Button onClick={resetGame} variant="secondary" className="mt-2">
+            <Button onClick={resetGame} variant="secondary" className="mt-4 btn-custom btn-secondary-custom max-w-fit">
                 <RotateCw className="mr-2 h-4 w-4" />
                 Reset Game
             </Button>
