@@ -37,8 +37,12 @@ export const scripts: Script[] = [
     title: 'Request Stated & Non-Verified',
     content: [
       {
-        title: 'Greeting and Verification',
-        content: 'Welcome to Customer Care [Customer First Name], you’re speaking with [Agent Name]! Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+        title: 'Greeting',
+        content: 'Welcome to Customer Care [Customer First Name], you’re speaking with [Agent Name]!',
+      },
+      {
+        title: 'Verification Request',
+        content: 'Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
       },
       {
         title: 'Acknowledge Request',
@@ -87,8 +91,12 @@ export const scripts: Script[] = [
     title: 'Request Not Stated & Non-Verified',
     content: [
         {
-          title: 'Greeting and Verification',
-          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is [Agent Name]!Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+          title: 'Greeting',
+          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is [Agent Name]!',
+        },
+        {
+          title: 'Verification Request',
+          content: 'Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
         },
         {
           title: 'Confirmation and Query',
@@ -110,8 +118,12 @@ export const scripts: Script[] = [
     title: 'Request Stated & Non-Verified',
     content: [
         {
-          title: 'Greeting and Verification',
-          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is [Agent Name]!Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
+          title: 'Greeting',
+          content: 'Welcome to Gotogate Customer Care in partnership with Booking.com [Customer First Name]! My name is [Agent Name]!',
+        },
+        {
+          title: 'Verification Request',
+          content: 'Before we get started, could you please provide me with your order number so I can confirm your details in our system?',
         },
         {
           title: 'Acknowledge Request',
