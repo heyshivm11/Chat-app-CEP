@@ -49,7 +49,7 @@ function WorldClockComponent() {
     setIsLoading(true);
     setError(null);
     setSuggestions([]);
-    setQuery(""); // Reset query for new search
+    setQuery("");
     try {
       const response = await fetch(`https://timeapi.io/api/time/current/zone?timeZone=${timezone}`);
       if (!response.ok) throw new Error(`Failed to fetch time for "${timezone}". Please check the timezone name (e.g., "Europe/Amsterdam").`);
@@ -57,6 +57,7 @@ function WorldClockComponent() {
       setTimeData(data);
       setCurrentTime(new Date(data.dateTime));
       setSelectedTimezone(data.timeZone);
+      setQuery(''); // Reset search bar
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       // Don't clear old data on error
