@@ -2,7 +2,6 @@
 "use client";
 import React from 'react';
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -329,38 +328,36 @@ function CustomerDetailsCardComponent({
             </CollapsibleTrigger>
           </div>
           <CollapsibleContent>
-            <Card>
-              <CardContent className="pt-6">
-                  <Tabs defaultValue="customer1" className="w-full" onValueChange={handleTabChange}>
-                      <TabsList className="grid w-full grid-cols-2">
-                          <TabsTrigger value="customer1">Customer 1</TabsTrigger>
-                          <TabsTrigger value="customer2">Customer 2</TabsTrigger>
-                      </TabsList>
-                      <TabsContent value="customer1">
-                          <CustomerForm
-                            agentName={agentName}
-                            formData={form1Data}
-                            onFormChange={(field, value) => handleFormChange(1, field, value)}
-                            onUndo={() => handleUndo(1)}
-                            onReset={() => handleReset(1)}
-                            hasHistory={form1History.length > 0}
-                            onQueryChange={onQueryChange}
-                          />
-                      </TabsContent>
-                      <TabsContent value="customer2">
-                          <CustomerForm
-                            agentName={agentName}
-                            formData={form2Data}
-                            onFormChange={(field, value) => handleFormChange(2, field, value)}
-                            onUndo={() => handleUndo(2)}
-                            onReset={() => handleReset(2)}
-                            hasHistory={form2History.length > 0}
-                            onQueryChange={onQueryChange}
-                          />
-                      </TabsContent>
-                  </Tabs>
-              </CardContent>
-            </Card>
+            <div className="p-6 pt-6 bg-background/30 backdrop-blur-sm border-white/20 rounded-lg">
+                <Tabs defaultValue="customer1" className="w-full" onValueChange={handleTabChange}>
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="customer1">Customer 1</TabsTrigger>
+                        <TabsTrigger value="customer2">Customer 2</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="customer1">
+                        <CustomerForm
+                          agentName={agentName}
+                          formData={form1Data}
+                          onFormChange={(field, value) => handleFormChange(1, field, value)}
+                          onUndo={() => handleUndo(1)}
+                          onReset={() => handleReset(1)}
+                          hasHistory={form1History.length > 0}
+                          onQueryChange={onQueryChange}
+                        />
+                    </TabsContent>
+                    <TabsContent value="customer2">
+                        <CustomerForm
+                          agentName={agentName}
+                          formData={form2Data}
+                          onFormChange={(field, value) => handleFormChange(2, field, value)}
+                          onUndo={() => handleUndo(2)}
+                          onReset={() => handleReset(2)}
+                          hasHistory={form2History.length > 0}
+                          onQueryChange={onQueryChange}
+                        />
+                    </TabsContent>
+                </Tabs>
+            </div>
           </CollapsibleContent>
       </section>
     </Collapsible>

@@ -8,7 +8,6 @@ import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
 import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote, ChevronsDownUp, ChevronsUpDown as ChevronsUpDownIcon } from "@/components/ui/lucide-icons";
 import { CustomerDetailsCard } from "./customer-details-card";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
@@ -228,14 +227,13 @@ export default function ScriptPage({ department: initialDepartment }: { departme
             />
             <main className="container mx-auto px-4 md:px-8 py-8 flex-1">
                 
-                <Card className="mb-8 bg-background/30 backdrop-blur-sm border-white/20">
-                    <CardHeader>
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="mb-8 p-6 bg-background/30 backdrop-blur-sm border-white/20 rounded-lg">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                         <div className="flex-1">
                             <h2 className="text-3xl font-bold text-foreground">Welcome back, {user?.name || 'Agent'}!</h2>
                             <TypingEffect phrases={motivationalPhrases} className="text-muted-foreground text-md h-6" />
                         </div>
-                            <div className="flex items-center gap-4 w-full md:w-auto">
+                        <div className="flex items-center gap-4 w-full md:w-auto">
                             <Label htmlFor="customerName" className="text-md whitespace-nowrap font-bold">Customer Name:</Label>
                             <div className="flex items-center gap-2 w-full">
                                 <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
@@ -244,9 +242,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                                 </Button>
                             </div>
                         </div>
-                        </div>
-                    </CardHeader>
-                </Card>
+                    </div>
+                </div>
 
                 <div className="mb-6 flex justify-end">
                     <Button variant="outline" onClick={toggleAllSections}>
@@ -257,10 +254,10 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 
                 <div className="my-8">
                     <CustomerDetailsCard 
-                    agentName={user?.name || 'Agent'} 
-                    onQueryChange={setCurrentQuery}
-                    isOpen={customerDetailsOpen}
-                    onOpenChange={setCustomerDetailsOpen}
+                        agentName={user?.name || 'Agent'} 
+                        onQueryChange={setCurrentQuery}
+                        isOpen={customerDetailsOpen}
+                        onOpenChange={setCustomerDetailsOpen}
                     />
                 </div>
 
@@ -279,16 +276,14 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             </CollapsibleTrigger>
                             </div>
                             <CollapsibleContent>
-                                <Card className="bg-background/30 backdrop-blur-sm border-white/20">
-                                    <CardContent className="p-6">
-                                        {requestStatedVerifiedScript && (
-                                        <div className="mb-4">
-                                            <ScriptCard script={requestStatedVerifiedScript} />
-                                        </div>
-                                        )}
-                                        {renderScriptList(otherDepartmentScripts)}
-                                    </CardContent>
-                                </Card>
+                                <div className="p-6 bg-background/30 backdrop-blur-sm border-white/20 rounded-lg">
+                                    {requestStatedVerifiedScript && (
+                                    <div className="mb-4">
+                                        <ScriptCard script={requestStatedVerifiedScript} />
+                                    </div>
+                                    )}
+                                    {renderScriptList(otherDepartmentScripts)}
+                                </div>
                             </CollapsibleContent>
                         </section>
                     </Collapsible>
@@ -307,11 +302,9 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             </CollapsibleTrigger>
                             </div>
                             <CollapsibleContent>
-                                <Card className="bg-background/30 backdrop-blur-sm border-white/20">
-                                    <CardContent className="p-6">
-                                        {renderScriptList(workflowScripts)}
-                                    </CardContent>
-                                </Card>
+                                <div className="p-6 bg-background/30 backdrop-blur-sm border-white/20 rounded-lg">
+                                    {renderScriptList(workflowScripts)}
+                                </div>
                             </CollapsibleContent>
                         </section>
                     </Collapsible>
@@ -330,11 +323,9 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             </CollapsibleTrigger>
                             </div>
                             <CollapsibleContent>
-                                <Card className="bg-background/30 backdrop-blur-sm border-white/20">
-                                    <CardContent className="p-6">
-                                        {renderFlexScriptList(commonScripts)}
-                                    </CardContent>
-                                </Card>
+                                <div className="p-6 bg-background/30 backdrop-blur-sm border-white/20 rounded-lg">
+                                    {renderFlexScriptList(commonScripts)}
+                                </div>
                             </CollapsibleContent>
                         </section>
                     </Collapsible>
@@ -353,15 +344,13 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             </CollapsibleTrigger>
                             </div>
                             <CollapsibleContent>
-                                <Card className="bg-background/30 backdrop-blur-sm border-white/20">
-                                    <CardContent className="p-6">
-                                        {chatClosingScript && (
-                                        <div className="mb-4">
-                                            <ScriptCard script={chatClosingScript} />
-                                        </div>
-                                        )}
-                                    </CardContent>
-                                </Card>
+                                <div className="p-6 bg-background/30 backdrop-blur-sm border-white/20 rounded-lg">
+                                    {chatClosingScript && (
+                                    <div className="mb-4">
+                                        <ScriptCard script={chatClosingScript} />
+                                    </div>
+                                    )}
+                                </div>
                             </CollapsibleContent>
                         </section>
                     </Collapsible>
@@ -374,9 +363,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
-
-    
-
-    
