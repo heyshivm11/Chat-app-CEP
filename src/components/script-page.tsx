@@ -110,7 +110,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       return <p className="text-muted-foreground text-center col-span-1 lg:col-span-2 xl:col-span-3 py-8">No scripts found.</p>;
     }
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 items-start">
         {scriptList.map((script) => (
           <ScriptCard key={script.id} script={script} />
         ))}
