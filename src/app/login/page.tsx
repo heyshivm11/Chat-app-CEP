@@ -57,7 +57,7 @@ export default function LoginPage() {
         priority
       />
       <Image
-        src="https://storage.googleapis.com/project-spark-348216/815/studio/assets/1l_Gk7Lz1.jpg"
+        src="https://images.unsplash.com/photo-1544135795-342c8a22dd60?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         alt="Airplane flying over a city at night - Dark Mode"
         fill
         className={cn(
