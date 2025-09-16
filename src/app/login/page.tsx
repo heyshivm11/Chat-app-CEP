@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -10,18 +10,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LogIn } from "lucide-react";
-import Image from "next/image";
-import { useTheme } from "@/components/providers/theme-provider";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
   const [name, setName] = useState('');
   const [department, setDepartment] = useState('');
   const [error, setError] = useState('');
   const { login, isLoading } = useAuth();
-  const router = useRouter();
-  const { theme } = useTheme();
+
+  useEffect(() => {
+    const blob = document.getElementById("blob");
+    if (!blob) return;
+
+    const handlePointerMove = (event: PointerEvent) => { 
+      const { clientX, clientY } = event;
+      
+      blob.animate({
+        left: `${clientX}px`,
+        top: `${clientY}px`
+      }, { duration: 3000, fill: "forwards" });
+    }
+
+    window.addEventListener('pointermove', handlePointerMove);
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+    }
+  }, []);
 
   const handleLogin = () => {
     if (!name.trim() || !department) {
@@ -41,33 +56,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen p-4">
+    <div className="relative flex items-center justify-center min-h-screen p-4 overflow-hidden">
+       <div id="blob"></div>
+       <div id="blur"></div>
+       
        <div className="absolute top-4 right-4 z-10">
         <ThemeSwitcher />
       </div>
-      
-      <Image
-        src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        alt="Airplane wing in the sky - Light Mode"
-        fill
-        className={cn(
-            "object-cover -z-10 transition-opacity duration-1000",
-            theme === 'dark' ? 'opacity-0' : 'opacity-100'
-        )}
-        priority
-      />
-      <Image
-        src="https://images.unsplash.com/photo-1544135795-342c8a22dd60?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        alt="Airplane flying over a city at night - Dark Mode"
-        fill
-        className={cn(
-            "object-cover -z-10 transition-opacity duration-1000",
-            theme === 'dark' ? 'opacity-100' : 'opacity-0'
-        )}
-        priority
-      />
 
-      <Card className="w-full max-w-sm bg-background/80 backdrop-blur-sm">
+      <Card className="w-full max-w-sm bg-background/30 backdrop-blur-sm z-10 border-white/20">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
           <CardDescription>Sign in to access the CEP scripts</CardDescription>
