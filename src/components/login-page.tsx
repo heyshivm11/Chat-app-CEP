@@ -27,6 +27,7 @@ import {
 interface IFormInput {
   firstName: string;
   department: 'Frontline' | 'Schedule Change';
+  password: string;
 }
 
 export function LoginPage() {
@@ -44,6 +45,7 @@ export function LoginPage() {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setIsLoading(true);
     try {
+      // NOTE: Password is not actually used in the mock login function.
       await login(data.firstName, data.department);
       toast({
         title: 'Login Successful',
@@ -104,6 +106,22 @@ export function LoginPage() {
               {errors.department && (
                 <p className="text-xs text-destructive mt-1">
                   {errors.department.message}
+                </p>
+              )}
+            </div>
+             <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                {...register('password', {
+                  required: 'Password is required',
+                })}
+              />
+              {errors.password && (
+                <p className="text-xs text-destructive mt-1">
+                  {errors.password.message}
                 </p>
               )}
             </div>
