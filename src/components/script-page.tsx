@@ -68,23 +68,21 @@ const doesScriptMatch = (script: Script, term: string) => {
   return false;
 }
 
-const BentoCard = ({ 
+const SectionCard = ({ 
     icon, 
     title, 
     isOpen, 
     onOpenChange, 
-    children, 
-    className 
+    children 
 } : {
     icon: React.ReactNode,
     title: string,
     isOpen: boolean,
     onOpenChange: (open: boolean) => void,
-    children: React.ReactNode,
-    className?: string
+    children: React.ReactNode
 }) => (
-    <Collapsible open={isOpen} onOpenChange={onOpenChange} className={className}>
-        <div className="p-4 rounded-lg border border-white/20 bg-background/30 backdrop-blur-lg flex flex-col h-full">
+    <Collapsible open={isOpen} onOpenChange={onOpenChange}>
+        <div className="p-4 rounded-lg border border-white/20 bg-background/30 backdrop-blur-lg">
             <CollapsibleTrigger asChild>
                 <button className="flex items-center justify-between w-full pb-4 group">
                     <div className="flex items-center gap-3">
@@ -94,10 +92,8 @@ const BentoCard = ({
                     <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
                 </button>
             </CollapsibleTrigger>
-            <CollapsibleContent asChild>
-                <div className="flex-1">
-                    {children}
-                </div>
+            <CollapsibleContent>
+                {children}
             </CollapsibleContent>
         </div>
     </Collapsible>
@@ -116,8 +112,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 
   const [customerDetailsOpen, setCustomerDetailsOpen] = useState(true);
   const [openingOpen, setOpeningOpen] = useState(true);
-  const [workflowOpen, setWorkflowOpen] = useState(true);
-  const [commonOpen, setCommonOpen] = useState(true);
+  const [workflowOpen, setWorkflowOpen] = useState(false);
+  const [commonOpen, setCommonOpen] = useState(false);
   const [closingOpen, setClosingOpen] = useState(true);
   
   const blobRef = useRef<HTMLDivElement>(null);
@@ -203,34 +199,16 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     }
     
     return (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {scriptList.map((script) => (
-                <div key={script.id} className="break-inside-avoid">
-                    <ScriptCard script={script} />
-                </div>
+                <ScriptCard key={script.id} script={script} />
             ))}
         </div>
     );
   }, []);
   
-  const renderFlexScriptList = useCallback((scriptList: Script[]) => {
-    if (scriptList.length === 0) {
-      return <p className="text-muted-foreground text-center col-span-1 md:col-span-2 xl:col-span-3 py-8">No scripts found.</p>;
-    }
-
-    return (
-      <div className="columns-1 md:columns-2 gap-4">
-        {scriptList.map((script) => (
-          <div key={script.id} className="break-inside-avoid mb-4">
-            <ScriptCard script={script} />
-          </div>
-        ))}
-      </div>
-    );
-  }, []);
-  
   return (
-    <div className="flex flex-col min-h-screen relative overflow-hidden">
+    <div className="flex flex-col min-h-screen relative overflow-x-hidden">
         <div id="blob" ref={blobRef}></div>
         <div id="blur"></div>
         <div className="relative z-10 flex flex-col h-full flex-1">
@@ -263,13 +241,12 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                     </div>
                 </div>
 
-                <div className="grid grid-cols-12 gap-4 auto-rows-fr">
-                    <BentoCard 
+                <div className="space-y-6">
+                    <SectionCard 
                         icon={<FileText className="h-6 w-6 text-primary" />}
                         title="Customer Details"
                         isOpen={customerDetailsOpen}
                         onOpenChange={setCustomerDetailsOpen}
-                        className="col-span-12"
                     >
                          <CustomerDetailsCard 
                             agentName={user?.name || 'Agent'} 
@@ -277,56 +254,50 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             isOpen={customerDetailsOpen}
                             onOpenChange={setCustomerDetailsOpen}
                         />
-                    </BentoCard>
+                    </SectionCard>
 
-                    <BentoCard
+                    <SectionCard
                         icon={<FileText className="h-6 w-6 text-primary" />}
                         title="Opening"
                         isOpen={openingOpen}
                         onOpenChange={setOpeningOpen}
-                        className="col-span-12 md:col-span-6 lg:col-span-5"
                     >
-                         {requestStatedVerifiedScript && (
-                            <div className="mb-4">
-                                <ScriptCard script={requestStatedVerifiedScript} />
-                            </div>
-                        )}
-                        {renderScriptList(otherDepartmentScripts)}
-                    </BentoCard>
+                        <div className="space-y-4">
+                            {requestStatedVerifiedScript && (
+                                <div className="p-4 rounded-md border bg-card">
+                                    <ScriptCard script={requestStatedVerifiedScript} />
+                                </div>
+                            )}
+                            {renderScriptList(otherDepartmentScripts)}
+                        </div>
+                    </SectionCard>
 
-                    <BentoCard
+                    <SectionCard
                         icon={<Workflow className="h-6 w-6 text-primary" />}
                         title="Workflow"
                         isOpen={workflowOpen}
                         onOpenChange={setWorkflowOpen}
-                        className="col-span-12 md:col-span-6 lg:col-span-7"
                     >
-                        {renderFlexScriptList(workflowScripts)}
-                    </BentoCard>
+                        {renderScriptList(workflowScripts)}
+                    </SectionCard>
                     
-                    <BentoCard
+                    <SectionCard
                         icon={<BookCopy className="h-6 w-6 text-primary" />}
                         title="Common Scripts"
                         isOpen={commonOpen}
                         onOpenChange={setCommonOpen}
-                        className="col-span-12 lg:col-span-8"
                     >
-                        {renderFlexScriptList(commonScripts)}
-                    </BentoCard>
+                        {renderScriptList(commonScripts)}
+                    </SectionCard>
 
-                    <BentoCard
+                    <SectionCard
                         icon={<MessageSquareQuote className="h-6 w-6 text-primary" />}
                         title="Chat Closing"
                         isOpen={closingOpen}
                         onOpenChange={setClosingOpen}
-                        className="col-span-12 lg:col-span-4"
                     >
-                        {chatClosingScript && (
-                            <div className="w-full">
-                                <ScriptCard script={chatClosingScript} />
-                            </div>
-                        )}
-                    </BentoCard>
+                        {chatClosingScript && <ScriptCard script={chatClosingScript} />}
+                    </SectionCard>
                 </div>
             </main>
             <Chatbot />
