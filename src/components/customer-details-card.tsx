@@ -51,13 +51,6 @@ interface CustomerFormProps {
 function CustomerForm({ agentName, formData, onFormChange, onUndo, onReset, hasHistory, onQueryChange }: CustomerFormProps) {
   const [customerIsCaller, setCustomerIsCaller] = useState(formData.relation === 'Self');
 
-  useEffect(() => {
-    if (customerIsCaller) {
-      onFormChange('callerName', formData.customerName);
-      onFormChange('relation', 'Self');
-    }
-  }, [customerIsCaller, formData.customerName, onFormChange]);
-
   const handleInputChange = (id: string, value: string) => {
     onFormChange(id as keyof FormState, value);
     if (id === 'query' && onQueryChange) {
@@ -71,9 +64,12 @@ function CustomerForm({ agentName, formData, onFormChange, onUndo, onReset, hasH
 
   const handleCheckboxChange = (checked: boolean) => {
     setCustomerIsCaller(checked);
-    if (!checked) {
-        onFormChange('callerName', '');
-        onFormChange('relation', '');
+    if (checked) {
+      onFormChange('callerName', formData.customerName);
+      onFormChange('relation', 'Self');
+    } else {
+      onFormChange('callerName', '');
+      onFormChange('relation', '');
     }
   }
 
@@ -358,3 +354,5 @@ export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: s
     </Collapsible>
   );
 }
+
+    
