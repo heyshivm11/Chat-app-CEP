@@ -1,21 +1,20 @@
 
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CopyButton } from './copy-button';
-import { ClipboardPaste, User, RotateCcw } from 'lucide-react';
+import { ClipboardPaste, User, RotateCcw, ChevronsUpDown, Undo } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronsUpDown } from 'lucide-react';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Checkbox } from './ui/checkbox';
-import { useAuth } from '@/hooks/use-auth';
-import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+
 
 const initialFormState = {
   interactionId: '',
@@ -43,10 +42,12 @@ interface CustomerFormProps {
   agentName: string;
   formData: FormState;
   onFormChange: (fieldName: keyof FormState, value: string) => void;
+  onUndo: () => void;
   onReset: () => void;
+  hasHistory: boolean;
 }
 
-function CustomerForm({ agentName, formData, onFormChange, onReset }: CustomerFormProps) {
+function CustomerForm({ agentName, formData, onFormChange, onUndo, onReset, hasHistory }: CustomerFormProps) {
   const [customerIsCaller, setCustomerIsCaller] = useState(formData.relation === 'Self');
 
   useEffect(() => {
@@ -67,7 +68,6 @@ function CustomerForm({ agentName, formData, onFormChange, onReset }: CustomerFo
   const handleCheckboxChange = (checked: boolean) => {
     setCustomerIsCaller(checked);
     if (!checked) {
-        // Clear caller name and relation when unchecked
         onFormChange('callerName', '');
         onFormChange('relation', '');
     }
@@ -159,6 +159,9 @@ function CustomerForm({ agentName, formData, onFormChange, onReset }: CustomerFo
         />
       </div>
       <div className="flex justify-end gap-2">
+        <Button variant="outline" size="icon" onClick={onUndo} disabled={!hasHistory} aria-label="Undo change">
+          <Undo className="h-4 w-4" />
+        </Button>
         <Button variant="outline" size="icon" onClick={onReset} aria-label="Reset form">
           <RotateCcw className="h-4 w-4" />
         </Button>
@@ -174,19 +177,100 @@ function CustomerForm({ agentName, formData, onFormChange, onReset }: CustomerFo
 
 export function CustomerDetailsCard({ agentName }: { agentName: string }) {
   const [isOpen, setIsOpen] = useState(true);
+  
   const [form1Data, setForm1Data] = useState(initialFormState);
+  const [form1History, setForm1History] = useState<FormState[]>([]);
+  
   const [form2Data, setForm2Data] = useState(initialFormState);
+  const [form2History, setForm2History] = useState<FormState[]>([]);
 
-  const handleForm1Change = useCallback((fieldName: keyof FormState, value: string) => {
-    setForm1Data(prev => ({ ...prev, [fieldName]: value }));
-  }, []);
+  const { toast } = useToast();
+  const reminderInterval = useRef<NodeJS.Timeout>();
 
-  const handleForm2Change = useCallback((fieldName: keyof FormState, value: string) => {
-    setForm2Data(prev => ({ ...prev, [fieldName]: value }));
-  }, []);
+  const copyDetails = useCallback((details: string) => {
+    navigator.clipboard.writeText(details);
+    toast({ title: 'Details Copied!', description: 'Customer details have been copied to your clipboard.' });
+  },[toast]);
 
-  const resetForm1 = () => setForm1Data(initialFormState);
-  const resetForm2 = () => setForm2Data(initialFormState);
+  const detailsToCopy1 = useMemo(() => {
+    let text = `Agent Name: ${agentName}\n`;
+    Object.entries(form1Data).forEach(([key, value]) => {
+      if(value) text += `${key}: ${value}\n`;
+    });
+    return text;
+  }, [form1Data, agentName]);
+
+  const detailsToCopy2 = useMemo(() => {
+    let text = `Agent Name: ${agentName}\n`;
+    Object.entries(form2Data).forEach(([key, value]) => {
+      if(value) text += `${key}: ${value}\n`;
+    });
+    return text;
+  }, [form2Data, agentName]);
+
+  useEffect(() => {
+    reminderInterval.current = setInterval(() => {
+      toast({
+        title: "Don't Forget!",
+        description: "Have you copied the customer details? They might be important for your records.",
+        duration: 10000,
+        action: (
+            <div className="flex flex-col gap-2">
+                <Button onClick={() => copyDetails(detailsToCopy1)}>Copy Cust. 1</Button>
+                <Button onClick={() => copyDetails(detailsToCopy2)}>Copy Cust. 2</Button>
+            </div>
+        )
+      });
+    }, 120000); // 2 minutes
+
+    return () => {
+      if (reminderInterval.current) {
+        clearInterval(reminderInterval.current);
+      }
+    };
+  }, [toast, detailsToCopy1, detailsToCopy2, copyDetails]);
+
+
+  const handleFormChange = (
+    formIndex: 1 | 2, 
+    fieldName: keyof FormState, 
+    value: string
+  ) => {
+    if (formIndex === 1) {
+      setForm1History(prev => [...prev, form1Data]);
+      setForm1Data(prev => ({ ...prev, [fieldName]: value }));
+    } else {
+      setForm2History(prev => [...prev, form2Data]);
+      setForm2Data(prev => ({ ...prev, [fieldName]: value }));
+    }
+  };
+  
+  const handleUndo = (formIndex: 1 | 2) => {
+    if (formIndex === 1) {
+      const lastState = form1History.pop();
+      if (lastState) {
+        setForm1Data(lastState);
+        setForm1History([...form1History]);
+      }
+    } else {
+      const lastState = form2History.pop();
+      if (lastState) {
+        setForm2Data(lastState);
+        setForm2History([...form2History]);
+      }
+    }
+  };
+
+  const handleReset = (formIndex: 1 | 2) => {
+    if (formIndex === 1) {
+      setForm1History(prev => [...prev, form1Data]);
+      setForm1Data(initialFormState);
+    } else {
+      setForm2History(prev => [...prev, form2Data]);
+      setForm2Data(initialFormState);
+    }
+  };
+
 
   return (
     <Collapsible
@@ -194,7 +278,7 @@ export function CustomerDetailsCard({ agentName }: { agentName: string }) {
       onOpenChange={setIsOpen}
       className="w-full"
     >
-      <Card className="mb-8">
+      <Card className="mb-8 bg-card/50 backdrop-blur-lg">
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <User className="text-primary h-6 w-6" />
@@ -218,16 +302,20 @@ export function CustomerDetailsCard({ agentName }: { agentName: string }) {
                       <CustomerForm
                         agentName={agentName}
                         formData={form1Data}
-                        onFormChange={handleForm1Change}
-                        onReset={resetForm1}
+                        onFormChange={(field, value) => handleFormChange(1, field, value)}
+                        onUndo={() => handleUndo(1)}
+                        onReset={() => handleReset(1)}
+                        hasHistory={form1History.length > 0}
                       />
                   </TabsContent>
                   <TabsContent value="customer2">
                        <CustomerForm
                         agentName={agentName}
                         formData={form2Data}
-                        onFormChange={handleForm2Change}
-                        onReset={resetForm2}
+                        onFormChange={(field, value) => handleFormChange(2, field, value)}
+                        onUndo={() => handleUndo(2)}
+                        onReset={() => handleReset(2)}
+                        hasHistory={form2History.length > 0}
                       />
                   </TabsContent>
               </Tabs>
@@ -237,3 +325,5 @@ export function CustomerDetailsCard({ agentName }: { agentName: string }) {
     </Collapsible>
   );
 }
+
+    
