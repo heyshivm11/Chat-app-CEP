@@ -76,6 +76,30 @@
     --sub-item-hover-bg: hsl(var(--accent));
     --sub-item-hover-fg: hsl(var(--accent-foreground));
   }
+  
+  .theme-ocean {
+    --background: 195 60% 98%;
+    --foreground: 195 10% 3.9%;
+    --card: 195 60% 98%;
+    --card-foreground: 195 10% 3.9%;
+    --popover: 195 60% 98%;
+    --popover-foreground: 195 10% 3.9%;
+    --primary: 180 80% 40%;
+    --primary-foreground: 180 40% 98%;
+    --secondary: 195 4.8% 95.9%;
+    --secondary-foreground: 195 5.9% 10%;
+    --muted: 195 4.8% 95.9%;
+    --muted-foreground: 195 3.8% 46.1%;
+    --accent: 195 4.8% 95.9%;
+    --accent-foreground: 195 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 195 5.9% 90%;
+    --input: 195 5.9% 90%;
+    --ring: 180 80% 40%;
+    --sub-item-hover-bg: hsla(var(--primary) / 0.1);
+    --sub-item-hover-fg: hsl(var(--primary));
+  }
 }
 
 @layer base {
@@ -137,6 +161,10 @@
         animation: rotate 20s infinite;
         opacity: 0.8;
         z-index: -2;
+    }
+
+    .theme-ocean #blob {
+        background: linear-gradient(to right, #5EEAD4, #38BDF8);
     }
 
     #blur {
