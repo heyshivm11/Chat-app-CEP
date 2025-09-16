@@ -5,15 +5,17 @@ import { useState, useEffect } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, RotateCcw, Notebook } from "lucide-react";
+import { Copy, RotateCcw, Notebook, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { AuthGate } from "@/components/auth-gate";
+import { useRouter } from "next/navigation";
 
 const NOTES_STORAGE_KEY = "cep_my_notes";
 
 export default function NotesPage() {
   const [notes, setNotes] = useState("");
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     const savedNotes = localStorage.getItem(NOTES_STORAGE_KEY);
@@ -53,6 +55,9 @@ export default function NotesPage() {
         />
         <main className="flex-1 flex flex-col container mx-auto px-4 md:px-8 py-8">
             <div className="flex items-center gap-3 mb-6">
+                <Button variant="ghost" size="icon" onClick={() => router.back()} aria-label="Go back">
+                    <ArrowLeft className="h-8 w-8 text-primary" />
+                </Button>
                 <Notebook className="h-8 w-8 text-primary" />
                 <h1 className="text-4xl font-bold tracking-tight text-foreground">My Notes</h1>
             </div>
