@@ -128,7 +128,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       />
       <main className="container mx-auto px-4 md:px-8 py-8 flex-1">
           
-          <Card className={cn("mb-8 glass-card")}>
+          <Card className="mb-8">
               <CardHeader>
                   <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                   <div className="flex-1">
@@ -151,7 +151,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
           <CustomerDetailsCard agentName={user?.name || 'Agent'} />
 
           <div className="space-y-12 mt-8">
-              <div className="glass-card p-4 md:p-6">
+              <div className="p-4 md:p-6 rounded-lg">
                 <Collapsible asChild open={openingOpen} onOpenChange={setOpeningOpen} >
                 <section>
                     <div className="flex items-center justify-between mb-6">
@@ -173,7 +173,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                 </Collapsible>
               </div>
 
-              <div className="glass-card p-4 md:p-6">
+              <div className="p-4 md:p-6 rounded-lg">
                 <Collapsible asChild open={workflowOpen} onOpenChange={setWorkflowOpen}>
                 <section>
                     <div className="flex items-center justify-between mb-6">
@@ -195,7 +195,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                 </Collapsible>
               </div>
               
-              <div className="glass-card p-4 md:p-6">
+              <div className="p-4 md:p-6 rounded-lg">
                 <Collapsible asChild open={commonOpen} onOpenChange={setCommonOpen}>
                 <section>
                     <div className="flex items-center justify-between mb-6">
