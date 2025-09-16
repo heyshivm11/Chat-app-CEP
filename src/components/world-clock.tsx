@@ -23,15 +23,32 @@ const formatDate = (date: Date) => {
 
 function WorldClockComponent() {
   const [query, setQuery] = useState('');
+  const [allTimezones, setAllTimezones] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [selectedTimezone, setSelectedTimezone] = useState<string>('Asia/Kolkata');
   const [timeData, setTimeData] = useState<TimeData | null>(null);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const fetchAllTimezones = async () => {
+      try {
+        const response = await fetch('https://timeapi.io/api/TimeZone/AvailableTimeZones');
+        if (!response.ok) throw new Error('Failed to fetch timezone list.');
+        const data: string[] = await response.json();
+        setAllTimezones(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred while fetching timezones.');
+      }
+    };
+    fetchAllTimezones();
+  }, []);
+
   const fetchTime = useCallback(async (timezone: string) => {
     setIsLoading(true);
     setError(null);
+    setSuggestions([]);
     try {
       const response = await fetch(`https://timeapi.io/api/time/current/zone?timeZone=${timezone}`);
       if (!response.ok) throw new Error(`Failed to fetch time for "${timezone}". Please check the timezone name (e.g., "Europe/Amsterdam").`);
@@ -39,6 +56,7 @@ function WorldClockComponent() {
       setTimeData(data);
       setCurrentTime(new Date(data.dateTime));
       setSelectedTimezone(data.timeZone);
+      setQuery(timezone);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       setTimeData(null);
@@ -49,9 +67,7 @@ function WorldClockComponent() {
   }, []);
 
   useEffect(() => {
-    fetchTime(selectedTimezone);
-    // This effect should only run once on mount to fetch the initial time.
-    // fetchTime is wrapped in useCallback to be stable.
+    fetchTime('Asia/Kolkata');
   }, [fetchTime]); 
 
   useEffect(() => {
@@ -66,6 +82,22 @@ function WorldClockComponent() {
       return () => clearInterval(timer);
     }
   }, [currentTime]);
+
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
+    if (value.length > 1) {
+      const filtered = allTimezones.filter(tz => tz.toLowerCase().includes(value.toLowerCase()));
+      setSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
+    } else {
+      setSuggestions([]);
+    }
+  };
+  
+  const handleSuggestionClick = (timezone: string) => {
+    setQuery(timezone);
+    fetchTime(timezone);
+  };
 
   const handleSearch = () => {
     if (query.trim()) {
@@ -95,21 +127,38 @@ function WorldClockComponent() {
 
   return (
     <div className="w-full max-w-md">
-      <div className="relative flex items-center gap-2">
-        <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Search for a timezone (e.g. America/New_York)"
-              className="w-full pl-10 text-lg h-14 rounded-full shadow-lg"
-            />
+      <div className="relative">
+        <div className="relative flex items-center gap-2">
+            <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  type="text"
+                  value={query}
+                  onChange={handleQueryChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Search for a city or timezone..."
+                  className="w-full pl-10 text-lg h-14 rounded-full shadow-lg"
+                />
+            </div>
+            <Button onClick={handleSearch} disabled={isLoading || !query.trim()} className="h-14 rounded-full px-6">
+                <Search className="h-5 w-5" />
+            </Button>
         </div>
-        <Button onClick={handleSearch} disabled={isLoading || !query.trim()} className="h-14 rounded-full px-6">
-            <Search className="h-5 w-5" />
-        </Button>
+        {suggestions.length > 0 && (
+            <Card className="absolute top-full mt-2 w-full z-10 shadow-lg">
+                <CardContent className="p-2">
+                    {suggestions.map(tz => (
+                        <div 
+                            key={tz}
+                            onClick={() => handleSuggestionClick(tz)}
+                            className="p-2 hover:bg-accent rounded-md cursor-pointer"
+                        >
+                            {tz.replace(/_/g, ' ')}
+                        </div>
+                    ))}
+                </CardContent>
+            </Card>
+        )}
       </div>
 
       <div className="mt-8">
@@ -117,7 +166,7 @@ function WorldClockComponent() {
           <div className="flex justify-center items-center p-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
-        ) : error ? (
+        ) : error && !timeData ? (
           <p className="text-center text-destructive">{error}</p>
         ) : timeData && currentTime ? (
           <Card className="text-center shadow-2xl rounded-2xl bg-card/30 backdrop-blur-sm border-white/20">
