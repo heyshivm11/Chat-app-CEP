@@ -11,6 +11,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LogIn } from "lucide-react";
 import Image from "next/image";
+import { useTheme } from "@/components/providers/theme-provider";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
   const [name, setName] = useState('');
@@ -18,6 +21,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const { login, isLoading } = useAuth();
   const router = useRouter();
+  const { theme } = useTheme();
 
   const handleLogin = () => {
     if (!name.trim() || !department) {
@@ -38,13 +42,31 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex items-center justify-center min-h-screen p-4">
+       <div className="absolute top-4 right-4 z-10">
+        <ThemeSwitcher />
+      </div>
+      
       <Image
         src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        alt="Airplane wing in the sky"
+        alt="Airplane wing in the sky - Light Mode"
         fill
-        className="object-cover -z-10"
+        className={cn(
+            "object-cover -z-10 transition-opacity duration-1000",
+            theme === 'dark' ? 'opacity-0' : 'opacity-100'
+        )}
         priority
       />
+      <Image
+        src="https://storage.googleapis.com/project-spark-348216/815/studio/assets/y8wz6S_r4.jpg"
+        alt="Airplane wing over a city at night - Dark Mode"
+        fill
+        className={cn(
+            "object-cover -z-10 transition-opacity duration-1000",
+            theme === 'dark' ? 'opacity-100' : 'opacity-0'
+        )}
+        priority
+      />
+
       <Card className="w-full max-w-sm bg-background/80 backdrop-blur-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
