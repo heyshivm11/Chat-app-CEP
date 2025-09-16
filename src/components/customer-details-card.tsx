@@ -278,7 +278,7 @@ export function CustomerDetailsCard({ agentName }: { agentName: string }) {
       onOpenChange={setIsOpen}
       className="w-full"
     >
-      <Card className="mb-8 bg-card/50 backdrop-blur-lg">
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <User className="text-primary h-6 w-6" />
@@ -325,5 +325,7 @@ export function CustomerDetailsCard({ agentName }: { agentName: string }) {
     </Collapsible>
   );
 }
+
+    
 
     
