@@ -3,14 +3,9 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
-export type Theme = "theme-settleup" | "theme-default" | "theme-black-red" | "theme-black-green" | "theme-black-white" | "theme-white-red";
+export type Theme = "theme-settleup";
 export const themeNames: { [key in Theme]: string } = {
   "theme-settleup": "SettleUp",
-  "theme-default": "Sunset",
-  "theme-black-red": "Crimson Night",
-  "theme-black-green": "Emerald Dark",
-  "theme-black-white": "Monochrome",
-  "theme-white-red": "Scarlet Light",
 };
 
 const themeKeys = Object.keys(themeNames) as Theme[];
@@ -38,13 +33,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const root = document.documentElement;
     root.className = '';
 
-    if (!theme.startsWith('theme-white') && theme !== 'theme-settleup') {
-      root.classList.add('dark');
-    }
-    
-    if (theme === 'theme-settleup' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-       // Don't add dark class if system is dark for settleup theme
-    } else if (!theme.startsWith('theme-white')) {
+    if (theme === 'theme-settleup') {
+        // default to light theme for settleup
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
        root.classList.add('dark');
     }
 
