@@ -90,20 +90,22 @@ export default {
           },
         },
         'toast-in-right': {
-          '0%': { transform: 'translateX(100%)', opacity: '0' },
-          '50%': { transform: 'translateX(-10%)', opacity: '1' },
-          '75%': { transform: 'translateX(5%)' },
-          '100%': { transform: 'translateX(0)' },
+          '0%': {
+            transform: 'translateX(100%)',
+            opacity: '0',
+          },
+          '100%': {
+            transform: 'translateX(0)',
+            opacity: '1',
+          },
         },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'toast-in-right': 'toast-in-right 0.5s ease-out',
+        'toast-in-right': 'toast-in-right 0.3s ease-out',
       },
     },
   },
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
-
-    

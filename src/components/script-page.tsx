@@ -270,8 +270,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                          <CustomerDetailsCard 
                             agentName={user?.name || 'Agent'} 
                             onQueryChange={setCurrentQuery}
-                            isOpen={customerDetailsOpen}
-                            onOpenChange={setCustomerDetailsOpen}
                         />
                     </SectionCard>
 
