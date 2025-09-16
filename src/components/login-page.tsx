@@ -62,39 +62,38 @@ export function LoginPage() {
   };
 
   return (
-      <Card className="w-full max-w-sm z-10 bg-primary-foreground/5 backdrop-blur-lg border-primary-foreground/20 text-primary-foreground">
+      <Card className="w-full max-w-sm z-10 glass-card">
         <CardHeader className="text-center">
-          <CardTitle className="text-5xl font-bold">SettleUp</CardTitle>
-          <CardDescription className="text-primary-foreground/80 text-lg">Simplify. Split. Settle.</CardDescription>
+          <CardTitle className="text-3xl font-bold">CEP Scripts</CardTitle>
+          <CardDescription>
+            Sign in to access your scripts and tools.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
+              <Label htmlFor="firstName">First Name</Label>
               <Input
                 id="firstName"
-                placeholder="First Name"
-                className="bg-transparent border-primary-foreground/30 placeholder:text-primary-foreground/60 h-12 rounded-xl"
+                placeholder="Enter your first name"
                 {...register('firstName', {
                   required: 'First name is required',
                 })}
               />
               {errors.firstName && (
-                <p className="text-xs text-red-400 mt-1">
+                <p className="text-xs text-destructive mt-1">
                   {errors.firstName.message}
                 </p>
               )}
             </div>
             <div className="space-y-2">
-              <Label className="font-semibold sr-only">Department</Label>
+              <Label>Department</Label>
               <Select
                 onValueChange={(value: 'Frontline' | 'Schedule Change') => {
                   setValue('department', value, { shouldValidate: true });
                 }}
-                {...register('department', {
-                  required: 'Department is required',
-                })}
               >
-                <SelectTrigger className="bg-transparent border-primary-foreground/30 placeholder:text-primary-foreground/60 h-12 rounded-xl">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select your department" />
                 </SelectTrigger>
                 <SelectContent>
@@ -103,12 +102,12 @@ export function LoginPage() {
                 </SelectContent>
               </Select>
               {errors.department && (
-                <p className="text-xs text-red-400 mt-1">
+                <p className="text-xs text-destructive mt-1">
                   {errors.department.message}
                 </p>
               )}
             </div>
-            <Button type="submit" className="w-full h-14 bg-gray-900 text-white hover:bg-gray-800 rounded-full font-bold text-lg" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 'Signing in...'
               ) : (
@@ -116,11 +115,6 @@ export function LoginPage() {
               )}
             </Button>
           </form>
-            <div className="text-center mt-4">
-                 <Button variant="link" className="text-primary-foreground/80 font-semibold text-sm">
-                    Forgot your password?
-                </Button>
-            </div>
         </CardContent>
       </Card>
   );
