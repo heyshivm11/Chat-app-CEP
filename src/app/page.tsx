@@ -1,13 +1,15 @@
 
 "use client";
 
-import { AppLayout } from "@/components/app-layout";
-import ScriptPage from "@/components/script-page";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function Home() {
-  return (
-    <AppLayout>
-        <ScriptPage />
-    </AppLayout>
-  );
+export default function HomePage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/login');
+  }, [router]);
+
+  return null; 
 }

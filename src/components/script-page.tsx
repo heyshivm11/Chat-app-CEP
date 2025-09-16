@@ -6,27 +6,33 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
-import { FileText, Workflow, BookCopy, ChevronsUpDown } from "lucide-react";
+import { FileText, Workflow, BookCopy, ChevronsUpDown, LogOut } from "lucide-react";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { AuthGate } from "./auth-gate";
+import { useAuth } from "@/hooks/use-auth";
 import { TypingEffect } from "./typing-effect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { RotateCcw } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 
-export default function ScriptPage() {
+export default function ScriptPage({ department: initialDepartment, departmentName: initialDepartmentName }: { department?: string, departmentName?: string }) {
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("All");
-  const [department, setDepartment] = useState("etg");
-  const [agentName, setAgentName] = useState("Agent");
+  const [department, setDepartment] = useState(initialDepartment || "etg");
   const [customerName, setCustomerName] = useState("");
   const [openingOpen, setOpeningOpen] = useState(true);
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [commonOpen, setCommonOpen] = useState(true);
+
+  const agentName = user?.name || "Agent";
 
   const motivationalPhrases = [
     "Let's provide the best experience to customers...",
@@ -40,7 +46,13 @@ export default function ScriptPage() {
 
   const handleDepartmentChange = (newDepartment: string) => {
     setDepartment(newDepartment);
+    router.push(`/scripts/${newDepartment}`);
   };
+
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  }
 
   const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string) => {
     return scriptsToProcess.map(script => {
@@ -77,14 +89,12 @@ export default function ScriptPage() {
           ));
       
       const categoryMatch = category === "All" || script.category === category;
-
-      // Since auth is removed, teamMatch is simplified or can be removed
-      // For now, let's assume we want all scripts that are 'All' team
-      const teamMatch = script.team === 'All';
+      
+      const teamMatch = script.team === 'All' || script.team === user?.department;
       
       return searchMatch && categoryMatch && teamMatch;
     });
-  }, [searchTerm, category]);
+  }, [searchTerm, category, user?.department]);
 
   const departmentScripts = useMemo(() => {
     const deptScripts = filteredScripts.filter(s => s.department === department);
@@ -144,6 +154,10 @@ export default function ScriptPage() {
                             </Button>
                         </div>
                     </div>
+                     <Button variant="outline" onClick={handleLogout}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                    </Button>
                   </div>
               </CardHeader>
           </Card>
@@ -219,5 +233,3 @@ export default function ScriptPage() {
     </AuthGate>
   );
 }
-
-    

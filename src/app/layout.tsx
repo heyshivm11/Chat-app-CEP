@@ -3,6 +3,7 @@
 
 import './globals.css';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+import { AuthProvider } from '@/hooks/use-auth';
 import { Toaster } from '@/components/ui/toaster';
 
 export default function RootLayout({
@@ -24,13 +25,13 @@ export default function RootLayout({
         <meta name="description" content="Your smart home system." />
       </head>
       <body className="font-body antialiased">
-        <ThemeProvider>
-            {children}
-            <Toaster />
-        </ThemeProvider>
+        <AuthProvider>
+            <ThemeProvider>
+                {children}
+                <Toaster />
+            </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
 }
-
-    
