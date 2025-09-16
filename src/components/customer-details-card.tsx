@@ -1,7 +1,7 @@
 
 "use client";
 import React from 'react';
-import { useState, useMemo, useEffect, useCallback, useRef, useReducer } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -29,73 +29,6 @@ const initialFormState = {
 
 type FormState = typeof initialFormState;
 
-// Reducer logic
-type FormAction =
-  | { type: 'UPDATE_FIELD'; payload: { fieldName: keyof FormState; value: string } }
-  | { type: 'UNDO' }
-  | { type: 'RESET' }
-  | { type: 'SET_CALLER_FROM_CUSTOMER'; payload: { customerName: string } }
-  | { type: 'CLEAR_CALLER' };
-
-interface ReducerState {
-  data: FormState;
-  history: FormState[];
-}
-
-const initialReducerState: ReducerState = {
-  data: initialFormState,
-  history: [],
-};
-
-const formReducer = (state: ReducerState, action: FormAction): ReducerState => {
-  switch (action.type) {
-    case 'UPDATE_FIELD':
-      return {
-        history: [...state.history, state.data],
-        data: { ...state.data, [action.payload.fieldName]: action.payload.value },
-      };
-    case 'UNDO': {
-      if (state.history.length === 0) return state;
-      const lastState = state.history[state.history.length - 1];
-      const newHistory = state.history.slice(0, state.history.length - 1);
-      return { data: lastState, history: newHistory };
-    }
-    case 'RESET':
-      return {
-        history: [...state.history, state.data],
-        data: initialFormState,
-      };
-    case 'SET_CALLER_FROM_CUSTOMER':
-      return {
-        history: [...state.history, state.data],
-        data: {
-          ...state.data,
-          callerName: action.payload.customerName,
-          relation: 'Self',
-        },
-      };
-    case 'CLEAR_CALLER':
-       return {
-        history: [...state.history, state.data],
-        data: {
-          ...state.data,
-          callerName: '',
-          relation: '',
-        },
-      };
-    default:
-      return state;
-  }
-};
-
-
-const formFields = [
-  { id: 'interactionId', label: 'Interaction ID' },
-  { id: 'customerName', label: "Customer's name" },
-  { id: 'query', label: 'Query' },
-  { id: 'resolution', label: 'Resolution' },
-  { id: 'validatedBy', label: 'Validated by' },
-];
 
 const getDetailsToCopy = (formData: FormState, agentName: string) => {
     let text = `Agent Name: ${agentName}\n`;
@@ -113,38 +46,65 @@ const getDetailsToCopy = (formData: FormState, agentName: string) => {
 
 interface CustomerFormProps {
   agentName: string;
-  formState: ReducerState;
-  dispatch: React.Dispatch<FormAction>;
+  formData: FormState;
+  setFormData: (data: FormState) => void;
+  history: FormState[];
+  setHistory: (history: FormState[]) => void;
   onQueryChange?: (query: string) => void;
   scheduleReminder: () => void;
 }
 
-function CustomerFormComponent({ agentName, formState, dispatch, onQueryChange, scheduleReminder }: CustomerFormProps) {
-  const { data: formData, history } = formState;
+function CustomerFormComponent({ agentName, formData, setFormData, history, setHistory, onQueryChange, scheduleReminder }: CustomerFormProps) {
   const [customerIsCaller, setCustomerIsCaller] = useState(formData.relation === 'Self');
   
   useEffect(() => {
-    // Sync checkbox state if form is reset or undo changes relation
-    setCustomerIsCaller(formData.relation === 'Self');
-  }, [formData.relation]);
+    setCustomerIsCaller(formData.customerName !== '' && formData.customerName === formData.callerName && formData.relation === 'Self');
+  }, [formData.customerName, formData.callerName, formData.relation]);
 
+  const updateField = (fieldName: keyof FormState, value: string) => {
+    setHistory([...history, formData]);
+    setFormData({ ...formData, [fieldName]: value });
+  };
+  
   const handleInputChange = (id: keyof FormState, value: string) => {
-    dispatch({ type: 'UPDATE_FIELD', payload: { fieldName: id, value } });
+    updateField(id, value);
     if (id === 'query' && onQueryChange) {
       onQueryChange(value);
     }
-    if ((id === 'query' || id === 'resolution') && value.trim()) {
+     if ((id === 'query' || id === 'resolution') && value.trim()) {
         scheduleReminder();
     }
   };
 
   const handleCheckboxChange = (checked: boolean) => {
     setCustomerIsCaller(checked);
+    setHistory([...history, formData]);
     if (checked) {
-      dispatch({ type: 'SET_CALLER_FROM_CUSTOMER', payload: { customerName: formData.customerName } });
+      setFormData({
+        ...formData,
+        callerName: formData.customerName,
+        relation: 'Self',
+      });
     } else {
-      dispatch({ type: 'CLEAR_CALLER' });
+      setFormData({
+        ...formData,
+        callerName: '',
+        relation: '',
+      });
     }
+  }
+
+  const handleUndo = () => {
+    if (history.length === 0) return;
+    const lastState = history[history.length - 1];
+    setFormData(lastState);
+    setHistory(history.slice(0, history.length - 1));
+  };
+  
+  const handleReset = () => {
+      setHistory([...history, formData]);
+      setFormData(initialFormState);
+      if(onQueryChange) onQueryChange('');
   }
 
   const detailsToCopy = useMemo(() => {
@@ -226,10 +186,10 @@ function CustomerFormComponent({ agentName, formState, dispatch, onQueryChange, 
         />
       </div>
       <div className="flex justify-end gap-2">
-        <Button variant="outline" size="icon" onClick={() => dispatch({ type: 'UNDO' })} disabled={history.length === 0} aria-label="Undo change">
+        <Button variant="outline" size="icon" onClick={handleUndo} disabled={history.length === 0} aria-label="Undo change">
           <Undo className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="icon" onClick={() => dispatch({ type: 'RESET' })} aria-label="Reset form">
+        <Button variant="outline" size="icon" onClick={handleReset} aria-label="Reset form">
           <RotateCcw className="h-4 w-4" />
         </Button>
         <CopyButton textToCopy={detailsToCopy}>
@@ -240,6 +200,15 @@ function CustomerFormComponent({ agentName, formState, dispatch, onQueryChange, 
     </div>
   );
 }
+
+const formFields = [
+  { id: 'interactionId', label: 'Interaction ID' },
+  { id: 'customerName', label: "Customer's name" },
+  { id: 'query', label: 'Query' },
+  { id: 'resolution', label: 'Resolution' },
+  { id: 'validatedBy', label: 'Validated by' },
+];
+
 
 const CustomerForm = React.memo(CustomerFormComponent);
 
@@ -252,8 +221,11 @@ function CustomerDetailsCardComponent({
   onQueryChange?: (query: string) => void;
 }) {
   const { toast } = useToast();
-  const [form1State, form1Dispatch] = useReducer(formReducer, initialReducerState);
-  const [form2State, form2Dispatch] = useReducer(formReducer, initialReducerState);
+  
+  const [form1Data, setForm1Data] = useState<FormState>(initialFormState);
+  const [form2Data, setForm2Data] = useState<FormState>(initialFormState);
+  const [history1, setHistory1] = useState<FormState[]>([]);
+  const [history2, setHistory2] = useState<FormState[]>([]);
 
   const reminderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -265,12 +237,12 @@ function CustomerDetailsCardComponent({
   }, []);
 
   const copyDetails = useCallback((formNumber: 1 | 2) => {
-    const dataToCopy = formNumber === 1 ? form1State.data : form2State.data;
+    const dataToCopy = formNumber === 1 ? form1Data : form2Data;
     const text = getDetailsToCopy(dataToCopy, agentName);
     navigator.clipboard.writeText(text);
     toast({ title: `Details for Customer ${formNumber} copied!` });
     clearReminder();
-  }, [agentName, form1State.data, form2State.data, toast, clearReminder]);
+  }, [agentName, form1Data, form2Data, toast, clearReminder]);
 
   const triggerCopyReminder = useCallback(() => {
     toast({
@@ -278,7 +250,7 @@ function CustomerDetailsCardComponent({
         description: "Have you copied the customer details? They might be important for your records.",
         duration: 8000,
         action: (
-            <div className="flex flex-row gap-2 mt-2 w-full">
+            <div className="flex items-center gap-2 mt-2">
                 <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)}>
                     Copy Cust. 1
                 </ToastAction>
@@ -298,32 +270,21 @@ function CustomerDetailsCardComponent({
   }, [clearReminder, triggerCopyReminder]);
 
   useEffect(() => {
-    // Cleanup timer on component unmount
     return () => {
       clearReminder();
     };
   }, [clearReminder]);
   
-  const handleReset = useCallback((formIndex: 1 | 2) => {
-    clearReminder();
-    if (formIndex === 1) {
-      if (form1State.data.query !== '' && onQueryChange) onQueryChange('');
-      form1Dispatch({ type: 'RESET' });
-    } else {
-      if (form2State.data.query !== '' && onQueryChange) onQueryChange('');
-      form2Dispatch({ type: 'RESET' });
-    }
-  }, [clearReminder, onQueryChange, form1State.data.query, form2State.data.query]);
 
   const handleTabChange = useCallback((value: string) => {
     if (onQueryChange) {
       if (value === 'customer1') {
-        onQueryChange(form1State.data.query);
+        onQueryChange(form1Data.query);
       } else {
-        onQueryChange(form2State.data.query);
+        onQueryChange(form2Data.query);
       }
     }
-  }, [onQueryChange, form1State.data.query, form2State.data.query]);
+  }, [onQueryChange, form1Data.query, form2Data.query]);
 
 
   return (
@@ -335,8 +296,10 @@ function CustomerDetailsCardComponent({
         <TabsContent value="customer1">
             <CustomerForm
               agentName={agentName}
-              formState={form1State}
-              dispatch={form1Dispatch}
+              formData={form1Data}
+              setFormData={setForm1Data}
+              history={history1}
+              setHistory={setHistory1}
               onQueryChange={onQueryChange}
               scheduleReminder={scheduleReminder}
             />
@@ -344,8 +307,10 @@ function CustomerDetailsCardComponent({
         <TabsContent value="customer2">
             <CustomerForm
               agentName={agentName}
-              formState={form2State}
-              dispatch={form2Dispatch}
+              formData={form2Data}
+              setFormData={setForm2Data}
+              history={history2}
+              setHistory={setHistory2}
               onQueryChange={onQueryChange}
               scheduleReminder={scheduleReminder}
             />
@@ -355,5 +320,3 @@ function CustomerDetailsCardComponent({
 }
 
 export const CustomerDetailsCard = React.memo(CustomerDetailsCardComponent);
-
-    
