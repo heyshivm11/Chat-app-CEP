@@ -9,7 +9,7 @@ import { PageHeader } from "./page-header";
 import { FileText, Workflow, BookCopy, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CustomerDetailsCard } from "./customer-details-card";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
@@ -139,44 +139,35 @@ export default function ScriptPage() {
         />
         <main className="container mx-auto px-4 md:px-8 py-8">
           
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
-              <div className="xl:col-span-1">
-                  <Card className="glass-card">
-                      <CardContent className="pt-6">
-                          <div className="space-y-4">
-                              <div className="space-y-2">
-                                <div className="mb-4">
-                                  <h2 className="text-2xl font-bold text-foreground">Welcome {agentName}!</h2>
-                                  <TypingEffect phrases={motivationalPhrases} className="text-muted-foreground text-sm h-5" />
-                                </div>
-                                  <Label htmlFor="agentName">Agent Name</Label>
-                                  <Input id="agentName" value={agentName} disabled />
-                              </div>
-                              <div className="space-y-2">
-                                  <Label htmlFor="customerName">Customer Name</Label>
-                                  <div className="flex items-center gap-2">
-                                      <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
-                                      <Button variant="outline" size="icon" onClick={() => setCustomerName("")} aria-label="Reset customer name">
-                                          <RotateCcw className="h-4 w-4" />
-                                      </Button>
-                                  </div>
-                              </div>
-                          </div>
-                      </CardContent>
-                  </Card>
-              </div>
-              <div className="xl:col-span-2">
-                  <CustomerDetailsCard agentName={agentName} />
-              </div>
-          </div>
+          <Card className="glass-card mb-8">
+              <CardHeader>
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div className="flex-1">
+                      <h2 className="text-3xl font-bold text-foreground">Welcome back, {agentName}!</h2>
+                      <TypingEffect phrases={motivationalPhrases} className="text-muted-foreground text-md h-6" />
+                    </div>
+                     <div className="flex items-center gap-4 w-full md:w-auto">
+                        <Label htmlFor="customerName" className="text-md whitespace-nowrap">Customer Name:</Label>
+                        <div className="flex items-center gap-2 w-full">
+                            <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} className="text-md" />
+                            <Button variant="outline" size="icon" onClick={() => setCustomerName("")} aria-label="Reset customer name">
+                                <RotateCcw className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    </div>
+                  </div>
+              </CardHeader>
+          </Card>
+
+          <CustomerDetailsCard agentName={agentName || ''} />
 
           <div className="space-y-12 mt-8">
-              <Collapsible asChild open={openingOpen} onOpenChange={setOpeningOpen}>
+              <Collapsible asChild open={openingOpen} onOpenChange={setOpeningOpen} className="bg-card/30 rounded-lg p-4 md:p-6 border border-white/5">
                 <section>
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
                         <FileText className="h-7 w-7 text-primary" />
-                        <h2 className="text-2xl font-bold tracking-tight text-foreground">Opening</h2>
+                        <h2 className="text-3xl font-bold tracking-tight text-foreground">Opening</h2>
                       </div>
                       <CollapsibleTrigger asChild>
                         <Button variant="ghost" size="sm" className="w-9 p-0">
@@ -191,12 +182,12 @@ export default function ScriptPage() {
                 </section>
               </Collapsible>
 
-              <Collapsible asChild open={workflowOpen} onOpenChange={setWorkflowOpen}>
+              <Collapsible asChild open={workflowOpen} onOpenChange={setWorkflowOpen} className="bg-card/30 rounded-lg p-4 md:p-6 border border-white/5">
                 <section>
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
                         <Workflow className="h-7 w-7 text-primary" />
-                        <h2 className="text-2xl font-bold tracking-tight text-foreground">Workflow</h2>
+                        <h2 className="text-3xl font-bold tracking-tight text-foreground">Workflow</h2>
                       </div>
                       <CollapsibleTrigger asChild>
                         <Button variant="ghost" size="sm" className="w-9 p-0">
@@ -211,12 +202,12 @@ export default function ScriptPage() {
                 </section>
               </Collapsible>
               
-              <Collapsible asChild open={commonOpen} onOpenChange={setCommonOpen}>
+              <Collapsible asChild open={commonOpen} onOpenChange={setCommonOpen} className="bg-card/30 rounded-lg p-4 md:p-6 border border-white/5">
                 <section>
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
                         <BookCopy className="h-7 w-7 text-primary" />
-                        <h2 className="text-2xl font-bold tracking-tight text-foreground">Common Scripts</h2>
+                        <h2 className="text-3xl font-bold tracking-tight text-foreground">Common Scripts</h2>
                       </div>
                       <CollapsibleTrigger asChild>
                         <Button variant="ghost" size="sm" className="w-9 p-0">

@@ -67,16 +67,22 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 overflow-hidden relative gradient-background">
+      <div className="absolute inset-0 z-0">
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/10 rounded-full animate-float-1 opacity-50"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-secondary/20 rounded-xl animate-float-2 opacity-50"></div>
+          <div className="absolute bottom-1/2 right-1/3 w-16 h-16 bg-primary/5 rounded-full animate-float-3 opacity-50"></div>
+          <div className="absolute top-1/3 left-1/2 w-20 h-20 bg-secondary/10 rounded-lg animate-float-1 opacity-50"></div>
+      </div>
       <Card className="w-full max-w-md glass-card z-10 relative">
         <CardHeader className="text-center">
             <div className="mx-auto h-16 w-16 mb-4 relative">
                 <Plane className="h-16 w-16 text-primary animate-fly-login" />
             </div>
-            <CardTitle className="text-2xl">CEP Scripts</CardTitle>
-            <CardDescription>Please log in to continue</CardDescription>
+            <CardTitle className="text-3xl font-bold">CEP Scripts</CardTitle>
+            <CardDescription className="text-lg">Please log in to continue</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="firstName">First Name</Label>
               <Input
@@ -85,6 +91,7 @@ export default function LoginPage() {
                 {...register('firstName', {
                   required: 'First name is required',
                 })}
+                className="text-base"
               />
               {errors.firstName && (
                 <p className="text-xs text-red-500 mt-1">
@@ -103,7 +110,7 @@ export default function LoginPage() {
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="text-base">
                       <SelectValue placeholder="Select your department" />
                     </SelectTrigger>
                     <SelectContent>
@@ -119,12 +126,12 @@ export default function LoginPage() {
                 </p>
               )}
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full text-lg py-6" disabled={isLoading}>
               {isLoading ? (
                 'Logging in...'
               ) : (
                 <>
-                  <LogIn className="mr-2 h-4 w-4" />
+                  <LogIn className="mr-2 h-5 w-5" />
                   Login
                 </>
               )}

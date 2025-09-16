@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
 export type Theme = "theme-default" | "theme-black-red" | "theme-black-green" | "theme-black-white" | "theme-white-red";
 export const themeNames: { [key in Theme]: string } = {
-  "theme-default": "Midnight Blue",
+  "theme-default": "Sunset",
   "theme-black-red": "Crimson Night",
   "theme-black-green": "Emerald Dark",
   "theme-black-white": "Monochrome",

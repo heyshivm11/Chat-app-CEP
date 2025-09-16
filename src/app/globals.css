@@ -12,8 +12,8 @@
     --card-foreground: 210 40% 98%;
     --popover: 224 71% 4%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 220 13% 18%;
+    --primary: 346.8 77.2% 49.8%;
+    --primary-foreground: 355.7 100% 97.3%;
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217 33% 17%;
@@ -29,27 +29,27 @@
   }
 }
 
-/* Default Theme: Midnight Blue */
+/* Default Theme: Sunset */
 .theme-default {
-  --background: 210 8% 17%; /* Dark Slate Gray */
+  --background: 220 40% 2%;
   --foreground: 210 40% 98%;
-  --card: 210 8% 22%;
+  --card: 220 20% 10%;
   --card-foreground: 210 40% 98%;
-  --popover: 210 8% 17%;
+  --popover: 220 40% 2%;
   --popover-foreground: 210 40% 98%;
-  --primary: 225 100% 58%; /* Deep Blue */
-  --primary-foreground: 210 40% 98%;
+  --primary: 346.8 77.2% 49.8%;
+  --primary-foreground: 355.7 100% 97.3%;
   --secondary: 217 33% 17%;
   --secondary-foreground: 210 40% 98%;
   --muted: 217 33% 17%;
   --muted-foreground: 215 20% 65%;
-  --accent: 16 100% 50%; /* Bright Red */
+  --accent: 217 33% 17%;
   --accent-foreground: 210 40% 98%;
   --destructive: 0 63% 31%;
   --destructive-foreground: 210 40% 98%;
-  --border: 210 8% 30%;
-  --input: 210 8% 25%;
-  --ring: 225 100% 58%;
+  --border: 217 33% 17%;
+  --input: 217 33% 17%;
+  --ring: 346.8 77.2% 49.8%;
 }
 
 /* Theme: Crimson Night (Black & Red) */
@@ -159,7 +159,7 @@
 }
 
 .glass-card {
-  @apply bg-card/60 backdrop-blur-lg border border-white/10;
+  @apply bg-card/60 backdrop-blur-lg border border-white/10 shadow-lg;
 }
 
 .gradient-background {
@@ -167,10 +167,11 @@
   background-image: linear-gradient(
     -45deg,
     hsl(var(--background)),
-    hsl(var(--primary) / 0.2),
+    hsl(var(--primary) / 0.1),
+    hsl(var(--secondary)),
     hsl(var(--background))
   );
-  animation: gradient 15s ease infinite;
+  animation: gradient 25s ease infinite;
 }
 
 @keyframes gradient {
@@ -226,19 +227,19 @@
 
 @keyframes float-1 {
   0% { transform: translateY(0px) translateX(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) translateX(10px) rotate(180deg); }
+  50% { transform: translateY(-30px) translateX(15px) rotate(180deg); }
   100% { transform: translateY(0px) translateX(0px) rotate(360deg); }
 }
 
 @keyframes float-2 {
   0% { transform: translateY(0px) translateX(0px) rotate(0deg); }
-  50% { transform: translateY(20px) translateX(-10px) rotate(-180deg); }
+  50% { transform: translateY(30px) translateX(-15px) rotate(-180deg); }
   100% { transform: translateY(0px) translateX(0px) rotate(-360deg); }
 }
 
 @keyframes float-3 {
   0% { transform: translateY(0px) scale(1); }
-  50% { transform: translateY(15px) scale(1.1); }
+  50% { transform: translateY(20px) scale(1.1); }
   100% { transform: translateY(0px) scale(1); }
 }
 
