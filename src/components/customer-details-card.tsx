@@ -1,4 +1,5 @@
 
+
 "use client";
 import React from 'react';
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
@@ -6,9 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CopyButton } from './copy-button';
-import { ClipboardPaste, User, RotateCcw, ChevronsUpDown, Undo } from '@/components/ui/lucide-icons';
+import { ClipboardPaste, RotateCcw, Undo } from '@/components/ui/lucide-icons';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Checkbox } from './ui/checkbox';
@@ -179,8 +179,6 @@ const CustomerForm = React.memo(CustomerFormComponent);
 function CustomerDetailsCardComponent({
   agentName,
   onQueryChange,
-  isOpen,
-  onOpenChange
 }: {
   agentName: string;
   onQueryChange?: (query: string) => void;
@@ -310,58 +308,37 @@ function CustomerDetailsCardComponent({
 
 
   return (
-    <Collapsible
-      open={isOpen}
-      onOpenChange={onOpenChange}
-      className="w-full"
-    >
-      <section>
-          <div className="flex items-center justify-between mb-6">
-            <CollapsibleTrigger asChild>
-              <button className="flex items-center justify-between w-full group">
-                  <div className="flex items-center gap-3">
-                      <User className="h-7 w-7 text-primary" />
-                      <h2 className="text-3xl font-bold tracking-tight text-foreground">Customer Details</h2>
-                  </div>
-                  <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-              </button>
-            </CollapsibleTrigger>
-          </div>
-          <CollapsibleContent>
-            <div className="p-6 pt-6 bg-background/30 backdrop-blur-sm border-white/20 rounded-lg">
-                <Tabs defaultValue="customer1" className="w-full" onValueChange={handleTabChange}>
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="customer1">Customer 1</TabsTrigger>
-                        <TabsTrigger value="customer2">Customer 2</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="customer1">
-                        <CustomerForm
-                          agentName={agentName}
-                          formData={form1Data}
-                          onFormChange={(field, value) => handleFormChange(1, field, value)}
-                          onUndo={() => handleUndo(1)}
-                          onReset={() => handleReset(1)}
-                          hasHistory={form1History.length > 0}
-                          onQueryChange={onQueryChange}
-                        />
-                    </TabsContent>
-                    <TabsContent value="customer2">
-                        <CustomerForm
-                          agentName={agentName}
-                          formData={form2Data}
-                          onFormChange={(field, value) => handleFormChange(2, field, value)}
-                          onUndo={() => handleUndo(2)}
-                          onReset={() => handleReset(2)}
-                          hasHistory={form2History.length > 0}
-                          onQueryChange={onQueryChange}
-                        />
-                    </TabsContent>
-                </Tabs>
-            </div>
-          </CollapsibleContent>
-      </section>
-    </Collapsible>
+    <Tabs defaultValue="customer1" className="w-full" onValueChange={handleTabChange}>
+        <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="customer1">Customer 1</TabsTrigger>
+            <TabsTrigger value="customer2">Customer 2</TabsTrigger>
+        </TabsList>
+        <TabsContent value="customer1">
+            <CustomerForm
+              agentName={agentName}
+              formData={form1Data}
+              onFormChange={(field, value) => handleFormChange(1, field, value)}
+              onUndo={() => handleUndo(1)}
+              onReset={() => handleReset(1)}
+              hasHistory={form1History.length > 0}
+              onQueryChange={onQueryChange}
+            />
+        </TabsContent>
+        <TabsContent value="customer2">
+            <CustomerForm
+              agentName={agentName}
+              formData={form2Data}
+              onFormChange={(field, value) => handleFormChange(2, field, value)}
+              onUndo={() => handleUndo(2)}
+              onReset={() => handleReset(2)}
+              hasHistory={form2History.length > 0}
+              onQueryChange={onQueryChange}
+            />
+        </TabsContent>
+    </Tabs>
   );
 }
 
 export const CustomerDetailsCard = React.memo(CustomerDetailsCardComponent);
+
+    

@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
@@ -6,7 +7,7 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
-import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote, ChevronsDownUp, ChevronsUpDown as ChevronsUpDownIcon } from "@/components/ui/lucide-icons";
+import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote } from "@/components/ui/lucide-icons";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -67,6 +68,42 @@ const doesScriptMatch = (script: Script, term: string) => {
   return false;
 }
 
+const BentoCard = ({ 
+    icon, 
+    title, 
+    isOpen, 
+    onOpenChange, 
+    children, 
+    className 
+} : {
+    icon: React.ReactNode,
+    title: string,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
+    children: React.ReactNode,
+    className?: string
+}) => (
+    <Collapsible open={isOpen} onOpenChange={onOpenChange} className={className}>
+        <div className="bento-card">
+            <CollapsibleTrigger asChild>
+                <button className="bento-card-header group">
+                    <div className="flex items-center gap-3">
+                        {icon}
+                        <h2 className="text-xl font-bold tracking-tight text-foreground">{title}</h2>
+                    </div>
+                    <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                </button>
+            </CollapsibleTrigger>
+            <CollapsibleContent asChild>
+                <div className="bento-card-content">
+                    {children}
+                </div>
+            </CollapsibleContent>
+        </div>
+    </Collapsible>
+);
+
+
 export default function ScriptPage({ department: initialDepartment }: { department: string }) {
   const router = useRouter();
   const { user } = useAuth();
@@ -83,8 +120,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [commonOpen, setCommonOpen] = useState(true);
   const [closingOpen, setClosingOpen] = useState(true);
   
-  const [allOpen, setAllOpen] = useState(true);
-
   const blobRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -108,22 +143,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     setDepartment(newDepartment);
     router.push(`/scripts/${newDepartment}`);
   }, [router]);
-
-  const toggleAllSections = useCallback(() => {
-    const nextState = !allOpen;
-    setCustomerDetailsOpen(nextState);
-    setOpeningOpen(nextState);
-    setWorkflowOpen(nextState);
-    setCommonOpen(nextState);
-    setClosingOpen(nextState);
-    setAllOpen(nextState);
-  }, [allOpen]);
-  
-  useEffect(() => {
-    const currentlyAllOpen = customerDetailsOpen && openingOpen && workflowOpen && commonOpen && closingOpen;
-    setAllOpen(currentlyAllOpen);
-  },[customerDetailsOpen, openingOpen, workflowOpen, commonOpen, closingOpen])
-
 
   const filteredScripts = useMemo(() => {
     return scripts.filter((script) => {
@@ -184,9 +203,9 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     }
     
     return (
-        <div className="columns-1 md:columns-2 xl:columns-3 gap-4">
+        <div className="grid grid-cols-1 gap-4">
             {scriptList.map((script) => (
-                <div key={script.id} className="break-inside-avoid mb-4">
+                <div key={script.id} className="break-inside-avoid">
                     <ScriptCard script={script} />
                 </div>
             ))}
@@ -200,9 +219,9 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     }
 
     return (
-      <div className="flex flex-wrap gap-4">
+      <div className="columns-1 md:columns-2 gap-4">
         {scriptList.map((script) => (
-          <div key={script.id} className="w-full md:w-[calc(50%-0.5rem)] xl:w-[calc(33.33%-1rem)]">
+          <div key={script.id} className="break-inside-avoid mb-4">
             <ScriptCard script={script} />
           </div>
         ))}
@@ -244,115 +263,70 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                     </div>
                 </div>
 
-                <div className="flex justify-end mb-6">
-                    <Button variant="outline" onClick={toggleAllSections}>
-                        {allOpen ? <ChevronsUpDownIcon className="mr-2 h-4 w-4" /> : <ChevronsDownUp className="mr-2 h-4 w-4" />}
-                        {allOpen ? 'Collapse All' : 'Expand All'}
-                    </Button>
-                </div>
-
-                <div className="my-8">
-                    <CustomerDetailsCard 
-                        agentName={user?.name || 'Agent'} 
-                        onQueryChange={setCurrentQuery}
+                <div className="grid grid-cols-12 gap-4 auto-rows-fr">
+                    <BentoCard 
+                        icon={<FileText className="h-6 w-6 text-primary" />}
+                        title="Customer Details"
                         isOpen={customerDetailsOpen}
                         onOpenChange={setCustomerDetailsOpen}
-                    />
-                </div>
+                        className="col-span-12 lg:col-span-12"
+                    >
+                         <CustomerDetailsCard 
+                            agentName={user?.name || 'Agent'} 
+                            onQueryChange={setCurrentQuery}
+                            isOpen={customerDetailsOpen}
+                            onOpenChange={setCustomerDetailsOpen}
+                        />
+                    </BentoCard>
 
-                <div className="space-y-12">
-                    <Collapsible open={openingOpen} onOpenChange={setOpeningOpen}>
-                        <section>
-                            <div className="flex items-center justify-between mb-6">
-                            <CollapsibleTrigger asChild>
-                                <button className="flex items-center justify-between w-full group">
-                                    <div className="flex items-center gap-3">
-                                        <FileText className="h-7 w-7 text-primary" />
-                                        <h2 className="text-3xl font-bold tracking-tight text-foreground">Opening</h2>
-                                    </div>
-                                    <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-                                </button>
-                            </CollapsibleTrigger>
+                    <BentoCard
+                        icon={<FileText className="h-6 w-6 text-primary" />}
+                        title="Opening"
+                        isOpen={openingOpen}
+                        onOpenChange={setOpeningOpen}
+                        className="col-span-12 md:col-span-6 lg:col-span-5"
+                    >
+                         {requestStatedVerifiedScript && (
+                            <div className="mb-4">
+                                <ScriptCard script={requestStatedVerifiedScript} />
                             </div>
-                            <CollapsibleContent>
-                                <div className="p-6 bg-background/30 backdrop-blur-sm border-white/20 rounded-lg">
-                                    {requestStatedVerifiedScript && (
-                                    <div className="mb-4">
-                                        <ScriptCard script={requestStatedVerifiedScript} />
-                                    </div>
-                                    )}
-                                    {renderScriptList(otherDepartmentScripts)}
-                                </div>
-                            </CollapsibleContent>
-                        </section>
-                    </Collapsible>
+                        )}
+                        {renderScriptList(otherDepartmentScripts)}
+                    </BentoCard>
 
-                    <Collapsible open={workflowOpen} onOpenChange={setWorkflowOpen}>
-                        <section>
-                            <div className="flex items-center justify-between mb-6">
-                            <CollapsibleTrigger asChild>
-                                <button className="flex items-center justify-between w-full group">
-                                    <div className="flex items-center gap-3">
-                                    <Workflow className="h-7 w-7 text-primary" />
-                                    <h2 className="text-3xl font-bold tracking-tight text-foreground">Workflow</h2>
-                                    </div>
-                                    <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-                                </button>
-                            </CollapsibleTrigger>
-                            </div>
-                            <CollapsibleContent>
-                                <div className="p-6 bg-background/30 backdrop-blur-sm border-white/20 rounded-lg">
-                                    {renderScriptList(workflowScripts)}
-                                </div>
-                            </CollapsibleContent>
-                        </section>
-                    </Collapsible>
+                    <BentoCard
+                        icon={<Workflow className="h-6 w-6 text-primary" />}
+                        title="Workflow"
+                        isOpen={workflowOpen}
+                        onOpenChange={setWorkflowOpen}
+                        className="col-span-12 md:col-span-6 lg:col-span  -7"
+                    >
+                        {renderFlexScriptList(workflowScripts)}
+                    </BentoCard>
                     
-                    <Collapsible open={commonOpen} onOpenChange={setCommonOpen}>
-                        <section>
-                            <div className="flex items-center justify-between mb-6">
-                            <CollapsibleTrigger asChild>
-                                <button className="flex items-center justify-between w-full group">
-                                    <div className="flex items-center gap-3">
-                                        <BookCopy className="h-7 w-7 text-primary" />
-                                        <h2 className="text-3xl font-bold tracking-tight text-foreground">Common Scripts</h2>
-                                    </div>
-                                    <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-                                </button>
-                            </CollapsibleTrigger>
-                            </div>
-                            <CollapsibleContent>
-                                <div className="p-6 bg-background/30 backdrop-blur-sm border-white/20 rounded-lg">
-                                    {renderFlexScriptList(commonScripts)}
-                                </div>
-                            </CollapsibleContent>
-                        </section>
-                    </Collapsible>
+                    <BentoCard
+                        icon={<BookCopy className="h-6 w-6 text-primary" />}
+                        title="Common Scripts"
+                        isOpen={commonOpen}
+                        onOpenChange={setCommonOpen}
+                        className="col-span-12 lg:col-span-8"
+                    >
+                        {renderFlexScriptList(commonScripts)}
+                    </BentoCard>
 
-                    <Collapsible open={closingOpen} onOpenChange={setClosingOpen}>
-                        <section>
-                            <div className="flex items-center justify-between mb-6">
-                            <CollapsibleTrigger asChild>
-                                <button className="flex items-center justify-between w-full group">
-                                    <div className="flex items-center gap-3">
-                                        <MessageSquareQuote className="h-7 w-7 text-primary" />
-                                        <h2 className="text-3xl font-bold tracking-tight text-foreground">Chat Closing</h2>
-                                    </div>
-                                    <ChevronsUpDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-                                </button>
-                            </CollapsibleTrigger>
+                    <BentoCard
+                        icon={<MessageSquareQuote className="h-6 w-6 text-primary" />}
+                        title="Chat Closing"
+                        isOpen={closingOpen}
+                        onOpenChange={setClosingOpen}
+                        className="col-span-12 lg:col-span-4"
+                    >
+                        {chatClosingScript && (
+                            <div className="w-full">
+                                <ScriptCard script={chatClosingScript} />
                             </div>
-                            <CollapsibleContent>
-                                <div className="p-6 bg-background/30 backdrop-blur-sm border-white/20 rounded-lg">
-                                    {chatClosingScript && (
-                                    <div className="mb-4">
-                                        <ScriptCard script={chatClosingScript} />
-                                    </div>
-                                    )}
-                                </div>
-                            </CollapsibleContent>
-                        </section>
-                    </Collapsible>
+                        )}
+                    </BentoCard>
                 </div>
             </main>
             <Chatbot />
@@ -363,3 +337,5 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
