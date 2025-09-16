@@ -4,7 +4,6 @@ import React from 'react';
 import { useState } from "react";
 import type { Script, SubScript } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CopyButton } from "./copy-button";
 import { AiRefineDialog } from "./ai-refine-dialog";
 import { Button } from "./ui/button";
 import { PersonStanding } from "@/components/ui/lucide-icons";
@@ -18,6 +17,7 @@ interface ScriptCardProps {
 function ScriptCardComponent({ script }: ScriptCardProps) {
   const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
   const [humanizeScriptContent, setHumanizeScriptContent] = useState("");
+  const { toast } = useToast();
 
   const rawContent = Array.isArray(script.content)
     ? script.content.map((s) => `${s.title}: ${s.content}`).join("\n\n")
@@ -27,6 +27,12 @@ function ScriptCardComponent({ script }: ScriptCardProps) {
     setHumanizeScriptContent(content);
     setIsAiDialogOpen(true);
   }
+
+  const handleCopy = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    navigator.clipboard.writeText(rawContent);
+    toast({ title: "Copied!" });
+  };
 
   return (
     <>
@@ -61,7 +67,15 @@ function ScriptCardComponent({ script }: ScriptCardProps) {
               ))}
             </div>
           ) : (
-            <p className="text-foreground/80 whitespace-pre-wrap">{script.content}</p>
+            <div 
+              className="p-3 rounded-md bg-background/50 relative group/sub-item border transition-colors sub-item-hoverable copy-cursor"
+              onClick={handleCopy}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleCopy(e as any)}}
+            >
+              <p className="text-foreground/80 whitespace-pre-wrap">{script.content}</p>
+            </div>
           )}
         </CardContent>
       </Card>
