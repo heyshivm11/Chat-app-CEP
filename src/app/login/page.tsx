@@ -36,8 +36,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background p-4">
-      <Card className="w-full max-w-sm">
+    <div 
+      className="flex items-center justify-center min-h-screen bg-cover bg-center p-4"
+      style={{
+        backgroundImage: "url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"
+      }}
+    >
+      <Card className="w-full max-w-sm bg-background/80 backdrop-blur-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
           <CardDescription>Sign in to access the CEP scripts</CardDescription>
