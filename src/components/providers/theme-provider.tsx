@@ -3,12 +3,11 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
-export type Theme = "light" | "dark" | "theme-ocean" | "theme-crimson";
+export type Theme = "light" | "dark" | "theme-neutral";
 export const themeNames: { [key in Theme]: string } = {
   "light": "Default Light",
   "dark": "Default Dark",
-  "theme-ocean": "Ocean",
-  "theme-crimson": "Crimson",
+  "theme-neutral": "Neutral",
 };
 
 const themeKeys = Object.keys(themeNames) as Theme[];
@@ -38,7 +37,30 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const root = document.documentElement;
     root.classList.remove(...themeKeys);
-    root.classList.add(theme);
+    
+    // For dark and neutral, we need to handle which class is applied.
+    if (theme === 'dark' || theme === 'theme-neutral') {
+        if (theme === 'dark') {
+            root.classList.add('dark');
+            // Ensure other theme classes are removed
+            themeKeys.forEach(t => {
+                if (t !== 'dark') root.classList.remove(t);
+            });
+        } else { // theme is 'theme-neutral'
+             root.classList.add(theme);
+             root.classList.remove('dark'); // A neutral theme may not be dark
+        }
+    } else {
+        // It's the light theme
+        root.classList.remove(...themeKeys);
+    }
+    
+    // Always add the specific theme class for non-default themes
+    if(theme !== 'light' && theme !== 'dark') {
+        root.classList.add(theme);
+    }
+
+
     localStorage.setItem("cep-theme", theme);
   }, [theme]);
 

@@ -49,48 +49,26 @@
     --ring: 250 80% 60%;
   }
 
-  .theme-ocean {
+  .theme-neutral {
     --background: 0 0% 100%;
-    --foreground: 210 10% 3.9%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 210 10% 3.9%;
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 210 10% 3.9%;
-    --primary: 210 80% 50%; /* Ocean Blue */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 30% 95%;
-    --secondary-foreground: 210 5.9% 10%;
-    --muted: 210 30% 95%;
-    --muted-foreground: 210 3.8% 46.1%;
-    --accent: 210 30% 95%;
-    --accent-foreground: 210 5.9% 10%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 210 20% 90%;
-    --input: 210 20% 90%;
-    --ring: 210 80% 50%;
-  }
-
-  .theme-crimson {
-    --background: 0 0% 100%;
-    --foreground: 0 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 10% 3.9%;
-    --primary: 347 77% 48%; /* Crimson Red */
-    --primary-foreground: 0 40% 98%;
-    --secondary: 347 15% 95%;
-    --secondary-foreground: 347 5.9% 10%;
-    --muted: 347 15% 95%;
-    --muted-foreground: 347 3.8% 46.1%;
-    --accent: 347 15% 95%;
-    --accent-foreground: 347 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 40% 98%;
-    --border: 347 10% 90%;
-    --input: 347 10% 90%;
-    --ring: 347 77% 48%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
   }
 }
 
