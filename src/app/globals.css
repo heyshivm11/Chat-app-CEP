@@ -25,6 +25,8 @@
     --input: 240 5.9% 90%;
     --ring: 250 80% 60%;
     --radius: 0.5rem;
+    --sub-item-hover-bg: hsla(var(--destructive) / 0.1);
+    --sub-item-hover-fg: hsl(var(--destructive));
   }
 
   .dark {
@@ -47,6 +49,8 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 250 80% 60%;
+    --sub-item-hover-bg: hsla(var(--primary) / 0.1);
+    --sub-item-hover-fg: hsl(var(--primary));
   }
 
   .theme-neutral {
@@ -69,6 +73,8 @@
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
+    --sub-item-hover-bg: hsl(var(--accent));
+    --sub-item-hover-fg: hsl(var(--accent-foreground));
   }
 }
 
@@ -82,3 +88,11 @@
   }
 }
 
+@layer components {
+    .sub-item-hoverable:hover {
+        background-color: var(--sub-item-hover-bg);
+    }
+    .sub-item-hoverable:hover h4 {
+        color: var(--sub-item-hover-fg);
+    }
+}

@@ -61,10 +61,10 @@ export function ScriptCard({ script }: ScriptCardProps) {
 
 function SubScriptItem({ subScript }: { subScript: SubScript }) {
     return (
-        <div className="p-3 rounded-md bg-background/50 relative group/sub-item border transition-colors hover:bg-destructive/10">
+        <div className="p-3 rounded-md bg-background/50 relative group/sub-item border transition-colors sub-item-hoverable">
             <div className="flex justify-between items-start">
                 <div className="flex-1 pr-10">
-                    <h4 className="font-semibold text-primary group-hover/sub-item:text-destructive transition-colors">{subScript.title}</h4>
+                    <h4 className="font-semibold text-primary transition-colors">{subScript.title}</h4>
                     <p className="text-foreground/80 mt-1 whitespace-pre-wrap">{subScript.content}</p>
                 </div>
                 <CopyButton textToCopy={subScript.content} className="absolute top-2 right-2 opacity-0 group-hover/sub-item:opacity-100 transition-opacity" />
