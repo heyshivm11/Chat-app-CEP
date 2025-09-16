@@ -179,11 +179,13 @@ const CustomerForm = React.memo(CustomerFormComponent);
 function CustomerDetailsCardComponent({
   agentName,
   onQueryChange,
+  onTriggerCopyReminder
 }: {
   agentName: string;
   onQueryChange?: (query: string) => void;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  onTriggerCopyReminder: () => void;
 }) {
   const [form1Data, setForm1Data] = useState(initialFormState);
   const [form1History, setForm1History] = useState<FormState[]>([]);
@@ -191,43 +193,11 @@ function CustomerDetailsCardComponent({
   const [form2Data, setForm2Data] = useState(initialFormState);
   const [form2History, setForm2History] = useState<FormState[]>([]);
 
-  const { toast } = useToast();
   const reminderInterval = useRef<NodeJS.Timeout>();
-
-  const copyDetails = useCallback((details: string) => {
-    navigator.clipboard.writeText(details);
-    toast({ title: 'Details Copied!', description: 'Customer details have been copied to your clipboard.' });
-  },[toast]);
-
-  const detailsToCopy1 = useMemo(() => {
-    let text = `Agent Name: ${agentName}\n`;
-    Object.entries(form1Data).forEach(([key, value]) => {
-      if(value) text += `${key}: ${value}\n`;
-    });
-    return text;
-  }, [form1Data, agentName]);
-
-  const detailsToCopy2 = useMemo(() => {
-    let text = `Agent Name: ${agentName}\n`;
-    Object.entries(form2Data).forEach(([key, value]) => {
-      if(value) text += `${key}: ${value}\n`;
-    });
-    return text;
-  }, [form2Data, agentName]);
 
   useEffect(() => {
     reminderInterval.current = setInterval(() => {
-      toast({
-        title: "Don't Forget!",
-        description: "Have you copied the customer details? They might be important for your records.",
-        duration: 8000,
-        action: (
-            <div className="flex flex-col gap-2">
-                <Button onClick={() => copyDetails(detailsToCopy1)}>Copy Cust. 1</Button>
-                <Button onClick={() => copyDetails(detailsToCopy2)}>Copy Cust. 2</Button>
-            </div>
-        )
-      });
+        onTriggerCopyReminder();
     }, 120000); // 2 minutes
 
     return () => {
@@ -235,7 +205,7 @@ function CustomerDetailsCardComponent({
         clearInterval(reminderInterval.current);
       }
     };
-  }, [toast, detailsToCopy1, detailsToCopy2, copyDetails]);
+  }, [onTriggerCopyReminder]);
 
 
   const handleFormChange = useCallback((

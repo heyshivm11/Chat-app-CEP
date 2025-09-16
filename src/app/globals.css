@@ -102,6 +102,23 @@
     .highlight-animation {
         animation: highlight-fade 1.5s ease-out;
     }
+
+    @keyframes sonar-wave {
+        0% {
+            transform: scale(0.75);
+            opacity: 0.8;
+        }
+        100% {
+            transform: scale(2.5);
+            opacity: 0;
+        }
+    }
+
+    .animate-sonar {
+        animation: sonar-wave 2s ease-out 4;
+        background-color: hsl(var(--primary));
+        opacity: 0;
+    }
 }
 
 
@@ -148,3 +165,5 @@
     transform: translate(-50%, -50%) rotate(360deg) scale(1);
   }
 }
+
+    

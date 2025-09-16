@@ -24,7 +24,11 @@ interface Message {
   content: string;
 }
 
-export function Chatbot() {
+interface ChatbotProps {
+    showCopyReminder: boolean;
+}
+
+export function Chatbot({ showCopyReminder }: ChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -75,13 +79,17 @@ export function Chatbot() {
 
   return (
     <>
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-8 right-8 h-16 w-16 rounded-full shadow-lg"
-        aria-label="Open Chatbot"
-      >
-        <MessageCircle className="h-8 w-8" />
-      </Button>
+      <div className="fixed bottom-8 right-8 z-50">
+        <div className={cn("absolute inset-0 rounded-full", showCopyReminder && "animate-sonar")}></div>
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="relative h-16 w-16 rounded-full shadow-lg"
+          aria-label="Open Chatbot"
+        >
+          <MessageCircle className="h-8 w-8" />
+        </Button>
+      </div>
+
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[425px] md:max-w-[600px] flex flex-col h-[70vh]">
           <DialogHeader>
@@ -165,3 +173,5 @@ export function Chatbot() {
     </>
   );
 }
+
+    
