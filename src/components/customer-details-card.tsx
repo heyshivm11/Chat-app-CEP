@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
@@ -15,6 +13,7 @@ import { ChevronsUpDown } from 'lucide-react';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Checkbox } from './ui/checkbox';
+import { useAuth } from '@/hooks/use-auth';
 
 const initialFormState = {
   interactionId: '',
@@ -171,11 +170,7 @@ function CustomerForm({ agentName, formData, onFormChange, onReset }: CustomerFo
 }
 
 
-interface CustomerDetailsCardProps {
-    agentName: string;
-}
-
-export function CustomerDetailsCard({ agentName }: CustomerDetailsCardProps) {
+export function CustomerDetailsCard({ agentName }: { agentName: string }) {
   const [isOpen, setIsOpen] = useState(true);
   const [form1Data, setForm1Data] = useState(initialFormState);
   const [form2Data, setForm2Data] = useState(initialFormState);

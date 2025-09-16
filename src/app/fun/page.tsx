@@ -10,11 +10,15 @@ import { TicTacToeGame } from "@/components/tic-tac-toe-game";
 import { SnakeGame } from "@/components/snake-game";
 import { BikeRacingGame } from "@/components/bike-racing-game";
 import { cn } from "@/lib/utils";
+import { AuthGate } from "@/components/auth-gate";
+import { useAuth } from "@/hooks/use-auth";
+
 
 const gameCardStyles = "flex items-center justify-center p-6 md:p-10";
 
 function FunZonePageContent() {
     const router = useRouter();
+    const { user } = useAuth();
 
     return (
         <div className="flex flex-col h-screen">
@@ -23,7 +27,7 @@ function FunZonePageContent() {
                 onSearchChange={() => {}}
                 category="All"
                 onCategoryChange={() => {}}
-                department={'etg'}
+                department={user?.department || 'etg'}
                 onDepartmentChange={() => {}}
             />
             <main className="flex-1 flex flex-col container mx-auto px-4 md:px-8 py-8">
@@ -70,6 +74,8 @@ function FunZonePageContent() {
 
 export default function FunZonePage() {
     return (
-        <FunZonePageContent />
+        <AuthGate>
+            <FunZonePageContent />
+        </AuthGate>
     )
 }

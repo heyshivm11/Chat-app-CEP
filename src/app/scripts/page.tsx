@@ -7,13 +7,14 @@ import { useAuth } from '@/hooks/use-auth';
 // This page's purpose is to redirect from /scripts to /scripts/etg
 export default function ScriptsRedirectPage() {
   const router = useRouter();
-  const { isLoading } = useAuth();
+  const { isLoading, user } = useAuth();
 
   useEffect(() => {
     if (!isLoading) {
-        router.replace('/scripts/etg');
+        const targetDepartment = user?.department || 'etg';
+        router.replace(`/scripts/${targetDepartment}`);
     }
-  }, [router, isLoading]);
+  }, [router, isLoading, user]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">

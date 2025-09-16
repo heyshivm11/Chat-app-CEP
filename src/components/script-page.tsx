@@ -15,19 +15,19 @@ import { TypingEffect } from "./typing-effect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function ScriptPage({ department: initialDepartment }: { department?: string }) {
   const router = useRouter();
+  const { user } = useAuth();
   
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("All");
-  const [department, setDepartment] = useState(initialDepartment || "etg");
+  const [department, setDepartment] = useState(initialDepartment || user?.department || "etg");
   const [customerName, setCustomerName] = useState("");
   const [openingOpen, setOpeningOpen] = useState(true);
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [commonOpen, setCommonOpen] = useState(true);
-
-  const agentName = 'Agent'; // Generic agent name
 
   const motivationalPhrases = [
     "Let's provide the best experience to customers...",
@@ -79,26 +79,26 @@ export default function ScriptPage({ department: initialDepartment }: { departme
           ));
       
       const categoryMatch = category === "All" || script.category === category;
+      const teamMatch = script.department === 'common' || script.department === department;
       
-      // Removed teamMatch as user department is no longer available
-      return searchMatch && categoryMatch;
+      return searchMatch && categoryMatch && teamMatch;
     });
-  }, [searchTerm, category]);
+  }, [searchTerm, category, department]);
 
   const departmentScripts = useMemo(() => {
     const deptScripts = filteredScripts.filter(s => s.department === department);
-    return getProcessedScripts(deptScripts, customerName, agentName || 'Agent');
-  }, [filteredScripts, department, customerName, agentName]);
+    return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent');
+  }, [filteredScripts, department, customerName, user?.name]);
   
   const workflowScripts = useMemo(() => {
     const common = filteredScripts.filter(s => s.department === "common" && s.category === "Workflow");
-    return getProcessedScripts(common, customerName, agentName || 'Agent');
-  }, [filteredScripts, customerName, agentName]);
+    return getProcessedScripts(common, customerName, user?.name || 'Agent');
+  }, [filteredScripts, customerName, user?.name]);
 
   const commonScripts = useMemo(() => {
     const common = filteredScripts.filter(s => s.department === "common" && s.category !== "Workflow");
-    return getProcessedScripts(common, customerName, agentName || 'Agent');
-  }, [filteredScripts, customerName, agentName]);
+    return getProcessedScripts(common, customerName, user?.name || 'Agent');
+  }, [filteredScripts, customerName, user?.name]);
 
 
   const renderScriptList = (scriptList: Script[]) => {
@@ -130,7 +130,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
               <CardHeader>
                   <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                   <div className="flex-1">
-                      <h2 className="text-3xl font-bold text-foreground">Welcome back!</h2>
+                      <h2 className="text-3xl font-bold text-foreground">Welcome back, {user?.name || 'Agent'}!</h2>
                       <TypingEffect phrases={motivationalPhrases} className="text-muted-foreground text-md h-6" />
                   </div>
                       <div className="flex items-center gap-4 w-full md:w-auto">
@@ -146,7 +146,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
               </CardHeader>
           </Card>
 
-          <CustomerDetailsCard agentName={agentName || ''} />
+          <CustomerDetailsCard agentName={user?.name || 'Agent'} />
 
           <div className="space-y-12 mt-8">
               <Collapsible asChild open={openingOpen} onOpenChange={setOpeningOpen} className="rounded-xl p-4 md:p-6 border">
