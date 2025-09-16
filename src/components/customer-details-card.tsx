@@ -24,7 +24,6 @@ const initialFormState = {
   query: '',
   resolution: '',
   ghostline: 'N/A',
-  validatedBy: '',
   notes: '',
 };
 
