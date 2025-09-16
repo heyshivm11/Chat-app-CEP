@@ -36,47 +36,49 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen p-4 overflow-hidden">
-      <div className="absolute top-4 right-4 z-10">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden">
+      <div className="absolute top-4 right-4 z-20">
         <ThemeSwitcher />
       </div>
 
-      <Card className="w-full max-w-sm bg-background/30 backdrop-blur-sm z-10 border-white/20">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-          <CardDescription>Sign in to access the CEP scripts</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">First Name</Label>
-            <Input
-              id="name"
-              placeholder="Enter your first name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="department">Department</Label>
-            <Select onValueChange={setDepartment} value={department}>
-              <SelectTrigger id="department">
-                <SelectValue placeholder="Select your department" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="etg">FrontLine</SelectItem>
-                <SelectItem value="bookingcom">Schedule Change</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full" onClick={handleLogin}>
-            <LogIn className="mr-2 h-4 w-4" />
-            Sign In
-          </Button>
-        </CardFooter>
-      </Card>
+      <div className="relative z-10 w-full p-4">
+        <Card className="w-full max-w-sm mx-auto bg-background/30 backdrop-blur-sm border-white/20">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
+            <CardDescription>Sign in to access the CEP scripts</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">First Name</Label>
+              <Input
+                id="name"
+                placeholder="Enter your first name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="department">Department</Label>
+              <Select onValueChange={setDepartment} value={department}>
+                <SelectTrigger id="department">
+                  <SelectValue placeholder="Select your department" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="etg">FrontLine</SelectItem>
+                  <SelectItem value="bookingcom">Schedule Change</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {error && <p className="text-sm text-destructive">{error}</p>}
+          </CardContent>
+          <CardFooter>
+            <Button className="w-full" onClick={handleLogin}>
+              <LogIn className="mr-2 h-4 w-4" />
+              Sign In
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
       
       <div className="wave-container">
         <div className="wave"></div>
