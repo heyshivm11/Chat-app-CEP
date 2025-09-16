@@ -88,7 +88,13 @@ export function WorldClock() {
       const filtered = allTimezones
         .filter(tz => tz.toLowerCase().includes(lowerCaseQuery))
         .sort();
-      setSuggestions(filtered.slice(0, 100));
+      
+      if (filtered.length > 0) {
+        handleSelectTimezone(filtered[0]);
+      } else {
+        setError(`No timezone found for "${query}"`);
+        setSuggestions([]);
+      }
     } else {
       setSuggestions([]);
     }
@@ -111,6 +117,7 @@ export function WorldClock() {
       setQuery(e.target.value);
       if (e.target.value === "") {
           setSuggestions([]);
+          setError(null);
       }
   }
 
