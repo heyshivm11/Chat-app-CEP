@@ -174,6 +174,22 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     );
   };
   
+  const renderFlexScriptList = (scriptList: Script[]) => {
+    if (scriptList.length === 0) {
+      return <p className="text-muted-foreground text-center col-span-1 md:col-span-2 xl:col-span-3 py-8">No scripts found.</p>;
+    }
+
+    return (
+      <div className="flex flex-wrap gap-4">
+        {scriptList.map((script) => (
+          <div key={script.id} className="w-full md:w-[calc(50%-0.5rem)] xl:w-[calc(33.33%-1rem)]">
+            <ScriptCard script={script} />
+          </div>
+        ))}
+      </div>
+    );
+  };
+  
   return (
     <div 
       className="flex flex-col min-h-screen bg-background"
@@ -283,7 +299,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                       </CollapsibleTrigger>
                     </div>
                     <CollapsibleContent>
-                        {renderScriptList(commonScripts)}
+                        {renderFlexScriptList(commonScripts)}
                     </CollapsibleContent>
                 </section>
               </Collapsible>
@@ -318,3 +334,5 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
