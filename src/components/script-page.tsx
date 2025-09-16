@@ -27,6 +27,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [category, setCategory] = useState("All");
   const [department, setDepartment] = useState(initialDepartment || user?.department || "etg");
   const [customerName, setCustomerName] = useState("");
+  const [currentQuery, setCurrentQuery] = useState("");
   const [openingOpen, setOpeningOpen] = useState(true);
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [commonOpen, setCommonOpen] = useState(true);
@@ -46,14 +47,15 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     router.push(`/scripts/${newDepartment}`);
   };
 
-  const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string) => {
+  const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string, query: string) => {
     return scriptsToProcess.map(script => {
       const newScript = JSON.parse(JSON.stringify(script)); // Deep copy
       
       const replacePlaceholders = (text: string) => {
         return text
           .replace(/\[Customer First Name\]/g, currentCustomerName || '[Customer First Name]')
-          .replace(/\[Agent Name\]/g, currentAgentName || '[Agent Name]');
+          .replace(/\[Agent Name\]/g, currentAgentName || '[Agent Name]')
+          .replace(/\[Query\]/g, query || '...');
       };
 
       if (typeof newScript.content === 'string') {
@@ -89,18 +91,18 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 
   const departmentScripts = useMemo(() => {
     const deptScripts = filteredScripts.filter(s => s.department === department);
-    return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent');
-  }, [filteredScripts, department, customerName, user?.name]);
+    return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent', currentQuery);
+  }, [filteredScripts, department, customerName, user?.name, currentQuery]);
   
   const workflowScripts = useMemo(() => {
     const common = filteredScripts.filter(s => s.department === "common" && s.category === "Workflow");
-    return getProcessedScripts(common, customerName, user?.name || 'Agent');
-  }, [filteredScripts, customerName, user?.name]);
+    return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
+  }, [filteredScripts, customerName, user?.name, currentQuery]);
 
   const commonScripts = useMemo(() => {
     const common = filteredScripts.filter(s => s.department === "common" && s.category !== "Workflow");
-    return getProcessedScripts(common, customerName, user?.name || 'Agent');
-  }, [filteredScripts, customerName, user?.name]);
+    return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
+  }, [filteredScripts, customerName, user?.name, currentQuery]);
 
 
   const renderScriptList = (scriptList: Script[]) => {
@@ -148,7 +150,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
               </CardHeader>
           </Card>
 
-          <CustomerDetailsCard agentName={user?.name || 'Agent'} />
+          <CustomerDetailsCard agentName={user?.name || 'Agent'} onQueryChange={setCurrentQuery} />
 
           <div className="space-y-12 mt-8">
               <Collapsible open={openingOpen} onOpenChange={setOpeningOpen}>

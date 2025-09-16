@@ -45,9 +45,10 @@ interface CustomerFormProps {
   onUndo: () => void;
   onReset: () => void;
   hasHistory: boolean;
+  onQueryChange?: (query: string) => void;
 }
 
-function CustomerForm({ agentName, formData, onFormChange, onUndo, onReset, hasHistory }: CustomerFormProps) {
+function CustomerForm({ agentName, formData, onFormChange, onUndo, onReset, hasHistory, onQueryChange }: CustomerFormProps) {
   const [customerIsCaller, setCustomerIsCaller] = useState(formData.relation === 'Self');
 
   useEffect(() => {
@@ -59,6 +60,9 @@ function CustomerForm({ agentName, formData, onFormChange, onUndo, onReset, hasH
 
   const handleInputChange = (id: string, value: string) => {
     onFormChange(id as keyof FormState, value);
+    if (id === 'query' && onQueryChange) {
+      onQueryChange(value);
+    }
   };
   
   const handleSelectChange = (id: string, value: string) => {
@@ -175,7 +179,7 @@ function CustomerForm({ agentName, formData, onFormChange, onUndo, onReset, hasH
 }
 
 
-export function CustomerDetailsCard({ agentName }: { agentName: string }) {
+export function CustomerDetailsCard({ agentName, onQueryChange }: { agentName: string, onQueryChange?: (query: string) => void }) {
   const [isOpen, setIsOpen] = useState(true);
   
   const [form1Data, setForm1Data] = useState(initialFormState);
@@ -239,6 +243,9 @@ export function CustomerDetailsCard({ agentName }: { agentName: string }) {
     if (formIndex === 1) {
       setForm1History(prev => [...prev, form1Data]);
       setForm1Data(prev => ({ ...prev, [fieldName]: value }));
+      if (fieldName === 'query' && onQueryChange) {
+        onQueryChange(value);
+      }
     } else {
       setForm2History(prev => [...prev, form2Data]);
       setForm2Data(prev => ({ ...prev, [fieldName]: value }));
@@ -251,6 +258,9 @@ export function CustomerDetailsCard({ agentName }: { agentName: string }) {
       if (lastState) {
         setForm1Data(lastState);
         setForm1History([...form1History]);
+        if(lastState.query !== form1Data.query && onQueryChange) {
+          onQueryChange(lastState.query);
+        }
       }
     } else {
       const lastState = form2History.pop();
@@ -265,6 +275,9 @@ export function CustomerDetailsCard({ agentName }: { agentName: string }) {
     if (formIndex === 1) {
       setForm1History(prev => [...prev, form1Data]);
       setForm1Data(initialFormState);
+       if (form1Data.query !== '' && onQueryChange) {
+        onQueryChange('');
+      }
     } else {
       setForm2History(prev => [...prev, form2Data]);
       setForm2Data(initialFormState);
@@ -306,6 +319,7 @@ export function CustomerDetailsCard({ agentName }: { agentName: string }) {
                         onUndo={() => handleUndo(1)}
                         onReset={() => handleReset(1)}
                         hasHistory={form1History.length > 0}
+                        onQueryChange={onQueryChange}
                       />
                   </TabsContent>
                   <TabsContent value="customer2">

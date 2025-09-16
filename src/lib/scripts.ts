@@ -173,7 +173,7 @@ export const scripts: Script[] = [
     content: [
       {
         title: 'Acknowledge initial query',
-        content: 'I understand that you need help with……..is that correct',
+        content: 'I understand that you need help with [Query], is that correct?',
       },
       {
         title: 'Commitment to assist',
