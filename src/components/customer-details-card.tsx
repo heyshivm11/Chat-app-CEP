@@ -196,7 +196,7 @@ export function CustomerDetailsCard({ agentName }: CustomerDetailsCardProps) {
       onOpenChange={setIsOpen}
       className="w-full"
     >
-      <Card className="glass-card mb-8">
+      <Card className="mb-8">
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <User className="text-primary h-6 w-6" />

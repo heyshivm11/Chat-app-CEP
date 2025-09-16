@@ -47,7 +47,7 @@ export function PageHeader({
     <header className="sticky top-0 z-30 w-full bg-background/80 backdrop-blur-md border-b">
       <div className="container flex h-20 items-center gap-6">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold text-foreground">
-            <Plane className="h-8 w-8 text-primary animate-fly" />
+            <Plane className="h-8 w-8 text-primary" />
             <span className="hidden sm:inline-block">CEP Scripts</span>
         </Link>
         
@@ -57,27 +57,27 @@ export function PageHeader({
             <Input
               type="search"
               placeholder="Search scripts..."
-              className="pl-10 h-11 text-md border-2 border-black"
+              className="pl-10 h-11 text-md rounded-full"
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
             />
           </div>
 
           <Select value={department} onValueChange={onDepartmentChange}>
-            <SelectTrigger className="w-[200px] h-11 text-md border-2 border-black">
+            <SelectTrigger className="w-[200px] h-11 text-md rounded-full">
               <SelectValue placeholder="Select Department" />
             </SelectTrigger>
-            <SelectContent className="border-2 border-black">
+            <SelectContent>
               <SelectItem value="etg">ETG</SelectItem>
               <SelectItem value="booking">Booking.com</SelectItem>
             </SelectContent>
           </Select>
 
           <Select value={category} onValueChange={onCategoryChange}>
-            <SelectTrigger className="w-[220px] hidden md:flex h-11 text-md border-2 border-black">
+            <SelectTrigger className="w-[220px] hidden md:flex h-11 text-md rounded-full">
               <SelectValue placeholder="Filter by category" />
             </SelectTrigger>
-            <SelectContent className="border-2 border-black">
+            <SelectContent>
               <SelectItem value="All">All Categories</SelectItem>
               {scriptCategories.map((cat) => (
                 <SelectItem key={cat} value={cat}>{cat}</SelectItem>

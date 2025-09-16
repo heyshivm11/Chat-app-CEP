@@ -140,7 +140,7 @@ export default function ScriptPage() {
         />
         <main className="container mx-auto px-4 md:px-8 py-8">
           
-          <Card className="mb-8 border-2 border-black shadow-[8px_8px_0px_#000]">
+          <Card className="mb-8">
               <CardHeader>
                   <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                     <div className="flex-1">
@@ -150,8 +150,8 @@ export default function ScriptPage() {
                      <div className="flex items-center gap-4 w-full md:w-auto">
                         <Label htmlFor="customerName" className="text-md whitespace-nowrap font-bold">Customer Name:</Label>
                         <div className="flex items-center gap-2 w-full">
-                            <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} className="text-md border-2 border-black" />
-                            <Button variant="outline" size="icon" onClick={() => setCustomerName("")} aria-label="Reset customer name" className="border-2 border-black">
+                            <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} className="text-md" />
+                            <Button variant="outline" size="icon" onClick={() => setCustomerName("")} aria-label="Reset customer name">
                                 <RotateCcw className="h-4 w-4" />
                             </Button>
                         </div>
@@ -163,7 +163,7 @@ export default function ScriptPage() {
           <CustomerDetailsCard agentName={agentName || ''} />
 
           <div className="space-y-12 mt-8">
-              <Collapsible asChild open={openingOpen} onOpenChange={setOpeningOpen} className="rounded-lg p-4 md:p-6 border-2 border-black">
+              <Collapsible asChild open={openingOpen} onOpenChange={setOpeningOpen} className="rounded-xl p-4 md:p-6 border">
                 <section>
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
@@ -183,7 +183,7 @@ export default function ScriptPage() {
                 </section>
               </Collapsible>
 
-              <Collapsible asChild open={workflowOpen} onOpenChange={setWorkflowOpen} className="rounded-lg p-4 md:p-6 border-2 border-black">
+              <Collapsible asChild open={workflowOpen} onOpenChange={setWorkflowOpen} className="rounded-xl p-4 md:p-6 border">
                 <section>
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
@@ -203,7 +203,7 @@ export default function ScriptPage() {
                 </section>
               </Collapsible>
               
-              <Collapsible asChild open={commonOpen} onOpenChange={setCommonOpen} className="rounded-lg p-4 md:p-6 border-2 border-black">
+              <Collapsible asChild open={commonOpen} onOpenChange={setCommonOpen} className="rounded-xl p-4 md:p-6 border">
                 <section>
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">

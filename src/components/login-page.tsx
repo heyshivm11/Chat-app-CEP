@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { LogIn, Plane } from 'lucide-react';
+import { LogIn } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import {
@@ -63,32 +63,38 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 grid-background">
-      <Card className="w-full max-w-md z-10 border-2 border-black rounded-lg shadow-[8px_8px_0px_#000]">
+      <Card className="w-full max-w-sm z-10 bg-primary-foreground/5 backdrop-blur-lg border-primary-foreground/20 text-primary-foreground">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold">Agent Login</CardTitle>
-          <CardDescription>Enter your details to access the scripts</CardDescription>
+          <CardTitle className="text-5xl font-bold">SettleUp</CardTitle>
+          <CardDescription className="text-primary-foreground/80 text-lg">Simplify. Split. Settle.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="firstName" className="font-semibold">First Name</Label>
               <Input
                 id="firstName"
-                placeholder="Enter your first name"
-                className="border-2 border-black"
+                placeholder="Email"
+                className="bg-transparent border-primary-foreground/30 placeholder:text-primary-foreground/60 h-12 rounded-xl"
                 {...register('firstName', {
                   required: 'First name is required',
                 })}
               />
               {errors.firstName && (
-                <p className="text-xs text-red-500 mt-1">
+                <p className="text-xs text-red-400 mt-1">
                   {errors.firstName.message}
                 </p>
               )}
             </div>
+             <div className="space-y-2">
+              <Input
+                id="password"
+                type="password"
+                placeholder="Password"
+                className="bg-transparent border-primary-foreground/30 placeholder:text-primary-foreground/60 h-12 rounded-xl"
+              />
+            </div>
             <div className="space-y-2">
-              <Label className="font-semibold">Department</Label>
+              <Label className="font-semibold sr-only">Department</Label>
               <Select
                 onValueChange={(value: 'Frontline' | 'Schedule Change') => {
                   setValue('department', value, { shouldValidate: true });
@@ -97,33 +103,34 @@ export function LoginPage() {
                   required: 'Department is required',
                 })}
               >
-                <SelectTrigger className="border-2 border-black">
+                <SelectTrigger className="bg-transparent border-primary-foreground/30 placeholder:text-primary-foreground/60 h-12 rounded-xl">
                   <SelectValue placeholder="Select your department" />
                 </SelectTrigger>
-                <SelectContent className="border-2 border-black">
+                <SelectContent>
                   <SelectItem value="Frontline">Frontline</SelectItem>
                   <SelectItem value="Schedule Change">Schedule Change</SelectItem>
                 </SelectContent>
               </Select>
               {errors.department && (
-                <p className="text-xs text-red-500 mt-1">
+                <p className="text-xs text-red-400 mt-1">
                   {errors.department.message}
                 </p>
               )}
             </div>
-            <Button type="submit" className="w-full btn-custom btn-primary-custom" disabled={isLoading}>
+            <Button type="submit" className="w-full h-14 bg-gray-900 text-white hover:bg-gray-800 rounded-full font-bold text-lg" disabled={isLoading}>
               {isLoading ? (
-                'Logging in...'
+                'Signing in...'
               ) : (
-                <>
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Login
-                </>
+                'Sign in'
               )}
             </Button>
           </form>
+            <div className="text-center mt-4">
+                 <Button variant="link" className="text-primary-foreground/80 font-semibold text-sm">
+                    Forgot your password?
+                </Button>
+            </div>
         </CardContent>
       </Card>
-    </div>
   );
 }

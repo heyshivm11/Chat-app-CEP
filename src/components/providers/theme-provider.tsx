@@ -3,8 +3,9 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
-export type Theme = "theme-default" | "theme-black-red" | "theme-black-green" | "theme-black-white" | "theme-white-red";
+export type Theme = "theme-settleup" | "theme-default" | "theme-black-red" | "theme-black-green" | "theme-black-white" | "theme-white-red";
 export const themeNames: { [key in Theme]: string } = {
+  "theme-settleup": "SettleUp",
   "theme-default": "Sunset",
   "theme-black-red": "Crimson Night",
   "theme-black-green": "Emerald Dark",
@@ -24,7 +25,7 @@ type ThemeProviderState = {
 const ThemeProviderContext = createContext<ThemeProviderState | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("theme-default");
+  const [theme, setTheme] = useState<Theme>("theme-settleup");
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("cep-theme") as Theme | null;
@@ -37,10 +38,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const root = document.documentElement;
     root.className = '';
 
-    if (!theme.startsWith('theme-white')) {
+    if (!theme.startsWith('theme-white') && theme !== 'theme-settleup') {
       root.classList.add('dark');
     }
     
+    if (theme === 'theme-settleup' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+       // Don't add dark class if system is dark for settleup theme
+    } else if (!theme.startsWith('theme-white')) {
+       root.classList.add('dark');
+    }
+
+
     root.classList.add(theme);
     localStorage.setItem("cep-theme", theme);
   }, [theme]);
