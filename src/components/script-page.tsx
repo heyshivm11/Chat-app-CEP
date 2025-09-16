@@ -188,6 +188,13 @@ export default function ScriptPage({ department: initialDepartment }: { departme
               </CardHeader>
           </Card>
 
+          <div className="mb-6 flex justify-end gap-2">
+              <Button variant="outline" onClick={toggleAllSections}>
+                  {allOpen ? <ChevronsUpDownIcon className="mr-2 h-4 w-4" /> : <ChevronsDownUp className="mr-2 h-4 w-4" />}
+                  {allOpen ? 'Collapse All' : 'Expand All'}
+              </Button>
+          </div>
+
           <div className="my-8">
             <CustomerDetailsCard 
               agentName={user?.name || 'Agent'} 
@@ -195,13 +202,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
               isOpen={customerDetailsOpen}
               onOpenChange={setCustomerDetailsOpen}
             />
-          </div>
-
-          <div className="mb-6 flex justify-end gap-2">
-              <Button variant="outline" onClick={toggleAllSections}>
-                  {allOpen ? <ChevronsUpDownIcon className="mr-2 h-4 w-4" /> : <ChevronsDownUp className="mr-2 h-4 w-4" />}
-                  {allOpen ? 'Collapse All' : 'Expand All'}
-              </Button>
           </div>
 
           <div className="space-y-12">
@@ -297,6 +297,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
 
     
 
