@@ -25,7 +25,7 @@ const formatDate = (date: Date) => {
 export function WorldClock() {
   const [query, setQuery] = useState('');
   const [allTimezones, setAllTimezones] = useState<string[]>([]);
-  const [filteredTimezones, setFilteredTimezones] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [selectedTimezone, setSelectedTimezone] = useState<string | null>('Asia/Kolkata');
   const [timeData, setTimeData] = useState<TimeData | null>(null);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
@@ -81,23 +81,37 @@ export function WorldClock() {
       return () => clearInterval(timer);
     }
   }, [currentTime]);
-  
-  useEffect(() => {
+
+  const handleSearch = () => {
     if (query) {
       const lowerCaseQuery = query.toLowerCase();
       const filtered = allTimezones
         .filter(tz => tz.toLowerCase().includes(lowerCaseQuery))
         .sort();
-      setFilteredTimezones(filtered.slice(0, 100)); // Limit results for performance
+      setSuggestions(filtered.slice(0, 100));
     } else {
-      setFilteredTimezones([]);
+      setSuggestions([]);
     }
-  }, [query, allTimezones]);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
+    }
+  }
 
   const handleSelectTimezone = (timezone: string) => {
     setSelectedTimezone(timezone);
     setQuery('');
-    setFilteredTimezones([]);
+    setSuggestions([]);
+  }
+  
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setQuery(e.target.value);
+      if (e.target.value === "") {
+          setSuggestions([]);
+      }
   }
 
   const locationName = useMemo(() => {
@@ -120,15 +134,16 @@ export function WorldClock() {
         <Input
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={handleQueryChange}
+          onKeyDown={handleKeyDown}
           placeholder="Search for a city or timezone..."
           className="w-full pl-10 text-lg h-14 rounded-full shadow-lg"
         />
-        {filteredTimezones.length > 0 && (
+        {suggestions.length > 0 && (
           <Card className="absolute z-10 w-full mt-2 max-h-60 overflow-y-auto">
             <ScrollArea className="h-full">
               <div className="p-2">
-              {filteredTimezones.map(tz => (
+              {suggestions.map(tz => (
                 <button
                   key={tz}
                   onClick={() => handleSelectTimezone(tz)}
