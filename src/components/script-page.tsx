@@ -8,7 +8,7 @@ import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
 import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote, ChevronsDownUp, ChevronsUpDown as ChevronsUpDownIcon } from "@/components/ui/lucide-icons";
 import { CustomerDetailsCard } from "./customer-details-card";
-import { Card, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
@@ -279,12 +279,16 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             </CollapsibleTrigger>
                             </div>
                             <CollapsibleContent>
-                                {requestStatedVerifiedScript && (
-                                <div className="mb-4">
-                                    <ScriptCard script={requestStatedVerifiedScript} />
-                                </div>
-                                )}
-                                {renderScriptList(otherDepartmentScripts)}
+                                <Card className="bg-background/30 backdrop-blur-sm border-white/20">
+                                    <CardContent className="p-6">
+                                        {requestStatedVerifiedScript && (
+                                        <div className="mb-4">
+                                            <ScriptCard script={requestStatedVerifiedScript} />
+                                        </div>
+                                        )}
+                                        {renderScriptList(otherDepartmentScripts)}
+                                    </CardContent>
+                                </Card>
                             </CollapsibleContent>
                         </section>
                     </Collapsible>
@@ -303,7 +307,11 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             </CollapsibleTrigger>
                             </div>
                             <CollapsibleContent>
-                                {renderScriptList(workflowScripts)}
+                                <Card className="bg-background/30 backdrop-blur-sm border-white/20">
+                                    <CardContent className="p-6">
+                                        {renderScriptList(workflowScripts)}
+                                    </CardContent>
+                                </Card>
                             </CollapsibleContent>
                         </section>
                     </Collapsible>
@@ -322,7 +330,11 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             </CollapsibleTrigger>
                             </div>
                             <CollapsibleContent>
-                                {renderFlexScriptList(commonScripts)}
+                                <Card className="bg-background/30 backdrop-blur-sm border-white/20">
+                                    <CardContent className="p-6">
+                                        {renderFlexScriptList(commonScripts)}
+                                    </CardContent>
+                                </Card>
                             </CollapsibleContent>
                         </section>
                     </Collapsible>
@@ -341,11 +353,15 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                             </CollapsibleTrigger>
                             </div>
                             <CollapsibleContent>
-                                {chatClosingScript && (
-                                <div className="mb-4">
-                                    <ScriptCard script={chatClosingScript} />
-                                </div>
-                                )}
+                                <Card className="bg-background/30 backdrop-blur-sm border-white/20">
+                                    <CardContent className="p-6">
+                                        {chatClosingScript && (
+                                        <div className="mb-4">
+                                            <ScriptCard script={chatClosingScript} />
+                                        </div>
+                                        )}
+                                    </CardContent>
+                                </Card>
                             </CollapsibleContent>
                         </section>
                     </Collapsible>
@@ -358,6 +374,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
 
     
 
