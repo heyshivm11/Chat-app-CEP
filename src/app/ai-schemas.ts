@@ -9,7 +9,8 @@ export const RefineScriptInputSchema = z.object({
 export type RefineScriptInput = z.infer<typeof RefineScriptInputSchema>;
 
 export const RefineScriptOutputSchema = z.object({
-  refinedScript: z.string().describe('The refined chat script.'),
+  refinedScript: z.string().describe('The refined, humanized chat script.'),
+  refinementReason: z.string().describe('A brief explanation of why the refined script is an improvement.'),
 });
 export type RefineScriptOutput = z.infer<typeof RefineScriptOutputSchema>;
 
