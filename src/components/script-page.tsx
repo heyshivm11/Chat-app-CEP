@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
@@ -66,6 +66,18 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     setAllOpen(currentlyAllOpen);
   },[customerDetailsOpen, openingOpen, workflowOpen, commonOpen, closingOpen])
 
+  const handleSuggestionClick = useCallback((scriptId: string) => {
+    const scriptElement = document.querySelector(`[data-script-id="${scriptId}"]`);
+    if (scriptElement) {
+      scriptElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // maybe flash the element?
+      scriptElement.classList.add('animate-pulse-once');
+      setTimeout(() => {
+        scriptElement.classList.remove('animate-pulse-once');
+      }, 2000);
+    }
+    setSearchTerm('');
+  }, []);
 
   const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string, query: string) => {
     return scriptsToProcess.map(script => {
@@ -108,6 +120,14 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       return searchMatch && categoryMatch && teamMatch;
     });
   }, [searchTerm, category, department]);
+
+  const searchSuggestions = useMemo(() => {
+    if (!searchTerm) return [];
+    return scripts.filter(script => 
+      script.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (script.department === 'common' || script.department === department)
+    );
+  }, [searchTerm, department]);
 
   const departmentScripts = useMemo(() => {
     const deptScripts = filteredScripts.filter(s => s.department === department);
@@ -165,6 +185,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
           onCategoryChange={setCategory}
           department={department}
           onDepartmentChange={handleDepartmentChange}
+          suggestions={searchSuggestions}
+          onSuggestionClick={handleSuggestionClick}
       />
       <main className="container mx-auto px-4 md:px-8 py-8 flex-1">
           
@@ -297,11 +319,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
-
-    
-
-    
-
-    

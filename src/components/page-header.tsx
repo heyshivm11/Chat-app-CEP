@@ -15,6 +15,8 @@ import { ThemeSwitcher } from "./theme-switcher";
 import { scriptCategories } from "@/lib/scripts";
 import { Button } from "./ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { SearchSuggestions } from "./search-suggestions";
+import type { Script } from "@/lib/types";
 
 interface PageHeaderProps {
   searchTerm: string;
@@ -23,6 +25,8 @@ interface PageHeaderProps {
   onCategoryChange: (category: string) => void;
   department: string;
   onDepartmentChange: (department: string) => void;
+  suggestions: Script[];
+  onSuggestionClick: (scriptId: string) => void;
 }
 
 export function PageHeader({ 
@@ -32,6 +36,8 @@ export function PageHeader({
   onCategoryChange, 
   department, 
   onDepartmentChange,
+  suggestions,
+  onSuggestionClick
 }: PageHeaderProps) {
   const { logout } = useAuth();
 
@@ -52,6 +58,11 @@ export function PageHeader({
               className="pl-12 h-12 text-md"
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
+            />
+            <SearchSuggestions
+              suggestions={suggestions}
+              onSuggestionClick={onSuggestionClick}
+              searchTerm={searchTerm}
             />
           </div>
 
