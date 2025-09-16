@@ -95,16 +95,11 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
     }
   }, [updateField, onQueryChange, scheduleReminder]);
   
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>, nextFieldRef: React.RefObject<HTMLElement> | null) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>, nextFieldRef: React.RefObject<HTMLElement | null>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (nextFieldRef && nextFieldRef.current) {
-        // For shadcn Select, we need to focus the trigger button
-        if (nextFieldRef.current.getAttribute('role') === 'combobox') {
-             (nextFieldRef.current as HTMLButtonElement).focus();
-        } else {
-             (nextFieldRef.current as HTMLElement).focus();
-        }
+      if (nextFieldRef?.current) {
+        nextFieldRef.current.focus();
       }
     }
   };
@@ -222,7 +217,7 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
                   ref={resolutionRef}
                   value={formData.resolution}
                   onChange={(e) => handleInputChange('resolution', e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(e, notesRef)}
+                  onKeyDown={(e) => handleKeyDown(e, validatedByRef)}
               />
           </div>
       </div>
@@ -234,7 +229,7 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
                 value={formData.validationNeeded}
                 onValueChange={(value) => handleInputChange('validationNeeded', value)}
             >
-                <SelectTrigger id="validationNeeded">
+                <SelectTrigger id="validationNeeded" onKeyDown={(e) => handleKeyDown(e, formData.validationNeeded === 'Yes' ? validatedByRef : notesRef)}>
                     <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -263,7 +258,7 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
                 value={formData.ghostline}
                 onValueChange={(value) => handleInputChange('ghostline', value)}
             >
-                <SelectTrigger id="ghostline">
+                <SelectTrigger id="ghostline" onKeyDown={(e) => handleKeyDown(e, notesRef)}>
                     <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -346,10 +341,10 @@ function CustomerDetailsCardComponent({
         duration: 8000,
         action: (
           <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0 w-full">
-            <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)} className="w-full sm:w-auto">
+            <ToastAction altText="Copy details for Customer 1" onClick={() => copyDetails(1)}>
                 Copy Cust. 1
             </ToastAction>
-            <ToastAction altText="Copy details for Customer 2" onClick={() => copyDetails(2)} className="w-full sm:w-auto">
+            <ToastAction altText="Copy details for Customer 2" onClick={() => copyDetails(2)}>
                 Copy Cust. 2
             </ToastAction>
         </div>
