@@ -3,12 +3,11 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
-export type Theme = "light" | "dark" | "theme-neutral" | "theme-ocean";
+export type Theme = "light" | "dark" | "theme-neutral";
 export const themeNames: { [key in Theme]: string } = {
   "light": "Default Light",
   "dark": "Default Dark",
   "theme-neutral": "Neutral",
-  "theme-ocean": "Ocean Vibe",
 };
 
 const themeKeys = Object.keys(themeNames) as Theme[];
@@ -40,14 +39,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     root.classList.remove(...themeKeys);
     
     // For dark and neutral, we need to handle which class is applied.
-    if (theme === 'dark' || theme === 'theme-neutral' || theme === 'theme-ocean') {
+    if (theme === 'dark' || theme === 'theme-neutral') {
         if (theme === 'dark') {
             root.classList.add('dark');
             // Ensure other theme classes are removed
             themeKeys.forEach(t => {
                 if (t !== 'dark') root.classList.remove(t);
             });
-        } else { // theme is 'theme-neutral' or 'theme-ocean'
+        } else { // theme is 'theme-neutral'
              root.classList.add(theme);
              root.classList.remove('dark'); // A neutral theme may not be dark
         }
