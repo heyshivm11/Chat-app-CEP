@@ -22,7 +22,7 @@ export function ScriptCard({ script }: ScriptCardProps) {
 
   return (
     <>
-      <Card className={cn("h-full rounded-lg shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] flex flex-col")}>
+      <Card className={cn("rounded-lg shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] flex flex-col")}>
         <CardHeader className="flex flex-row items-start justify-between pb-4">
           <CardTitle className="text-xl font-bold leading-tight pr-4">{script.title}</CardTitle>
           <div className="flex items-center gap-1 flex-shrink-0">
