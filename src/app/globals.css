@@ -88,6 +88,23 @@
   }
 }
 
+@layer utilities {
+    @keyframes highlight-fade {
+        0% {
+            background-color: hsl(var(--primary) / 0.2);
+            box-shadow: 0 0 15px 5px hsl(var(--primary) / 0.4);
+        }
+        100% {
+            background-color: hsl(var(--card));
+            box-shadow: var(--tw-shadow);
+        }
+    }
+    .highlight-animation {
+        animation: highlight-fade 1.5s ease-out;
+    }
+}
+
+
 @layer components {
     .sub-item-hoverable:hover {
         background-color: var(--sub-item-hover-bg);

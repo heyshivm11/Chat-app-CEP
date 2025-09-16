@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { scripts } from "@/lib/scripts";
-import { Script } from "@/lib/types";
+import { Script, SubScript } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
 import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote, ChevronsDownUp, ChevronsUpDown as ChevronsUpDownIcon } from "lucide-react";
@@ -114,6 +114,20 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       return searchMatch && categoryMatch && teamMatch;
     });
   }, [searchTerm, category, department]);
+  
+  const handleSearchSubmit = () => {
+    if (filteredScripts.length > 0) {
+      const firstMatchId = `script-card-${filteredScripts[0].id}`;
+      const element = document.getElementById(firstMatchId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('highlight-animation');
+        setTimeout(() => {
+          element.classList.remove('highlight-animation');
+        }, 1500);
+      }
+    }
+  };
 
   const departmentScripts = useMemo(() => {
     const deptScripts = filteredScripts.filter(s => s.department === department);
@@ -167,6 +181,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       <PageHeader 
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
+          onSearchSubmit={handleSearchSubmit}
           category={category}
           onCategoryChange={setCategory}
           department={department}
@@ -303,7 +318,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
-
-    
