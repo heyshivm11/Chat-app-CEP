@@ -200,5 +200,3 @@ function WorldClockComponent() {
 }
 
 export const WorldClock = memo(WorldClockComponent);
-
-    
