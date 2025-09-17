@@ -131,6 +131,11 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     }
   }, []);
 
+  const filteredScripts = useMemo(() => {
+    if (!searchTerm) return [];
+    return scripts.filter(script => doesScriptMatch(script, searchTerm)).slice(0, 8);
+  }, [searchTerm]);
+
   const handleSearchSubmit = useCallback(() => {
     if (filteredScripts.length > 0) {
       highlightAndScrollTo(filteredScripts[0].id);
@@ -175,11 +180,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     setWorkflowOpen(nextState);
     setClosingOpen(nextState);
   };
-  
-  const filteredScripts = useMemo(() => {
-    if (!searchTerm) return [];
-    return scripts.filter(script => doesScriptMatch(script, searchTerm)).slice(0, 8);
-  }, [searchTerm]);
   
   const scriptsToDisplay = useMemo(() => {
     let scriptsToFilter = scripts;
