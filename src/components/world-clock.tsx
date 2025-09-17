@@ -29,25 +29,31 @@ function WorldClockComponent() {
   const [timeData, setTimeData] = useState<TimeData | null>(null);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingTimezones, setIsLoadingTimezones] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [allTimezones, setAllTimezones] = useState<string[]>([]);
 
+  // Fetch the list of all available timezones from the API
   useEffect(() => {
     async function fetchAllTimezones() {
+        setIsLoadingTimezones(true);
         try {
             const response = await fetch('https://worldtimeapi.org/api/timezone');
             if (!response.ok) {
                 throw new Error('Failed to load timezone list.');
             }
-            const data = await response.json();
+            const data: string[] = await response.json();
             setAllTimezones(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Could not load timezones.');
+        } finally {
+            setIsLoadingTimezones(false);
         }
     }
     fetchAllTimezones();
   }, []);
 
+  // Function to fetch the time for a specific timezone
   const fetchTime = useCallback(async (timezone: string) => {
     setIsLoading(true);
     setError(null);
@@ -55,8 +61,7 @@ function WorldClockComponent() {
     try {
       const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Could not find time for "${timezone}".`);
+        throw new Error(`Could not find time for "${timezone}". Please select a valid timezone from the list.`);
       }
       
       const data: TimeData = await response.json();
@@ -67,54 +72,63 @@ function WorldClockComponent() {
       setQuery('');
       setSuggestions([]);
     } catch (err) {
-       setError(err instanceof Error ? err.message : 'An unknown error occurred while fetching the time.');
+       setError(err instanceof Error ? err.message : 'An unknown error occurred.');
        setTimeData(null); // Clear old data on error
     } finally {
       setIsLoading(false);
     }
   }, []);
 
+  // Fetch initial time for the default timezone
   useEffect(() => {
-    // Fetch initial time only after timezone list is available to avoid race conditions.
-    if(allTimezones.length > 0){
+    if (!isLoadingTimezones) { // Only fetch time after timezones are loaded.
         fetchTime(selectedTimezone);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allTimezones]); 
+  }, [isLoadingTimezones]); 
 
+  // Update the clock every second
   useEffect(() => {
     if (currentTime) {
       const timer = setInterval(() => {
         setCurrentTime(prevTime => {
             if (!prevTime) return null;
-            const newTime = new Date(prevTime.getTime() + 1000);
-            return newTime;
+            return new Date(prevTime.getTime() + 1000);
         });
       }, 1000);
       return () => clearInterval(timer);
     }
   }, [currentTime]);
 
+  // Handle changes in the search input
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
     if (value.length > 1 && allTimezones.length > 0) {
       const filtered = allTimezones.filter(tz => tz.toLowerCase().includes(value.toLowerCase()));
-      setSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
+      setSuggestions(filtered.slice(0, 5));
     } else {
       setSuggestions([]);
     }
   };
   
+  // Handle clicking a suggestion from the list
   const handleSuggestionClick = (timezone: string) => {
     fetchTime(timezone);
   };
 
+  // Handle submitting the search
   const handleSearch = () => {
-    if (suggestions.length > 0) {
-      fetchTime(suggestions[0]);
-    } else if (query.trim()) {
-      fetchTime(query.trim());
+    const searchTerm = query.trim();
+    if (!searchTerm) return;
+    
+    // Prioritize an exact match or the first suggestion
+    const firstSuggestion = suggestions.find(s => s.toLowerCase() === searchTerm.toLowerCase()) || suggestions[0];
+    if (firstSuggestion) {
+      fetchTime(firstSuggestion);
+    } else {
+      // If no suggestion matches, try to fetch directly
+      fetchTime(searchTerm);
     }
   }
 
@@ -142,6 +156,7 @@ function WorldClockComponent() {
     return `UTC${timeData.utc_offset}`;
   }, [timeData]);
 
+  const showLoader = isLoading || isLoadingTimezones;
 
   return (
     <div className="w-full max-w-md">
@@ -156,10 +171,10 @@ function WorldClockComponent() {
                   onKeyDown={handleKeyDown}
                   placeholder="Search for a city or timezone..."
                   className="w-full pl-10 text-lg h-14 rounded-full shadow-lg"
-                  disabled={allTimezones.length === 0}
+                  disabled={isLoadingTimezones || allTimezones.length === 0}
                 />
             </div>
-            <Button onClick={handleSearch} disabled={isLoading || (!query.trim() && suggestions.length === 0)} className="h-14 rounded-full px-6">
+            <Button onClick={handleSearch} disabled={showLoader || !query.trim()} className="h-14 rounded-full px-6">
                 <Search className="h-5 w-5" />
             </Button>
         </div>
@@ -181,7 +196,7 @@ function WorldClockComponent() {
       </div>
 
       <div className="mt-8">
-        {isLoading && !timeData ? (
+        {showLoader && !timeData ? (
           <div className="flex justify-center items-center p-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
@@ -208,7 +223,7 @@ function WorldClockComponent() {
             </Card>
           </>
         ) : (
-             !error && <p className="text-center text-muted-foreground">Search for a place to see the time.</p>
+            !error && <p className="text-center text-muted-foreground">Search for a place to see the time.</p>
         )}
       </div>
     </div>
