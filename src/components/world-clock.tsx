@@ -10,9 +10,9 @@ import { timezones } from '@/lib/timezones';
 
 
 interface TimeData {
-  dateTime: string;
-  timeZone: string;
-  dayOfWeek: string;
+  datetime: string;
+  timezone: string;
+  day_of_week: number;
 }
 
 const formatTime = (date: Date) => {
@@ -40,12 +40,15 @@ function WorldClockComponent() {
     setSuggestions([]);
     setQuery("");
     try {
-      const response = await fetch(`https://timeapi.io/api/time/current/zone?timeZone=${timezone}`);
-      if (!response.ok) throw new Error(`Could not fetch time for "${timezone}". Please check if the timezone is correct (e.g., "Europe/Amsterdam").`);
+      const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Could not fetch time for "${timezone}". Please check if the timezone is correct (e.g., "Europe/Amsterdam").`);
+      }
       const data: TimeData = await response.json();
       setTimeData(data);
-      setCurrentTime(new Date(data.dateTime));
-      setSelectedTimezone(data.timeZone);
+      setCurrentTime(new Date(data.datetime));
+      setSelectedTimezone(data.timezone);
       setQuery(''); // Reset search bar
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
@@ -176,7 +179,7 @@ function WorldClockComponent() {
                   {formatTime(currentTime)}
                 </div>
                 <p className="text-lg text-muted-foreground mt-2">{formatDate(currentTime)}</p>
-                <p className="text-sm text-muted-foreground mt-4">{timeData.timeZone}</p>
+                <p className="text-sm text-muted-foreground mt-4">{timeData.timezone}</p>
               </CardContent>
             </Card>
           </>
