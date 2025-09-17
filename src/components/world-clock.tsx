@@ -40,7 +40,7 @@ function WorldClockComponent() {
           throw new Error(errorData.error || 'Failed to load timezone list.');
         }
         const data = await response.json();
-        setAllTimezones(data.zones);
+        setAllTimezones(data.zones || []);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Could not load timezones.');
       }
@@ -75,13 +75,10 @@ function WorldClockComponent() {
   }, []);
 
   useEffect(() => {
-    // Only fetch time if timezones have been loaded.
-    if (allTimezones.length > 0) {
-      // On initial load, use the default selected timezone.
-      fetchTime(selectedTimezone);
-    }
+    // On initial load, use the default selected timezone.
+    fetchTime(selectedTimezone);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allTimezones]); // Intentionally only run when allTimezones is populated.
+  }, []); 
 
   useEffect(() => {
     if (currentTime) {
