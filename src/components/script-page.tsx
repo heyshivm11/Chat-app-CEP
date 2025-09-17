@@ -120,12 +120,12 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [form2Data, setForm2Data] = useState<FormState>(initialFormState);
 
   const [customerDetailsOpen, setCustomerDetailsOpen] = useState(true);
-  const [openingOpen, setOpeningOpen] = useState(false);
-  const [conversationFlowOpen, setConversationFlowOpen] = useState(false);
-  const [workflowOpen, setWorkflowOpen] = useState(false);
-  const [closingOpen, setClosingOpen] = useState(false);
+  const [openingOpen, setOpeningOpen] = useState(true);
+  const [conversationFlowOpen, setConversationFlowOpen] = useState(true);
+  const [workflowOpen, setWorkflowOpen] = useState(true);
+  const [closingOpen, setClosingOpen] = useState(true);
   
-  const [areAllSectionsOpen, setAreAllSectionsOpen] = useState(false);
+  const [areAllSectionsOpen, setAreAllSectionsOpen] = useState(true);
 
   const blobRef = useRef<HTMLDivElement>(null);
   
@@ -136,10 +136,10 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       if (savedStates) {
         const states = JSON.parse(savedStates);
         setCustomerDetailsOpen(states.customerDetailsOpen ?? true);
-        setOpeningOpen(states.openingOpen ?? false);
-        setConversationFlowOpen(states.conversationFlowOpen ?? false);
-        setWorkflowOpen(states.workflowOpen ?? false);
-        setClosingOpen(states.closingOpen ?? false);
+        setOpeningOpen(states.openingOpen ?? true);
+        setConversationFlowOpen(states.conversationFlowOpen ?? true);
+        setWorkflowOpen(states.workflowOpen ?? true);
+        setClosingOpen(states.closingOpen ?? true);
       }
     } catch (e) {
       console.error("Failed to parse collapsible states from localStorage", e);
@@ -256,16 +256,17 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent', currentQuery);
   }, [department, category, customerName, user?.name, currentQuery]);
 
+  const openingCategories = useMemo(() => [
+    'Request Not Stated & Non-Verified',
+    'Request Not Stated & Verified',
+    'Request Stated & Non-Verified',
+    'Request Stated & Verified',
+    'Verified – Request Stated (Transferred Chat)',
+  ], []);
+
   const openingScripts = useMemo(() => {
-    const openingCategories = [
-      'Request Not Stated & Non-Verified',
-      'Request Not Stated & Verified',
-      'Request Stated & Non-Verified',
-      'Request Stated & Verified',
-      'Verified – Request Stated (Transferred Chat)',
-    ];
     return departmentScripts.filter(s => openingCategories.includes(s.category));
-  }, [departmentScripts]);
+  }, [departmentScripts, openingCategories]);
   
   const workflowScripts = useMemo(() => {
     return departmentScripts.filter(s => s.category === "Workflow");
