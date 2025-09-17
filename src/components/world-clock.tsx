@@ -51,7 +51,6 @@ function WorldClockComponent() {
   const fetchTime = useCallback(async (timezone: string) => {
     setIsLoading(true);
     setError(null);
-    setSuggestions([]);
     
     try {
       const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
@@ -66,6 +65,7 @@ function WorldClockComponent() {
       setCurrentTime(new Date(data.datetime));
       setSelectedTimezone(data.timezone);
       setQuery('');
+      setSuggestions([]);
     } catch (err) {
        setError(err instanceof Error ? err.message : 'An unknown error occurred while fetching the time.');
        setTimeData(null); // Clear old data on error
