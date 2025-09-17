@@ -120,6 +120,11 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 
   const blobRef = useRef<HTMLDivElement>(null);
 
+  const filteredScripts = useMemo(() => {
+    if (!searchTerm) return [];
+    return scripts.filter(script => doesScriptMatch(script, searchTerm)).slice(0, 8);
+  }, [searchTerm]);
+
   const highlightAndScrollTo = useCallback((scriptId: string) => {
     const element = document.getElementById(`script-card-${scriptId}`);
     if (element) {
@@ -130,11 +135,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       }, 1500);
     }
   }, []);
-
-  const filteredScripts = useMemo(() => {
-    if (!searchTerm) return [];
-    return scripts.filter(script => doesScriptMatch(script, searchTerm)).slice(0, 8);
-  }, [searchTerm]);
 
   const handleSearchSubmit = useCallback(() => {
     if (filteredScripts.length > 0) {
@@ -147,7 +147,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     highlightAndScrollTo(scriptId);
     setSearchTerm("");
   }, [highlightAndScrollTo]);
-
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
