@@ -17,6 +17,7 @@ import { ChevronsDownUp, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { Chatbot } from "./chatbot";
+import { LandscapeScriptCard } from "./landscape-script-card";
 
 const motivationalPhrases = [
   "Let's provide the best experience to customers...",
@@ -251,13 +252,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     setClosingOpen(nextState);
   };
   
-  const departmentScripts = useMemo(() => {
-    const scriptsToDisplay = scripts;
-    const deptScripts = scriptsToDisplay.filter(s => s.department === department || s.department === 'common');
-    const categoryFiltered = category === "All" ? deptScripts : deptScripts.filter(s => s.category === category);
-    return getProcessedScripts(categoryFiltered, customerName, user?.name || 'Agent', currentQuery);
-  }, [department, category, customerName, user?.name, currentQuery]);
-
   const openingCategories = useMemo(() => [
     'Request Not Stated & Non-Verified',
     'Request Not Stated & Verified',
@@ -266,19 +260,30 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     'Verified – Request Stated (Transferred Chat)',
   ], []);
 
+  const processedScripts = useMemo(() => {
+    const scriptsToDisplay = scripts;
+    const deptScripts = scriptsToDisplay.filter(s => s.department === department || s.department === 'common');
+    const categoryFiltered = category === "All" ? deptScripts : deptScripts.filter(s => s.category === category);
+    return getProcessedScripts(categoryFiltered, customerName, user?.name || 'Agent', currentQuery);
+  }, [department, category, customerName, user?.name, currentQuery]);
+
+  
   const openingScripts = useMemo(() => {
-    const deptScripts = scripts.filter(s => (s.department === department || s.department === 'common'));
-    const opening = deptScripts.filter(s => openingCategories.includes(s.category));
-    return getProcessedScripts(opening, customerName, user?.name || 'Agent', currentQuery);
-  }, [department, openingCategories, customerName, user?.name, currentQuery]);
+    return processedScripts.filter(s => openingCategories.includes(s.category));
+  }, [processedScripts, openingCategories]);
+
+  const landscapeScript = useMemo(() => {
+    return openingScripts.find(s => s.title === 'Request Stated & Verified');
+  }, [openingScripts]);
+  
+  const otherOpeningScripts = useMemo(() => {
+    return openingScripts.filter(s => s.title !== 'Request Stated & Verified');
+  }, [openingScripts]);
+
   
   const otherDepartmentScripts = useMemo(() => {
-    const scriptsToDisplay = scripts;
-    const deptScripts = scriptsToDisplay.filter(s => (s.department === department || s.department === 'common'));
-    const categoryFiltered = category === "All" ? deptScripts : deptScripts.filter(s => s.category === category);
-    const nonOpening = categoryFiltered.filter(s => !openingCategories.includes(s.category));
-    return getProcessedScripts(nonOpening, customerName, user?.name || 'Agent', currentQuery);
-  }, [department, category, customerName, user?.name, currentQuery, openingCategories]);
+    return processedScripts.filter(s => !openingCategories.includes(s.category));
+  }, [processedScripts, openingCategories]);
   
   const workflowScripts = useMemo(() => {
     return otherDepartmentScripts.filter(s => s.category === "Workflow");
@@ -371,7 +376,10 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         isOpen={openingOpen}
                         onOpenChange={setOpeningOpen}
                     >
-                      {renderScriptList(openingScripts)}
+                        <div className="space-y-6">
+                            {landscapeScript && <LandscapeScriptCard script={landscapeScript} />}
+                            {renderScriptList(otherOpeningScripts)}
+                        </div>
                     </SectionCard>
 
                      <SectionCard
@@ -410,3 +418,5 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
