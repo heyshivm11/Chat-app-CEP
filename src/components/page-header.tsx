@@ -56,7 +56,7 @@ function PageHeaderComponent({
       <div className="container flex h-20 items-center gap-6">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold text-foreground">
             <Plane className="h-8 w-8 text-primary" />
-            <span className="hidden sm:inline-block">Scriptify AI</span>
+            <span className="hidden sm:inline-block">CEP Scripts</span>
         </Link>
         
         <div className="flex-1 flex items-center gap-4">

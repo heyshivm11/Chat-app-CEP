@@ -4,7 +4,7 @@ import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "Scriptify AI",
+  title: "CEP Scripts",
   description: "Your friendly AI-powered script assistant.",
 };
 
