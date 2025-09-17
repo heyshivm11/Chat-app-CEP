@@ -85,8 +85,8 @@ export default function LoginPage() {
                   <SelectValue placeholder="Select your department" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="etg">FrontLine</SelectItem>
-                  <SelectItem value="bookingcom">Schedule Change</SelectItem>
+                  <SelectItem value="etg">ETG</SelectItem>
+                  <SelectItem value="bookingcom">Booking.com</SelectItem>
                 </SelectContent>
               </Select>
             </div>
