@@ -61,11 +61,10 @@ function WorldClockComponent() {
   useEffect(() => {
     async function fetchInitialData() {
         setIsTimezoneListLoading(true);
+        setError(null);
         try {
             const response = await fetch('https://worldtimeapi.org/api/timezone');
-            if (!response.ok) {
-                throw new Error('Failed to load timezone list.');
-            }
+            if (!response.ok) throw new Error('Failed to load timezone list.');
             const data: string[] = await response.json();
             setAllTimezones(data);
         } catch (err) {
@@ -74,36 +73,28 @@ function WorldClockComponent() {
         } finally {
             setIsTimezoneListLoading(false);
         }
-        // Fetch initial time after timezone list is attempted
         await fetchTime('Asia/Kolkata');
     }
     fetchInitialData();
   }, [fetchTime]); 
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (currentTime) {
-      timer = setInterval(() => {
-        setCurrentTime(prevTime => {
-            if (!prevTime) return null;
-            const newTime = new Date(prevTime.getTime() + 1000);
-            return newTime;
-        });
-      }, 1000);
-    }
-    return () => {
-      if (timer) {
-        clearInterval(timer);
-      }
-    };
+    if (!currentTime) return;
+
+    const timer = setInterval(() => {
+        setCurrentTime(prevTime => new Date(prevTime!.getTime() + 1000));
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, [currentTime]);
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
     if (value.length > 1 && allTimezones.length > 0) {
+      const lowerCaseValue = value.toLowerCase().replace(/ /g, '_');
       const filtered = allTimezones
-        .filter(tz => tz.toLowerCase().includes(value.toLowerCase().replace(/ /g, '_')))
+        .filter(tz => tz.toLowerCase().includes(lowerCaseValue))
         .sort((a, b) => a.length - b.length);
       setSuggestions(filtered.slice(0, 5));
     } else {
@@ -116,15 +107,13 @@ function WorldClockComponent() {
   };
 
   const handleSearch = () => {
-    const searchTerm = query.trim().toLowerCase();
+    const searchTerm = query.trim();
     if (!searchTerm) return;
     
-    // Use the first suggestion if available, as it's the most likely match
     if (suggestions.length > 0) {
       fetchTime(suggestions[0]);
     } else {
-       // As a fallback, try to find a match in the full list
-       const bestGuess = allTimezones.find(tz => tz.toLowerCase().includes(searchTerm.replace(/ /g, '_')));
+       const bestGuess = allTimezones.find(tz => tz.toLowerCase().includes(searchTerm.toLowerCase().replace(/ /g, '_')));
        if (bestGuess) {
            fetchTime(bestGuess);
        } else {
