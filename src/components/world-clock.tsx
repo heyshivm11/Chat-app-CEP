@@ -33,6 +33,10 @@ function WorldClockComponent() {
   const [isTimezoneListLoading, setIsTimezoneListLoading] = useState(true);
 
   const fetchTime = useCallback(async (timezone: string) => {
+    if (!timezone) {
+        setError("Please provide a valid timezone.");
+        return;
+    }
     setIsLoading(true);
     setError(null);
     try {
@@ -48,6 +52,8 @@ function WorldClockComponent() {
     } catch (err) {
        const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
        setError(errorMessage);
+       setTimeData(null); // Clear old data on error
+       setCurrentTime(null);
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +85,8 @@ function WorldClockComponent() {
       const timer = setInterval(() => {
         setCurrentTime(prevTime => {
             if (!prevTime) return null;
-            return new Date(prevTime.getTime() + 1000);
+            const newTime = new Date(prevTime.getTime() + 1000);
+            return newTime;
         });
       }, 1000);
       return () => clearInterval(timer);
@@ -90,7 +97,9 @@ function WorldClockComponent() {
     const value = e.target.value;
     setQuery(value);
     if (value.length > 1 && allTimezones.length > 0) {
-      const filtered = allTimezones.filter(tz => tz.toLowerCase().includes(value.toLowerCase()));
+      const filtered = allTimezones
+        .filter(tz => tz.toLowerCase().includes(value.toLowerCase()))
+        .sort((a, b) => a.length - b.length); // Shorter matches are often better
       setSuggestions(filtered.slice(0, 5));
     } else {
       setSuggestions([]);
@@ -105,15 +114,18 @@ function WorldClockComponent() {
     const searchTerm = query.trim().toLowerCase();
     if (!searchTerm) return;
     
+    // Check for an exact match in suggestions or all timezones (case-insensitive)
     const exactMatch = allTimezones.find(tz => tz.toLowerCase() === searchTerm);
     if (exactMatch) {
       fetchTime(exactMatch);
       return;
     }
     
+    // If no exact match, use the first suggestion if it exists
     if (suggestions.length > 0) {
       fetchTime(suggestions[0]);
     } else {
+       // As a last resort, find the first timezone that includes the search term
        const bestGuess = allTimezones.find(tz => tz.toLowerCase().includes(searchTerm));
        if (bestGuess) {
            fetchTime(bestGuess);
@@ -133,7 +145,7 @@ function WorldClockComponent() {
   const locationName = useMemo(() => {
       if (!timeData?.timezone) return "";
       const parts = timeData.timezone.split('/');
-      return parts[parts.length - 1].replace(/_/g, ' ');
+      return parts.length > 1 ? parts[parts.length - 1].replace(/_/g, ' ') : parts[0];
   }, [timeData]);
   
   const regionName = useMemo(() => {
@@ -185,7 +197,7 @@ function WorldClockComponent() {
       </div>
 
       <div className="mt-8">
-        {isLoading && !timeData ? (
+        {(isLoading && !timeData) || isTimezoneListLoading ? (
           <div className="flex justify-center items-center p-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
