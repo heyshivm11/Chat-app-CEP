@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Search } from 'lucide-react';
+import { timezones } from '@/lib/timezones';
+
 
 interface TimeData {
   dateTime: string;
@@ -23,7 +25,6 @@ const formatDate = (date: Date) => {
 
 function WorldClockComponent() {
   const [query, setQuery] = useState('');
-  const [allTimezones, setAllTimezones] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [selectedTimezone, setSelectedTimezone] = useState<string>('Asia/Kolkata');
   const [timeData, setTimeData] = useState<TimeData | null>(null);
@@ -31,19 +32,7 @@ function WorldClockComponent() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchAllTimezones = async () => {
-      try {
-        const response = await fetch('https://timeapi.io/api/TimeZone/AvailableTimeZones');
-        if (!response.ok) throw new Error('Could not load the list of available timezones.');
-        const data: string[] = await response.json();
-        setAllTimezones(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An unknown error occurred while fetching timezones.');
-      }
-    };
-    fetchAllTimezones();
-  }, []);
+  const allTimezones = timezones;
 
   const fetchTime = useCallback(async (timezone: string) => {
     setIsLoading(true);
