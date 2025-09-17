@@ -23,3 +23,9 @@ export const ChatOutputSchema = z.object({
     message: z.string().describe('The AI response.'),
 });
 export type ChatOutput = z.infer<typeof ChatOutputSchema>;
+
+// Schema for randomFact
+export const RandomFactOutputSchema = z.object({
+  fact: z.string().describe('A random, interesting, and fun fact.'),
+});
+export type RandomFactOutput = z.infer<typeof RandomFactOutputSchema>;

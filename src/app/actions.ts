@@ -3,7 +3,7 @@
 import { refineScript } from "@/ai/flows/refine-script-with-ai";
 import { chat } from "@/ai/flows/chatbot-flow";
 import { randomFact } from "@/ai/flows/random-fact-flow";
-import type { RefineScriptInput, ChatInput } from "./ai-schemas";
+import type { RefineScriptInput, ChatInput, RandomFactOutput } from "./ai-schemas";
 
 
 export async function getRefinedScript(input: RefineScriptInput) {
@@ -26,7 +26,7 @@ export async function getChatResponse(input: ChatInput) {
     }
 }
 
-export async function getRandomFact() {
+export async function getRandomFact(): Promise<{ success: true, data: RandomFactOutput } | { success: false, error: string }> {
     try {
         const result = await randomFact();
         return { success: true, data: result };

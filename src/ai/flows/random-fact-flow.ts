@@ -9,12 +9,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
-
-export const RandomFactOutputSchema = z.object({
-  fact: z.string().describe('A random, interesting, and fun fact.'),
-});
-export type RandomFactOutput = z.infer<typeof RandomFactOutputSchema>;
+import { RandomFactOutputSchema, type RandomFactOutput } from '@/app/ai-schemas';
 
 const randomFactPrompt = ai.definePrompt({
   name: 'randomFactPrompt',
