@@ -129,6 +129,36 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 
   const blobRef = useRef<HTMLDivElement>(null);
   
+  // Load collapsible state from localStorage
+  useEffect(() => {
+    const savedStates = localStorage.getItem('collapsibleStates');
+    if (savedStates) {
+      try {
+        const states = JSON.parse(savedStates);
+        setCustomerDetailsOpen(states.customerDetailsOpen ?? false);
+        setOpeningOpen(states.openingOpen ?? false);
+        setConversationFlowOpen(states.conversationFlowOpen ?? false);
+        setWorkflowOpen(states.workflowOpen ?? false);
+        setClosingOpen(states.closingOpen ?? false);
+      } catch (e) {
+        console.error("Failed to parse collapsible states from localStorage", e);
+      }
+    }
+  }, []);
+
+  // Save collapsible state to localStorage
+  useEffect(() => {
+    const states = {
+      customerDetailsOpen,
+      openingOpen,
+      conversationFlowOpen,
+      workflowOpen,
+      closingOpen,
+    };
+    localStorage.setItem('collapsibleStates', JSON.stringify(states));
+  }, [customerDetailsOpen, openingOpen, conversationFlowOpen, workflowOpen, closingOpen]);
+
+
   useEffect(() => {
     try {
       const savedForm1 = localStorage.getItem('form1Data');
@@ -379,3 +409,5 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
