@@ -53,9 +53,8 @@ const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: st
 
 const doesScriptMatch = (script: Script, term: string) => {
   const lowerCaseTerm = term.toLowerCase();
-
-  // The user wants to search based on subheadings and content, not the main title.
-  // if (script.title.toLowerCase().includes(lowerCaseTerm)) return true;
+  
+  if (script.title.toLowerCase().includes(lowerCaseTerm)) return true;
 
   if (typeof script.content === 'string') {
     if (script.content.toLowerCase().includes(lowerCaseTerm)) return true;
@@ -210,6 +209,24 @@ export default function ScriptPage({ department: initialDepartment }: { departme
         </div>
     );
   }, []);
+
+  const highlightAndScrollTo = useCallback((scriptId: string) => {
+    const element = document.getElementById(`script-card-${scriptId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      element.classList.add('highlight-animation');
+      setTimeout(() => {
+        element.classList.remove('highlight-animation');
+      }, 1500);
+    }
+  }, []);
+
+  const handleSearchSubmit = useCallback(() => {
+    if (scriptsToDisplay.length > 0) {
+      highlightAndScrollTo(scriptsToDisplay[0].id);
+      setSearchTerm(""); 
+    }
+  }, [highlightAndScrollTo, scriptsToDisplay]);
   
   return (
     <div className="flex flex-col min-h-screen relative overflow-x-hidden">
@@ -219,7 +236,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
             <PageHeader 
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
-                onSearchSubmit={() => {}}
+                onSearchSubmit={handleSearchSubmit}
                 category={category}
                 onCategoryChange={setCategory}
                 department={department}
@@ -317,5 +334,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
