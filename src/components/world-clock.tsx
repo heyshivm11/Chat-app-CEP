@@ -6,13 +6,15 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Search } from 'lucide-react';
-import { timezones } from '@/lib/timezones';
 
+interface Timezone {
+  zoneName: string;
+}
 
 interface TimeData {
-  datetime: string;
-  timezone: string;
-  utc_offset: string;
+  formatted: string;
+  zoneName: string;
+  gmtOffset: number;
 }
 
 const formatTime = (date: Date) => {
@@ -25,6 +27,7 @@ const formatDate = (date: Date) => {
 
 function WorldClockComponent() {
   const [query, setQuery] = useState('');
+  const [allTimezones, setAllTimezones] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [selectedTimezone, setSelectedTimezone] = useState<string>('Asia/Kolkata');
   const [timeData, setTimeData] = useState<TimeData | null>(null);
@@ -32,7 +35,21 @@ function WorldClockComponent() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const allTimezones = timezones;
+  useEffect(() => {
+    const fetchAllTimezones = async () => {
+      try {
+        const response = await fetch('/api/timezone?list=true');
+        if (!response.ok) {
+          throw new Error('Failed to load timezone list.');
+        }
+        const data = await response.json();
+        setAllTimezones(data.zones.map((z: any) => z.zoneName));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Could not load timezones.');
+      }
+    };
+    fetchAllTimezones();
+  }, []);
 
   const fetchTime = useCallback(async (timezone: string) => {
     setIsLoading(true);
@@ -40,7 +57,7 @@ function WorldClockComponent() {
     setSuggestions([]);
     
     try {
-      const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
+      const response = await fetch(`/api/timezone?zone=${timezone}`);
       if (!response.ok) {
         throw new Error(`Could not find time for "${timezone}". Please check the spelling or try a different timezone.`);
       }
@@ -48,8 +65,9 @@ function WorldClockComponent() {
       const data: TimeData = await response.json();
       
       setTimeData(data);
-      setCurrentTime(new Date(data.datetime));
-      setSelectedTimezone(data.timezone);
+      // The timestamp is in seconds, convert to milliseconds
+      setCurrentTime(new Date(data.formatted));
+      setSelectedTimezone(data.zoneName);
       setQuery('');
     } catch (err) {
        setError(err instanceof Error ? err.message : 'An unknown error occurred while fetching the time.');
@@ -60,8 +78,10 @@ function WorldClockComponent() {
   }, []);
 
   useEffect(() => {
-    fetchTime(selectedTimezone);
-  }, []); 
+    if (allTimezones.length > 0) {
+      fetchTime(selectedTimezone);
+    }
+  }, [allTimezones, fetchTime, selectedTimezone]); 
 
   useEffect(() => {
     if (currentTime) {
@@ -79,7 +99,7 @@ function WorldClockComponent() {
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
-    if (value.length > 1) {
+    if (value.length > 1 && allTimezones.length > 0) {
       const filtered = allTimezones.filter(tz => tz.toLowerCase().includes(value.toLowerCase()));
       setSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
     } else {
@@ -117,6 +137,13 @@ function WorldClockComponent() {
       const parts = selectedTimezone.split('/');
       return parts.length > 1 ? parts[0].replace(/_/g, ' ') : "";
   }, [selectedTimezone]);
+  
+  const utcOffset = useMemo(() => {
+    if (!timeData) return '';
+    const offsetHours = Math.floor(timeData.gmtOffset / 3600);
+    const sign = offsetHours >= 0 ? '+' : '-';
+    return `UTC${sign}${Math.abs(offsetHours)}`;
+  }, [timeData]);
 
 
   return (
@@ -132,6 +159,7 @@ function WorldClockComponent() {
                   onKeyDown={handleKeyDown}
                   placeholder="Search for a city or timezone..."
                   className="w-full pl-10 text-lg h-14 rounded-full shadow-lg"
+                  disabled={allTimezones.length === 0}
                 />
             </div>
             <Button onClick={handleSearch} disabled={isLoading || (!query.trim() && suggestions.length === 0)} className="h-14 rounded-full px-6">
@@ -178,7 +206,7 @@ function WorldClockComponent() {
                   {formatTime(currentTime)}
                 </div>
                 <p className="text-lg text-muted-foreground mt-2">{formatDate(currentTime)}</p>
-                <p className="text-sm text-muted-foreground mt-4">{timeData.timezone} (UTC {timeData.utc_offset})</p>
+                <p className="text-sm text-muted-foreground mt-4">{timeData.zoneName} ({utcOffset})</p>
               </CardContent>
             </Card>
           </>
