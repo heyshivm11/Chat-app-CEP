@@ -10,9 +10,11 @@ import { timezones } from '@/lib/timezones';
 
 
 interface TimeData {
-  datetime: string;
-  timezone: string;
-  day_of_week: number;
+  formatted: string;
+  zoneName: string;
+  countryName: string;
+  status: string;
+  message: string;
 }
 
 const formatTime = (date: Date) => {
@@ -22,6 +24,8 @@ const formatTime = (date: Date) => {
 const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
+
+const API_KEY = process.env.NEXT_PUBLIC_TIMEZONEDB_API_KEY || 'U9YEKWGR5VGM';
 
 function WorldClockComponent() {
   const [query, setQuery] = useState('');
@@ -38,25 +42,27 @@ function WorldClockComponent() {
     setIsLoading(true);
     setError(null);
     setSuggestions([]);
-    setQuery("");
+    
     try {
-      const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Could not fetch time for "${timezone}". Please check if the timezone is correct (e.g., "Europe/Amsterdam").`);
-      }
+      // Using a proxy is not feasible in this environment, so we make the call directly.
+      // In a real production app, the API key should be handled on a backend.
+      const response = await fetch(`https://api.timezonedb.com/v2.1/get-time-zone?key=${API_KEY}&format=json&by=zone&zone=${timezone}`);
+      
       const data: TimeData = await response.json();
-      setTimeData(data);
-      setCurrentTime(new Date(data.datetime));
-      setSelectedTimezone(data.timezone);
-      setQuery(''); // Reset search bar
-    } catch (err) {
-      if (err instanceof Error && err.message.toLowerCase().includes('unknown location')) {
-        setError(`The timezone "${timezone}" could not be found. Please try a different location.`);
-      } else {
-        setError(err instanceof Error ? err.message : 'An unknown error occurred while fetching the time.');
+
+      if (data.status !== 'OK') {
+        throw new Error(data.message || `Could not fetch time for "${timezone}".`);
       }
-      // Don't clear old data on error, so the clock remains visible.
+      
+      setTimeData(data);
+      // The formatted string from the API is in 'YYYY-MM-DD HH:mm:ss' format.
+      // We need to replace spaces to make it a valid ISO-like string for the Date constructor.
+      const parsableDateString = data.formatted.replace(' ', 'T');
+      setCurrentTime(new Date(parsableDateString));
+      setSelectedTimezone(data.zoneName);
+      setQuery('');
+    } catch (err) {
+       setError(err instanceof Error ? err.message : 'An unknown error occurred while fetching the time.');
     } finally {
       setIsLoading(false);
     }
@@ -96,10 +102,8 @@ function WorldClockComponent() {
 
   const handleSearch = () => {
     if (suggestions.length > 0) {
-      // If there are suggestions, use the top one
       fetchTime(suggestions[0]);
     } else if (query.trim()) {
-      // Otherwise, use the raw query text
       fetchTime(query.trim());
     }
   }
@@ -117,7 +121,7 @@ function WorldClockComponent() {
       return parts[parts.length - 1].replace(/_/g, ' ');
   }, [selectedTimezone]);
   
-  const countryName = useMemo(() => {
+  const regionName = useMemo(() => {
       if (!selectedTimezone) return "";
       const parts = selectedTimezone.split('/');
       return parts.length > 1 ? parts[0].replace(/_/g, ' ') : "";
@@ -161,11 +165,11 @@ function WorldClockComponent() {
       </div>
 
       <div className="mt-8">
-        {isLoading && !timeData ? ( // Show loader only on initial load
+        {isLoading && !timeData ? (
           <div className="flex justify-center items-center p-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
-        ) : error && !timeData ? ( // Show error only if there's no data to display
+        ) : error && !timeData ? (
           <p className="text-center text-destructive p-4 bg-destructive/10 rounded-md">{error}</p>
         ) : timeData && currentTime ? (
           <>
@@ -176,14 +180,14 @@ function WorldClockComponent() {
                     <CardTitle className="text-2xl font-bold">{locationName}</CardTitle>
                     {isLoading && <Loader2 className="h-5 w-5 animate-spin text-primary" />}
                   </div>
-                  <p className="text-muted-foreground">{countryName}</p>
+                  <p className="text-muted-foreground">{timeData.countryName || regionName}</p>
               </CardHeader>
               <CardContent className="flex flex-col items-center justify-center">
                 <div className="text-6xl font-black text-primary tracking-tighter">
                   {formatTime(currentTime)}
                 </div>
                 <p className="text-lg text-muted-foreground mt-2">{formatDate(currentTime)}</p>
-                <p className="text-sm text-muted-foreground mt-4">{timeData.timezone}</p>
+                <p className="text-sm text-muted-foreground mt-4">{timeData.zoneName}</p>
               </CardContent>
             </Card>
           </>
