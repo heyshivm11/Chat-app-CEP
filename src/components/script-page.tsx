@@ -121,35 +121,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 
   const blobRef = useRef<HTMLDivElement>(null);
 
-  const filteredScripts = useMemo(() => {
-    if (!searchTerm) return [];
-    // We only filter from all scripts, not just the currently displayed ones.
-    return scripts.filter(script => doesScriptMatch(script, searchTerm)).slice(0, 8);
-  }, [searchTerm]);
-
-  const highlightAndScrollTo = useCallback((scriptId: string) => {
-    const element = document.getElementById(`script-card-${scriptId}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      element.classList.add('highlight-animation');
-      setTimeout(() => {
-        element.classList.remove('highlight-animation');
-      }, 1500);
-    }
-  }, []);
-
-  const handleSearchSubmit = useCallback(() => {
-    if (filteredScripts.length > 0) {
-      highlightAndScrollTo(filteredScripts[0].id);
-      setSearchTerm(""); 
-    }
-  }, [highlightAndScrollTo, filteredScripts]);
-  
-  const onSuggestionClick = useCallback((scriptId: string) => {
-    highlightAndScrollTo(scriptId);
-    setSearchTerm("");
-  }, [highlightAndScrollTo]);
-
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
@@ -185,12 +156,16 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   
   const scriptsToDisplay = useMemo(() => {
     let scriptsToFilter = scripts;
+    if (searchTerm) {
+        scriptsToFilter = scripts.filter(script => doesScriptMatch(script, searchTerm));
+    }
+    
     return scriptsToFilter.filter((script) => {
       const categoryMatch = category === "All" || script.category === category;
       const teamMatch = script.department === 'common' || script.department === department;
       return categoryMatch && teamMatch;
     });
-  }, [category, department]);
+  }, [searchTerm, category, department]);
 
 
   const departmentScripts = useMemo(() => {
@@ -244,13 +219,11 @@ export default function ScriptPage({ department: initialDepartment }: { departme
             <PageHeader 
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
-                onSearchSubmit={handleSearchSubmit}
+                onSearchSubmit={() => {}}
                 category={category}
                 onCategoryChange={setCategory}
                 department={department}
                 onDepartmentChange={handleDepartmentChange}
-                suggestions={filteredScripts}
-                onSuggestionClick={onSuggestionClick}
             />
             <main className="container mx-auto px-4 md:px-8 py-8 flex-1">
                 

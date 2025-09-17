@@ -15,9 +15,6 @@ import { ThemeSwitcher } from "./theme-switcher";
 import { scriptCategories } from "@/lib/scripts";
 import { Button } from "./ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { Script } from '@/lib/types';
-import { Card, CardContent } from './ui/card';
-import { cn } from '@/lib/utils';
 
 interface PageHeaderProps {
   searchTerm: string;
@@ -27,8 +24,6 @@ interface PageHeaderProps {
   onCategoryChange: (category: string) => void;
   department: string;
   onDepartmentChange: (department: string) => void;
-  suggestions: Script[];
-  onSuggestionClick: (scriptId: string) => void;
 }
 
 function PageHeaderComponent({ 
@@ -38,48 +33,14 @@ function PageHeaderComponent({
   category, 
   onCategoryChange, 
   department, 
-  onDepartmentChange,
-  suggestions,
-  onSuggestionClick
+  onDepartmentChange
 }: PageHeaderProps) {
   const { logout } = useAuth();
-  const [activeIndex, setActiveIndex] = React.useState(-1);
-  const [showSuggestions, setShowSuggestions] = React.useState(false);
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setActiveIndex(prev => Math.min(prev + 1, suggestions.length - 1));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setActiveIndex(prev => Math.max(prev - 1, 0));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (activeIndex >= 0 && suggestions[activeIndex]) {
-        onSuggestionClick(suggestions[activeIndex].id);
-      } else {
-        onSearchSubmit();
-      }
-      setShowSuggestions(false);
-    } else if (e.key === 'Escape') {
-      setShowSuggestions(false);
-    }
-  }
   
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onSearchChange(e.target.value);
-    setShowSuggestions(true);
-    setActiveIndex(-1);
-  }
-
-  const handleSuggestionClick = (scriptId: string) => {
-    onSuggestionClick(scriptId);
-    setShowSuggestions(false);
-  }
-
-  const handleBlur = () => {
-    // Delay hiding suggestions to allow click events to register
-    setTimeout(() => setShowSuggestions(false), 150);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onSearchSubmit();
+    }
   }
 
   return (
@@ -98,43 +59,9 @@ function PageHeaderComponent({
               placeholder="Search scripts..."
               className="pl-12 h-12 text-md"
               value={searchTerm}
-              onChange={handleSearchChange}
+              onChange={(e) => onSearchChange(e.target.value)}
               onKeyDown={handleKeyDown}
-              onFocus={() => setShowSuggestions(true)}
-              onBlur={handleBlur}
-              autoComplete="off"
             />
-            {showSuggestions && suggestions.length > 0 && searchTerm && (
-              <Card className="absolute top-full mt-2 w-full z-20 shadow-lg">
-                <CardContent className="p-2">
-                  <ul>
-                    {suggestions.map((script, index) => (
-                      <li
-                        key={script.id}
-                        className={cn(
-                          "p-2 rounded-md cursor-pointer",
-                          index === activeIndex ? "bg-accent" : "hover:bg-accent/50"
-                        )}
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          handleSuggestionClick(script.id);
-                        }}
-                      >
-                        <p className="font-semibold">{script.title}</p>
-                        <p className="text-sm text-muted-foreground">{script.category}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            )}
-             {showSuggestions && searchTerm && suggestions.length === 0 && (
-                <Card className="absolute top-full mt-2 w-full z-20 shadow-lg">
-                    <CardContent className="p-4 text-center text-muted-foreground">
-                        No results found.
-                    </CardContent>
-                </Card>
-            )}
           </div>
 
           <Select value={department} onValueChange={onDepartmentChange}>
@@ -182,5 +109,3 @@ function PageHeaderComponent({
 }
 
 export const PageHeader = React.memo(PageHeaderComponent);
-
-    
