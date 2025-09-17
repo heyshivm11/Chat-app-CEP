@@ -171,8 +171,9 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   }, [category, department]);
   
   const scriptsToDisplay = useMemo(() => {
-    return searchTerm.length > 1 ? filteredScripts : allVisibleScripts;
-  }, [searchTerm, filteredScripts, allVisibleScripts]);
+    // This logic is simplified as search term now controls suggestions, not main view
+    return allVisibleScripts;
+  }, [allVisibleScripts]);
 
   
   const highlightAndScrollTo = useCallback((scriptId: string) => {
@@ -365,7 +366,5 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
 
     
