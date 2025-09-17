@@ -30,6 +30,7 @@ function WorldClockComponent() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [allTimezones, setAllTimezones] = useState<string[]>([]);
+  const [isTimezoneListLoading, setIsTimezoneListLoading] = useState(true);
 
   const fetchTime = useCallback(async (timezone: string) => {
     setIsLoading(true);
@@ -47,7 +48,7 @@ function WorldClockComponent() {
     } catch (err) {
        const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
        setError(errorMessage);
-       setTimeData(null); 
+       // Do not clear timeData here, so the old time remains visible on error
     } finally {
       setIsLoading(false);
     }
@@ -55,6 +56,7 @@ function WorldClockComponent() {
 
   useEffect(() => {
     async function fetchAllTimezones() {
+        setIsTimezoneListLoading(true);
         try {
             const response = await fetch('https://worldtimeapi.org/api/timezone');
             if (!response.ok) {
@@ -65,6 +67,8 @@ function WorldClockComponent() {
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Could not load timezones.';
             setError(errorMessage);
+        } finally {
+            setIsTimezoneListLoading(false);
         }
     }
     fetchAllTimezones();
@@ -102,6 +106,14 @@ function WorldClockComponent() {
     const searchTerm = query.trim();
     if (!searchTerm) return;
     
+    // Check if the search term exactly matches a suggestion
+    const exactMatch = allTimezones.find(tz => tz.toLowerCase() === searchTerm.toLowerCase());
+    if (exactMatch) {
+      fetchTime(exactMatch);
+      return;
+    }
+    
+    // Otherwise, use the first suggestion if it exists
     if (suggestions.length > 0) {
       fetchTime(suggestions[0]);
     } else {
@@ -146,7 +158,7 @@ function WorldClockComponent() {
                   onKeyDown={handleKeyDown}
                   placeholder="Search for a city or timezone..."
                   className="w-full pl-10 text-lg h-14 rounded-full shadow-lg"
-                  disabled={allTimezones.length === 0}
+                  disabled={isTimezoneListLoading}
                 />
             </div>
             <Button onClick={handleSearch} disabled={isLoading || !query.trim()} className="h-14 rounded-full px-6">
@@ -175,8 +187,6 @@ function WorldClockComponent() {
           <div className="flex justify-center items-center p-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
-        ) : error && !timeData ? (
-          <p className="text-center text-destructive p-4 bg-destructive/10 rounded-md">{error}</p>
         ) : timeData && currentTime ? (
           <>
             {error && <p className="text-center text-destructive p-4 bg-destructive/10 rounded-md mb-4">{error}</p>}
@@ -198,7 +208,7 @@ function WorldClockComponent() {
             </Card>
           </>
         ) : (
-            !error && <p className="text-center text-muted-foreground">Search for a place to see the time.</p>
+             <p className="text-center text-destructive p-4 bg-destructive/10 rounded-md">{error || "Failed to fetch time data. Please try again."}</p>
         )}
       </div>
     </div>
@@ -206,3 +216,5 @@ function WorldClockComponent() {
 }
 
 export const WorldClock = memo(WorldClockComponent);
+
+    
