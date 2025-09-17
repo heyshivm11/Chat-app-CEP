@@ -376,7 +376,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         isOpen={openingOpen}
                         onOpenChange={setOpeningOpen}
                     >
-                        <div className="space-y-6">
+                        <div className="flex flex-col gap-6">
                             {landscapeScript && <LandscapeScriptCard script={landscapeScript} />}
                             {renderScriptList(otherOpeningScripts)}
                         </div>
@@ -418,5 +418,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
 
     
