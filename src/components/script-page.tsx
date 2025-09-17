@@ -151,51 +151,22 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     setWorkflowOpen(nextState);
     setClosingOpen(nextState);
   };
-
-  const filteredScripts = useMemo(() => {
-    if (searchTerm.length < 2) return [];
-    return scripts.filter((script) => {
-      const teamMatch = script.department === 'common' || script.department === department;
-      if (!teamMatch) return false;
-      return doesScriptMatch(script, searchTerm);
-    });
-  }, [searchTerm, department]);
-
+  
   const allVisibleScripts = useMemo(() => {
-    return scripts.filter((script) => {
+    let scriptsToFilter = scripts;
+    if (searchTerm) {
+        scriptsToFilter = scripts.filter(script => doesScriptMatch(script, searchTerm));
+    }
+    return scriptsToFilter.filter((script) => {
       const categoryMatch = category === "All" || script.category === category;
       const teamMatch = script.department === 'common' || script.department === department;
       return categoryMatch && teamMatch;
     });
-  }, [category, department]);
+  }, [category, department, searchTerm]);
   
   const scriptsToDisplay = useMemo(() => {
     return allVisibleScripts;
   }, [allVisibleScripts]);
-
-  
-  const highlightAndScrollTo = useCallback((scriptId: string) => {
-      const element = document.getElementById(`script-card-${scriptId}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        element.classList.add('highlight-animation');
-        setTimeout(() => {
-          element.classList.remove('highlight-animation');
-        }, 1500);
-      }
-  }, []);
-  
-  const handleSearchSubmit = useCallback(() => {
-    if (filteredScripts.length > 0) {
-      highlightAndScrollTo(filteredScripts[0].id);
-      setSearchTerm("");
-    }
-  }, [filteredScripts, highlightAndScrollTo]);
-
-  const onSuggestionClick = useCallback((scriptId: string) => {
-    highlightAndScrollTo(scriptId);
-    setSearchTerm("");
-  }, [highlightAndScrollTo]);
 
 
   const departmentScripts = useMemo(() => {
@@ -229,7 +200,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 
   const renderScriptList = useCallback((scriptList: Script[]) => {
     if (scriptList.length === 0) {
-        if (searchTerm) return null; // Don't show "No scripts" when filtering
+        if (searchTerm) return <p className="text-muted-foreground text-center col-span-1 md:col-span-2 xl:col-span-3 py-8">No scripts found for "{searchTerm}".</p>;
       return <p className="text-muted-foreground text-center col-span-1 md:col-span-2 xl:col-span-3 py-8">No scripts found for the current filter.</p>;
     }
     
@@ -250,13 +221,11 @@ export default function ScriptPage({ department: initialDepartment }: { departme
             <PageHeader 
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
-                onSearchSubmit={handleSearchSubmit}
+                onSearchSubmit={() => {}}
                 category={category}
                 onCategoryChange={setCategory}
                 department={department}
                 onDepartmentChange={handleDepartmentChange}
-                suggestions={filteredScripts}
-                onSuggestionClick={onSuggestionClick}
             />
             <main className="container mx-auto px-4 md:px-8 py-8 flex-1">
                 
