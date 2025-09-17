@@ -256,12 +256,15 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent', currentQuery);
   }, [department, category, customerName, user?.name, currentQuery]);
 
-  const requestStatedVerifiedScript = useMemo(() => {
-    return departmentScripts.find(s => s.title === 'Request Stated & Verified');
-  }, [departmentScripts]);
-
-  const otherDepartmentScripts = useMemo(() => {
-      return departmentScripts.filter(s => s.title !== 'Request Stated & Verified' && (s.category !== 'Conversation Flow' && s.category !== 'Workflow' && s.category !== 'Chat Closing'));
+  const openingScripts = useMemo(() => {
+    const openingCategories = [
+      'Request Not Stated & Non-Verified',
+      'Request Not Stated & Verified',
+      'Request Stated & Non-Verified',
+      'Request Stated & Verified',
+      'Verified – Request Stated (Transferred Chat)',
+    ];
+    return departmentScripts.filter(s => openingCategories.includes(s.category));
   }, [departmentScripts]);
   
   const workflowScripts = useMemo(() => {
@@ -355,14 +358,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         isOpen={openingOpen}
                         onOpenChange={setOpeningOpen}
                     >
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                          {requestStatedVerifiedScript && (
-                              <ScriptCard script={requestStatedVerifiedScript} />
-                          )}
-                          {otherDepartmentScripts.map((script) => (
-                              <ScriptCard key={script.id} script={script} />
-                          ))}
-                      </div>
+                      {renderScriptList(openingScripts)}
                     </SectionCard>
 
                      <SectionCard
@@ -389,7 +385,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         isOpen={closingOpen}
                         onOpenChange={setClosingOpen}
                     >
-                       {chatClosingScript && <ScriptCard script={chatClosingScript} />}
+                       {chatClosingScript && renderScriptList([chatClosingScript])}
                     </SectionCard>
                 </div>
             </main>
@@ -401,5 +397,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
