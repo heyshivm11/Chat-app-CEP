@@ -112,6 +112,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 
   const [customerDetailsOpen, setCustomerDetailsOpen] = useState(true);
   const [openingOpen, setOpeningOpen] = useState(true);
+  const [conversationFlowOpen, setConversationFlowOpen] = useState(false);
   const [workflowOpen, setWorkflowOpen] = useState(false);
   const [closingOpen, setClosingOpen] = useState(true);
   
@@ -146,6 +147,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     setAreAllSectionsOpen(nextState);
     setCustomerDetailsOpen(nextState);
     setOpeningOpen(nextState);
+    setConversationFlowOpen(nextState);
     setWorkflowOpen(nextState);
     setClosingOpen(nextState);
   };
@@ -315,8 +317,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                      <SectionCard
                         icon={<Workflow className="h-6 w-6 text-primary" />}
                         title="Conversation Flow"
-                        isOpen={workflowOpen}
-                        onOpenChange={setWorkflowOpen}
+                        isOpen={conversationFlowOpen}
+                        onOpenChange={setConversationFlowOpen}
                     >
                         {renderScriptList(conversationFlowScripts)}
                     </SectionCard>
@@ -348,5 +350,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
 
     
