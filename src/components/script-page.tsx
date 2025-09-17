@@ -28,6 +28,28 @@ const motivationalPhrases = [
   "Resolve. Recharge. Repeat.",
 ];
 
+const doesScriptMatch = (script: Script, term: string) => {
+  const lowerCaseTerm = term.toLowerCase();
+
+  // Search in sub-script title or content
+  if (Array.isArray(script.content)) {
+    if (script.content.some(sub => 
+      sub.title.toLowerCase().includes(lowerCaseTerm) || 
+      sub.content.toLowerCase().includes(lowerCaseTerm)
+    )) return true;
+  }
+  
+  // Search in simple script content
+  if (typeof script.content === 'string') {
+    if (script.content.toLowerCase().includes(lowerCaseTerm)) return true;
+  }
+
+  // Search in main script title
+  if (script.title.toLowerCase().includes(lowerCaseTerm)) return true;
+
+  return false;
+}
+
 const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: string, currentAgentName: string, query: string) => {
   return scriptsToProcess.map(script => {
     const newScript = JSON.parse(JSON.stringify(script)); // Deep copy
@@ -51,22 +73,6 @@ const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: st
   });
 };
 
-const doesScriptMatch = (script: Script, term: string) => {
-  const lowerCaseTerm = term.toLowerCase();
-  
-  if (script.title.toLowerCase().includes(lowerCaseTerm)) return true;
-
-  if (typeof script.content === 'string') {
-    if (script.content.toLowerCase().includes(lowerCaseTerm)) return true;
-  } else if (Array.isArray(script.content)) {
-    if (script.content.some(sub => 
-      sub.title.toLowerCase().includes(lowerCaseTerm) || 
-      sub.content.toLowerCase().includes(lowerCaseTerm)
-    )) return true;
-  }
-
-  return false;
-}
 
 const SectionCard = ({ 
     icon, 
@@ -110,15 +116,62 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [customerName, setCustomerName] = useState("");
   const [currentQuery, setCurrentQuery] = useState("");
 
-  const [customerDetailsOpen, setCustomerDetailsOpen] = useState(true);
-  const [openingOpen, setOpeningOpen] = useState(true);
+  const [customerDetailsOpen, setCustomerDetailsOpen] = useState(false);
+  const [openingOpen, setOpeningOpen] = useState(false);
   const [conversationFlowOpen, setConversationFlowOpen] = useState(false);
   const [workflowOpen, setWorkflowOpen] = useState(false);
-  const [closingOpen, setClosingOpen] = useState(true);
+  const [closingOpen, setClosingOpen] = useState(false);
   
-  const [areAllSectionsOpen, setAreAllSectionsOpen] = useState(true);
+  const [areAllSectionsOpen, setAreAllSectionsOpen] = useState(false);
 
   const blobRef = useRef<HTMLDivElement>(null);
+
+  const highlightAndScrollTo = useCallback((scriptId: string) => {
+    const element = document.getElementById(`script-card-${scriptId}`);
+    if (element) {
+      // Find the parent Collapsible section and open it if it's closed
+      const parentCollapsible = element.closest<HTMLElement>('[data-state]');
+      if (parentCollapsible && parentCollapsible.dataset.state === 'closed') {
+        const trigger = parentCollapsible.querySelector<HTMLButtonElement>('button');
+        trigger?.click();
+        
+        // Wait for animation to finish before scrolling
+        setTimeout(() => {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('highlight-animation');
+            setTimeout(() => {
+                element.classList.remove('highlight-animation');
+            }, 1500);
+        }, 300); // Should be slightly more than animation duration
+      } else {
+         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.classList.add('highlight-animation');
+          setTimeout(() => {
+            element.classList.remove('highlight-animation');
+          }, 1500);
+      }
+    }
+  }, []);
+  
+  const scriptsToDisplay = useMemo(() => {
+    let scriptsToFilter = scripts;
+    if (searchTerm) {
+        scriptsToFilter = scripts.filter(script => doesScriptMatch(script, searchTerm));
+    }
+    
+    return scriptsToFilter.filter((script) => {
+      const categoryMatch = category === "All" || script.category === category;
+      const teamMatch = script.department === 'common' || script.department === department;
+      return categoryMatch && teamMatch;
+    });
+  }, [searchTerm, category, department]);
+
+  const handleSearchSubmit = useCallback(() => {
+    if (scriptsToDisplay.length > 0) {
+      highlightAndScrollTo(scriptsToDisplay[0].id);
+      setSearchTerm(""); 
+    }
+  }, [highlightAndScrollTo, scriptsToDisplay]);
 
 
   useEffect(() => {
@@ -153,20 +206,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     setClosingOpen(nextState);
   };
   
-  const scriptsToDisplay = useMemo(() => {
-    let scriptsToFilter = scripts;
-    if (searchTerm) {
-        scriptsToFilter = scripts.filter(script => doesScriptMatch(script, searchTerm));
-    }
-    
-    return scriptsToFilter.filter((script) => {
-      const categoryMatch = category === "All" || script.category === category;
-      const teamMatch = script.department === 'common' || script.department === department;
-      return categoryMatch && teamMatch;
-    });
-  }, [searchTerm, category, department]);
-
-
   const departmentScripts = useMemo(() => {
     const deptScripts = scriptsToDisplay.filter(s => (s.department === department || s.department === 'common') && (category === "All" || s.category === category));
     return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent', currentQuery);
@@ -210,24 +249,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     );
   }, []);
 
-  const highlightAndScrollTo = useCallback((scriptId: string) => {
-    const element = document.getElementById(`script-card-${scriptId}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      element.classList.add('highlight-animation');
-      setTimeout(() => {
-        element.classList.remove('highlight-animation');
-      }, 1500);
-    }
-  }, []);
-
-  const handleSearchSubmit = useCallback(() => {
-    if (scriptsToDisplay.length > 0) {
-      highlightAndScrollTo(scriptsToDisplay[0].id);
-      setSearchTerm(""); 
-    }
-  }, [highlightAndScrollTo, scriptsToDisplay]);
-  
   return (
     <div className="flex flex-col min-h-screen relative overflow-x-hidden">
         <div id="blob" ref={blobRef}></div>
