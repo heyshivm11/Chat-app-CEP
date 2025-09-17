@@ -5,8 +5,6 @@ import { NextRequest, NextResponse } from 'next/server';
 const TIMEZONE_DB_API_KEY = process.env.TIMEZONEDB_API_KEY;
 
 // http://api.timezonedb.com/v2.1/list-time-zone
-// http://api.timezonedb.com/v2.1/get-time-zone
-
 async function listTimezones() {
   if (!TIMEZONE_DB_API_KEY) {
     return NextResponse.json({ error: 'API key is not configured.' }, { status: 500 });
@@ -26,6 +24,7 @@ async function listTimezones() {
   }
 }
 
+// http://api.timezonedb.com/v2.1/get-time-zone
 async function getTime(timezone: string) {
     if (!TIMEZONE_DB_API_KEY) {
         return NextResponse.json({ error: 'API key is not configured.' }, { status: 500 });
