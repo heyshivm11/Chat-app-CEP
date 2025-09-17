@@ -40,6 +40,12 @@ function WorldClockComponent() {
     }
     setIsLoading(true);
     setError(null);
+    
+    // Stop any existing timer
+    if (timerRef.current) {
+        clearInterval(timerRef.current);
+    }
+    
     try {
       const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
       if (!response.ok) {
@@ -47,7 +53,6 @@ function WorldClockComponent() {
       }
       const data: TimeData = await response.json();
       
-      // Atomic update of both timeData and currentTime
       setTimeData(data);
       setCurrentTime(new Date(data.datetime));
 
@@ -56,7 +61,8 @@ function WorldClockComponent() {
     } catch (err) {
        const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
        setError(errorMessage);
-       // Do not clear old data, so the last valid clock is still visible
+       setTimeData(null);
+       setCurrentTime(null);
     } finally {
       setIsLoading(false);
     }
@@ -91,22 +97,27 @@ function WorldClockComponent() {
     };
   }, [fetchTime]); 
 
-  // Effect for the clock tick
+  // Effect for the clock tick. This is the crucial fix.
   useEffect(() => {
-    if (timerRef.current) {
-        clearInterval(timerRef.current);
-    }
+    // Only start the timer if we have a valid current time.
     if (currentTime) {
-        timerRef.current = setInterval(() => {
-            setCurrentTime(prevTime => new Date(prevTime!.getTime() + 1000));
-        }, 1000);
+      timerRef.current = setInterval(() => {
+        // Use a functional update to ensure we are always working with the latest state.
+        setCurrentTime(prevTime => {
+          if (!prevTime) return null;
+          return new Date(prevTime.getTime() + 1000)
+        });
+      }, 1000);
     }
+    
+    // Cleanup function to clear the interval when the component unmounts
+    // or before this effect runs again.
     return () => {
         if (timerRef.current) {
             clearInterval(timerRef.current);
         }
     };
-  }, [currentTime]);
+  }, [currentTime]); // Rerun this effect ONLY when `currentTime` is reset by a new fetch.
 
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,12 +128,11 @@ function WorldClockComponent() {
       const filtered = allTimezones
         .filter(tz => tz.toLowerCase().includes(lowerCaseValue))
         .sort((a, b) => {
-          // Prioritize matches that start with the query
           const aStarts = a.toLowerCase().startsWith(lowerCaseValue);
           const bStarts = b.toLowerCase().startsWith(lowerCaseValue);
           if (aStarts && !bStarts) return -1;
           if (!aStarts && bStarts) return 1;
-          return a.length - b.length; // Then by length
+          return a.length - b.length;
         });
       setSuggestions(filtered.slice(0, 5));
     } else {
@@ -212,7 +222,7 @@ function WorldClockComponent() {
       </div>
 
       <div className="mt-8">
-        {isLoading && !timeData ? (
+        {isLoading && !currentTime ? (
           <div className="flex justify-center items-center p-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
