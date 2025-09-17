@@ -155,13 +155,11 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const filteredScripts = useMemo(() => {
     if (searchTerm.length < 2) return [];
     return scripts.filter((script) => {
-      const searchMatch = searchTerm ? doesScriptMatch(script, searchTerm) : true;
-      const categoryMatch = category === "All" || script.category === category;
       const teamMatch = script.department === 'common' || script.department === department;
-      
-      return searchMatch && categoryMatch && teamMatch;
+      if (!teamMatch) return false;
+      return doesScriptMatch(script, searchTerm);
     });
-  }, [searchTerm, category, department]);
+  }, [searchTerm, department]);
 
   const allVisibleScripts = useMemo(() => {
     return scripts.filter((script) => {

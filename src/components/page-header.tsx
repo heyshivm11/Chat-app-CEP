@@ -71,7 +71,7 @@ function PageHeaderComponent({
               onKeyDown={handleKeyDown}
             />
             {showSuggestions && (
-                 <Card className="absolute top-full mt-2 w-full z-20 shadow-lg">
+                 <Card className="absolute top-full mt-2 w-full z-50 shadow-lg">
                     <CardContent className="p-2 max-h-60 overflow-y-auto">
                         {suggestions.map(script => (
                             <div 
