@@ -51,7 +51,11 @@ function WorldClockComponent() {
       setSelectedTimezone(data.timezone);
       setQuery(''); // Reset search bar
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      if (err instanceof Error && err.message.toLowerCase().includes('unknown location')) {
+        setError(`The timezone "${timezone}" could not be found. Please try a different location.`);
+      } else {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred while fetching the time.');
+      }
       // Don't clear old data on error, so the clock remains visible.
     } finally {
       setIsLoading(false);
@@ -165,7 +169,7 @@ function WorldClockComponent() {
           <p className="text-center text-destructive p-4 bg-destructive/10 rounded-md">{error}</p>
         ) : timeData && currentTime ? (
           <>
-            {error && <p className="text-center text-destructive mb-4">{error}</p>}
+            {error && <p className="text-center text-destructive p-4 bg-destructive/10 rounded-md mb-4">{error}</p>}
             <Card className="text-center shadow-2xl rounded-2xl bg-card/30 backdrop-blur-sm border-white/20">
               <CardHeader>
                   <div className="flex items-center justify-center gap-2">
