@@ -197,25 +197,25 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 
 
   const departmentScripts = useMemo(() => {
-    const deptScripts = scriptsToDisplay.filter(s => s.department === department);
+    const deptScripts = scriptsToDisplay.filter(s => s.department === department || s.department === 'common' && (category === "All" || s.category === category));
     return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent', currentQuery);
-  }, [scriptsToDisplay, department, customerName, user?.name, currentQuery]);
+  }, [scriptsToDisplay, department, category, customerName, user?.name, currentQuery]);
 
   const requestStatedVerifiedScript = useMemo(() => {
     return departmentScripts.find(s => s.title === 'Request Stated & Verified');
   }, [departmentScripts]);
 
   const otherDepartmentScripts = useMemo(() => {
-      return departmentScripts.filter(s => s.title !== 'Request Stated & Verified');
+      return departmentScripts.filter(s => s.title !== 'Request Stated & Verified' && (s.category !== 'Conversation Flow' && s.category !== 'Workflow' && s.category !== 'Chat Closing'));
   }, [departmentScripts]);
   
   const workflowScripts = useMemo(() => {
-    const common = scriptsToDisplay.filter(s => s.department === "common" && s.category === "Workflow");
+    const common = scriptsToDisplay.filter(s => s.category === "Workflow");
     return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
   }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
   
   const conversationFlowScripts = useMemo(() => {
-    const common = scriptsToDisplay.filter(s => s.department === "common" && s.category === "Conversation Flow");
+    const common = scriptsToDisplay.filter(s => s.category === "Conversation Flow");
     return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
   }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
 
@@ -232,7 +232,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     }
     
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {scriptList.map((script) => (
                 <ScriptCard key={script.id} script={script} />
             ))}
@@ -302,7 +302,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         isOpen={openingOpen}
                         onOpenChange={setOpeningOpen}
                     >
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {requestStatedVerifiedScript && (
                                 <ScriptCard script={requestStatedVerifiedScript} />
                             )}
