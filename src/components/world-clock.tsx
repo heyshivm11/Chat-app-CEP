@@ -55,7 +55,7 @@ function WorldClockComponent() {
   }, []);
 
   useEffect(() => {
-    async function fetchAllTimezones() {
+    async function fetchInitialData() {
         setIsTimezoneListLoading(true);
         try {
             const response = await fetch('https://worldtimeapi.org/api/timezone');
@@ -70,9 +70,10 @@ function WorldClockComponent() {
         } finally {
             setIsTimezoneListLoading(false);
         }
+        // Fetch initial time after getting timezones or if it fails
+        fetchTime('Asia/Kolkata');
     }
-    fetchAllTimezones();
-    fetchTime('Asia/Kolkata');
+    fetchInitialData();
   }, [fetchTime]); 
 
   useEffect(() => {
