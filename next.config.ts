@@ -37,9 +37,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  env: {
-    NEXT_PUBLIC_TIMEZONEDB_API_KEY: process.env.TIMEZONEDB_API_KEY,
-  }
 };
 
 export default nextConfig;

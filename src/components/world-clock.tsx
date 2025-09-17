@@ -10,11 +10,9 @@ import { timezones } from '@/lib/timezones';
 
 
 interface TimeData {
-  formatted: string;
-  zoneName: string;
-  countryName: string;
-  status: string;
-  message: string;
+  datetime: string;
+  timezone: string;
+  utc_offset: string;
 }
 
 const formatTime = (date: Date) => {
@@ -24,8 +22,6 @@ const formatTime = (date: Date) => {
 const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
-
-const API_KEY = process.env.NEXT_PUBLIC_TIMEZONEDB_API_KEY || 'U9YEKWGR5VGM';
 
 function WorldClockComponent() {
   const [query, setQuery] = useState('');
@@ -44,25 +40,20 @@ function WorldClockComponent() {
     setSuggestions([]);
     
     try {
-      // Using a proxy is not feasible in this environment, so we make the call directly.
-      // In a real production app, the API key should be handled on a backend.
-      const response = await fetch(`https://api.timezonedb.com/v2.1/get-time-zone?key=${API_KEY}&format=json&by=zone&zone=${timezone}`);
-      
-      const data: TimeData = await response.json();
-
-      if (data.status !== 'OK') {
-        throw new Error(data.message || `Could not fetch time for "${timezone}".`);
+      const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
+      if (!response.ok) {
+        throw new Error(`Could not find time for "${timezone}". Please check the spelling or try a different timezone.`);
       }
       
+      const data: TimeData = await response.json();
+      
       setTimeData(data);
-      // The formatted string from the API is in 'YYYY-MM-DD HH:mm:ss' format.
-      // We need to replace spaces to make it a valid ISO-like string for the Date constructor.
-      const parsableDateString = data.formatted.replace(' ', 'T');
-      setCurrentTime(new Date(parsableDateString));
-      setSelectedTimezone(data.zoneName);
+      setCurrentTime(new Date(data.datetime));
+      setSelectedTimezone(data.timezone);
       setQuery('');
     } catch (err) {
        setError(err instanceof Error ? err.message : 'An unknown error occurred while fetching the time.');
+       setTimeData(null); // Clear old data on error
     } finally {
       setIsLoading(false);
     }
@@ -180,14 +171,14 @@ function WorldClockComponent() {
                     <CardTitle className="text-2xl font-bold">{locationName}</CardTitle>
                     {isLoading && <Loader2 className="h-5 w-5 animate-spin text-primary" />}
                   </div>
-                  <p className="text-muted-foreground">{timeData.countryName || regionName}</p>
+                  <p className="text-muted-foreground">{regionName}</p>
               </CardHeader>
               <CardContent className="flex flex-col items-center justify-center">
                 <div className="text-6xl font-black text-primary tracking-tighter">
                   {formatTime(currentTime)}
                 </div>
                 <p className="text-lg text-muted-foreground mt-2">{formatDate(currentTime)}</p>
-                <p className="text-sm text-muted-foreground mt-4">{timeData.zoneName}</p>
+                <p className="text-sm text-muted-foreground mt-4">{timeData.timezone} (UTC {timeData.utc_offset})</p>
               </CardContent>
             </Card>
           </>
