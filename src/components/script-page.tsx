@@ -131,18 +131,18 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   
   // Load collapsible state from localStorage
   useEffect(() => {
-    const savedStates = localStorage.getItem('collapsibleStates');
-    if (savedStates) {
-      try {
+    try {
+      const savedStates = localStorage.getItem('collapsibleStates');
+      if (savedStates) {
         const states = JSON.parse(savedStates);
         setCustomerDetailsOpen(states.customerDetailsOpen ?? true);
         setOpeningOpen(states.openingOpen ?? false);
         setConversationFlowOpen(states.conversationFlowOpen ?? false);
         setWorkflowOpen(states.workflowOpen ?? false);
         setClosingOpen(states.closingOpen ?? false);
-      } catch (e) {
-        console.error("Failed to parse collapsible states from localStorage", e);
       }
+    } catch (e) {
+      console.error("Failed to parse collapsible states from localStorage", e);
     }
   }, []);
 
@@ -265,19 +265,16 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   }, [departmentScripts]);
   
   const workflowScripts = useMemo(() => {
-    const common = departmentScripts.filter(s => s.category === "Workflow");
-    return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
-  }, [departmentScripts, customerName, user?.name, currentQuery]);
+    return departmentScripts.filter(s => s.category === "Workflow");
+  }, [departmentScripts]);
   
   const conversationFlowScripts = useMemo(() => {
-    const common = departmentScripts.filter(s => s.category === "Conversation Flow");
-    return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
-  }, [departmentScripts, customerName, user?.name, currentQuery]);
+    return departmentScripts.filter(s => s.category === "Conversation Flow");
+  }, [departmentScripts]);
 
   const chatClosingScript = useMemo(() => {
-    const closingScript = departmentScripts.find(s => s.category === "Chat Closing");
-    return closingScript ? getProcessedScripts([closingScript], customerName, user?.name || 'Agent', currentQuery)[0] : null;
-  }, [departmentScripts, customerName, user?.name, currentQuery]);
+    return departmentScripts.find(s => s.category === "Chat Closing");
+  }, [departmentScripts]);
 
 
   const renderScriptList = useCallback((scriptList: Script[]) => {
@@ -404,3 +401,5 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    

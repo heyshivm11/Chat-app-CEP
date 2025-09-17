@@ -423,3 +423,5 @@ function CustomerDetailsCardComponent({
 }
 
 export const CustomerDetailsCard = React.memo(CustomerDetailsCardComponent);
+
+    
