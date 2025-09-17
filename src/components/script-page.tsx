@@ -7,7 +7,7 @@ import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
 import { FileText, Workflow, ChevronsUpDown, MessageSquareQuote } from "@/components/ui/lucide-icons";
-import { CustomerDetailsCard } from "./customer-details-card";
+import { CustomerDetailsCard, initialFormState, type FormState } from "./customer-details-card";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -115,6 +115,9 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [department, setDepartment] = useState(initialDepartment || user?.department || "etg");
   const [customerName, setCustomerName] = useState("");
   const [currentQuery, setCurrentQuery] = useState("");
+  
+  const [form1Data, setForm1Data] = useState<FormState>(initialFormState);
+  const [form2Data, setForm2Data] = useState<FormState>(initialFormState);
 
   const [customerDetailsOpen, setCustomerDetailsOpen] = useState(false);
   const [openingOpen, setOpeningOpen] = useState(false);
@@ -300,6 +303,10 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                          <CustomerDetailsCard 
                             agentName={user?.name || 'Agent'} 
                             onQueryChange={setCurrentQuery}
+                            form1Data={form1Data}
+                            setForm1Data={setForm1Data}
+                            form2Data={form2Data}
+                            setForm2Data={setForm2Data}
                         />
                     </SectionCard>
 
@@ -355,3 +362,5 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    

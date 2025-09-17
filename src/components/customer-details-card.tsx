@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from './ui/toast';
 
 
-const initialFormState = {
+export const initialFormState = {
   interactionId: '',
   customerName: '',
   callerName: '',
@@ -28,7 +28,7 @@ const initialFormState = {
   validatedBy: '',
 };
 
-type FormState = typeof initialFormState;
+export type FormState = typeof initialFormState;
 
 
 const getDetailsToCopy = (formData: FormState, agentName: string) => {
@@ -307,14 +307,20 @@ const CustomerForm = React.memo(CustomerFormComponent);
 function CustomerDetailsCardComponent({
   agentName,
   onQueryChange,
+  form1Data,
+  setForm1Data,
+  form2Data,
+  setForm2Data,
 }: {
   agentName: string;
   onQueryChange?: (query: string) => void;
+  form1Data: FormState;
+  setForm1Data: (data: FormState) => void;
+  form2Data: FormState;
+  setForm2Data: (data: FormState) => void;
 }) {
   const { toast } = useToast();
   
-  const [form1Data, setForm1Data] = useState<FormState>(initialFormState);
-  const [form2Data, setForm2Data] = useState<FormState>(initialFormState);
   const [history1, setHistory1] = useState<FormState[]>([]);
   const [history2, setHistory2] = useState<FormState[]>([]);
   const [activeTab, setActiveTab] = useState('customer1');
@@ -413,3 +419,5 @@ function CustomerDetailsCardComponent({
 }
 
 export const CustomerDetailsCard = React.memo(CustomerDetailsCardComponent);
+
+    
