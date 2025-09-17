@@ -28,7 +28,6 @@ export {
     ChevronLeft,
     ChevronRight,
     Circle,
-    Clock,
     MessageCircle,
     Send,
     PersonStanding,
