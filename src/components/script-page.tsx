@@ -119,7 +119,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [form1Data, setForm1Data] = useState<FormState>(initialFormState);
   const [form2Data, setForm2Data] = useState<FormState>(initialFormState);
 
-  const [customerDetailsOpen, setCustomerDetailsOpen] = useState(false);
+  const [customerDetailsOpen, setCustomerDetailsOpen] = useState(true);
   const [openingOpen, setOpeningOpen] = useState(false);
   const [conversationFlowOpen, setConversationFlowOpen] = useState(false);
   const [workflowOpen, setWorkflowOpen] = useState(false);
@@ -135,7 +135,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     if (savedStates) {
       try {
         const states = JSON.parse(savedStates);
-        setCustomerDetailsOpen(states.customerDetailsOpen ?? false);
+        setCustomerDetailsOpen(states.customerDetailsOpen ?? true);
         setOpeningOpen(states.openingOpen ?? false);
         setConversationFlowOpen(states.conversationFlowOpen ?? false);
         setWorkflowOpen(states.workflowOpen ?? false);
@@ -207,18 +207,12 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     }
   }, []);
   
-  const scriptsToDisplay = useMemo(() => {
-    if (!searchTerm) {
-        return scripts;
-    }
-    return scripts.filter(script => doesScriptMatch(script, searchTerm));
-  }, [searchTerm]);
-
   const handleSearchSubmit = useCallback(() => {
-    const filteredScripts = scripts.filter(script => doesScriptMatch(script, searchTerm) && (script.department === department || script.department === 'common') && (category === "All" || script.category === category));
+    const deptScripts = scripts.filter(s => (s.department === department || s.department === 'common') && (category === "All" || s.category === category));
+    const filtered = deptScripts.filter(script => doesScriptMatch(script, searchTerm));
 
-    if (filteredScripts.length > 0) {
-      highlightAndScrollTo(filteredScripts[0].id);
+    if (filtered.length > 0) {
+      highlightAndScrollTo(filtered[0].id);
       setSearchTerm(""); 
     }
   }, [highlightAndScrollTo, searchTerm, department, category]);
@@ -257,9 +251,10 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   };
   
   const departmentScripts = useMemo(() => {
+    const scriptsToDisplay = scripts; // No search term filtering here
     const deptScripts = scriptsToDisplay.filter(s => (s.department === department || s.department === 'common') && (category === "All" || s.category === category));
     return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent', currentQuery);
-  }, [scriptsToDisplay, department, category, customerName, user?.name, currentQuery]);
+  }, [department, category, customerName, user?.name, currentQuery]);
 
   const requestStatedVerifiedScript = useMemo(() => {
     return departmentScripts.find(s => s.title === 'Request Stated & Verified');
@@ -270,19 +265,19 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   }, [departmentScripts]);
   
   const workflowScripts = useMemo(() => {
-    const common = scriptsToDisplay.filter(s => s.category === "Workflow");
+    const common = departmentScripts.filter(s => s.category === "Workflow");
     return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
-  }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
+  }, [departmentScripts, customerName, user?.name, currentQuery]);
   
   const conversationFlowScripts = useMemo(() => {
-    const common = scriptsToDisplay.filter(s => s.category === "Conversation Flow");
+    const common = departmentScripts.filter(s => s.category === "Conversation Flow");
     return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
-  }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
+  }, [departmentScripts, customerName, user?.name, currentQuery]);
 
   const chatClosingScript = useMemo(() => {
-    const closingScript = scriptsToDisplay.find(s => s.category === "Chat Closing");
+    const closingScript = departmentScripts.find(s => s.category === "Chat Closing");
     return closingScript ? getProcessedScripts([closingScript], customerName, user?.name || 'Agent', currentQuery)[0] : null;
-  }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
+  }, [departmentScripts, customerName, user?.name, currentQuery]);
 
 
   const renderScriptList = useCallback((scriptList: Script[]) => {
@@ -409,5 +404,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
