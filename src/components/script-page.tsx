@@ -53,8 +53,6 @@ const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: st
 
 const doesScriptMatch = (script: Script, term: string) => {
   const lowerCaseTerm = term.toLowerCase();
-  if (script.title.toLowerCase().includes(lowerCaseTerm)) return true;
-  if (script.category.toLowerCase().includes(lowerCaseTerm)) return true;
 
   if (typeof script.content === 'string') {
     if (script.content.toLowerCase().includes(lowerCaseTerm)) return true;
@@ -135,7 +133,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       }, 1500);
     }
   }, []);
-
+  
   const handleSearchSubmit = useCallback(() => {
     if (filteredScripts.length > 0) {
       highlightAndScrollTo(filteredScripts[0].id);
@@ -147,6 +145,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     highlightAndScrollTo(scriptId);
     setSearchTerm("");
   }, [highlightAndScrollTo]);
+
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
@@ -349,3 +348,4 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     
 
     
+
