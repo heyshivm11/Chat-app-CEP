@@ -15,6 +15,8 @@ import { ThemeSwitcher } from "./theme-switcher";
 import { scriptCategories } from "@/lib/scripts";
 import { Button } from "./ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import type { Script } from '@/lib/types';
+import { Card, CardContent } from './ui/card';
 
 interface PageHeaderProps {
   searchTerm: string;
@@ -24,6 +26,8 @@ interface PageHeaderProps {
   onCategoryChange: (category: string) => void;
   department: string;
   onDepartmentChange: (department: string) => void;
+  suggestions: Script[];
+  onSuggestionClick: (scriptId: string) => void;
 }
 
 function PageHeaderComponent({ 
@@ -34,6 +38,8 @@ function PageHeaderComponent({
   onCategoryChange, 
   department, 
   onDepartmentChange,
+  suggestions,
+  onSuggestionClick
 }: PageHeaderProps) {
   const { logout } = useAuth();
 
@@ -43,8 +49,10 @@ function PageHeaderComponent({
     }
   }
 
+  const showSuggestions = searchTerm.length > 1 && suggestions.length > 0;
+
   return (
-    <header className="sticky top-0 z-30 w-full bg-background/30 backdrop-blur-lg border-b">
+    <header className="sticky top-0 z-40 w-full bg-background/30 backdrop-blur-lg border-b">
       <div className="container flex h-20 items-center gap-6">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold text-foreground">
             <Plane className="h-8 w-8 text-primary" />
@@ -62,6 +70,21 @@ function PageHeaderComponent({
               onChange={(e) => onSearchChange(e.target.value)}
               onKeyDown={handleKeyDown}
             />
+            {showSuggestions && (
+                 <Card className="absolute top-full mt-2 w-full z-20 shadow-lg">
+                    <CardContent className="p-2 max-h-60 overflow-y-auto">
+                        {suggestions.map(script => (
+                            <div 
+                                key={script.id}
+                                onClick={() => onSuggestionClick(script.id)}
+                                className="p-2 hover:bg-accent rounded-md cursor-pointer text-sm"
+                            >
+                                {script.title}
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
+            )}
           </div>
 
           <Select value={department} onValueChange={onDepartmentChange}>

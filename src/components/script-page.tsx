@@ -10,7 +10,7 @@ import { PageHeader } from "./page-header";
 import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote } from "@/components/ui/lucide-icons";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { TypingEffect } from "./typing-effect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -153,6 +153,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   };
 
   const filteredScripts = useMemo(() => {
+    if (searchTerm.length < 2) return [];
     return scripts.filter((script) => {
       const searchMatch = searchTerm ? doesScriptMatch(script, searchTerm) : true;
       const categoryMatch = category === "All" || script.category === category;
@@ -161,11 +162,22 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       return searchMatch && categoryMatch && teamMatch;
     });
   }, [searchTerm, category, department]);
+
+  const allVisibleScripts = useMemo(() => {
+    return scripts.filter((script) => {
+      const categoryMatch = category === "All" || script.category === category;
+      const teamMatch = script.department === 'common' || script.department === department;
+      return categoryMatch && teamMatch;
+    });
+  }, [category, department]);
   
-  const handleSearchSubmit = useCallback(() => {
-    if (filteredScripts.length > 0) {
-      const firstMatchId = `script-card-${filteredScripts[0].id}`;
-      const element = document.getElementById(firstMatchId);
+  const scriptsToDisplay = useMemo(() => {
+    return searchTerm.length > 1 ? filteredScripts : allVisibleScripts;
+  }, [searchTerm, filteredScripts, allVisibleScripts]);
+
+  
+  const highlightAndScrollTo = useCallback((scriptId: string) => {
+      const element = document.getElementById(`script-card-${scriptId}`);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         element.classList.add('highlight-animation');
@@ -173,13 +185,25 @@ export default function ScriptPage({ department: initialDepartment }: { departme
           element.classList.remove('highlight-animation');
         }, 1500);
       }
+  }, []);
+  
+  const handleSearchSubmit = useCallback(() => {
+    if (filteredScripts.length > 0) {
+      highlightAndScrollTo(filteredScripts[0].id);
+      setSearchTerm("");
     }
-  }, [filteredScripts]);
+  }, [filteredScripts, highlightAndScrollTo]);
+
+  const onSuggestionClick = useCallback((scriptId: string) => {
+    highlightAndScrollTo(scriptId);
+    setSearchTerm("");
+  }, [highlightAndScrollTo]);
+
 
   const departmentScripts = useMemo(() => {
-    const deptScripts = filteredScripts.filter(s => s.department === department);
+    const deptScripts = scriptsToDisplay.filter(s => s.department === department);
     return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent', currentQuery);
-  }, [filteredScripts, department, customerName, user?.name, currentQuery]);
+  }, [scriptsToDisplay, department, customerName, user?.name, currentQuery]);
 
   const requestStatedVerifiedScript = useMemo(() => {
     return departmentScripts.find(s => s.title === 'Request Stated & Verified');
@@ -190,24 +214,25 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   }, [departmentScripts]);
   
   const workflowScripts = useMemo(() => {
-    const common = filteredScripts.filter(s => s.department === "common" && s.category === "Workflow");
+    const common = scriptsToDisplay.filter(s => s.department === "common" && s.category === "Workflow");
     return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
-  }, [filteredScripts, customerName, user?.name, currentQuery]);
+  }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
 
   const commonScripts = useMemo(() => {
-    const common = filteredScripts.filter(s => s.department === "common" && s.category !== "Workflow" && s.category !== "Chat Closing");
+    const common = scriptsToDisplay.filter(s => s.department === "common" && s.category !== "Workflow" && s.category !== "Chat Closing");
     return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
-  }, [filteredScripts, customerName, user?.name, currentQuery]);
+  }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
 
   const chatClosingScript = useMemo(() => {
-    const closingScript = filteredScripts.find(s => s.category === "Chat Closing");
+    const closingScript = scriptsToDisplay.find(s => s.category === "Chat Closing");
     return closingScript ? getProcessedScripts([closingScript], customerName, user?.name || 'Agent', currentQuery)[0] : null;
-  }, [filteredScripts, customerName, user?.name, currentQuery]);
+  }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
 
 
   const renderScriptList = useCallback((scriptList: Script[]) => {
     if (scriptList.length === 0) {
-      return <p className="text-muted-foreground text-center col-span-1 md:col-span-2 xl:col-span-3 py-8">No scripts found.</p>;
+        if (searchTerm) return null; // Don't show "No scripts" when filtering
+      return <p className="text-muted-foreground text-center col-span-1 md:col-span-2 xl:col-span-3 py-8">No scripts found for the current filter.</p>;
     }
     
     return (
@@ -217,7 +242,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
             ))}
         </div>
     );
-  }, []);
+  }, [searchTerm]);
   
   return (
     <div className="flex flex-col min-h-screen relative overflow-x-hidden">
@@ -232,6 +257,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                 onCategoryChange={setCategory}
                 department={department}
                 onDepartmentChange={handleDepartmentChange}
+                suggestions={filteredScripts}
+                onSuggestionClick={onSuggestionClick}
             />
             <main className="container mx-auto px-4 md:px-8 py-8 flex-1">
                 
@@ -325,3 +352,4 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
