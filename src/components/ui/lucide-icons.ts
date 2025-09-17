@@ -29,7 +29,6 @@ export {
     ChevronRight,
     Circle,
     Clock,
-    Globe,
     MessageCircle,
     Send,
     PersonStanding,

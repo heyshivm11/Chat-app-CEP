@@ -2,7 +2,7 @@
 "use client";
 import React from 'react';
 import Link from "next/link";
-import { Search, Globe, Plane, Notebook, LogOut } from "@/components/ui/lucide-icons";
+import { Search, Clock, Plane, Notebook, LogOut } from "@/components/ui/lucide-icons";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -96,7 +96,7 @@ function PageHeaderComponent({
             </Link>
             <Link href="/fun" passHref>
               <Button variant="ghost" size="icon" aria-label="Fun Zone">
-                <Globe className="h-6 w-6" />
+                <Clock className="h-6 w-6" />
               </Button>
             </Link>
             <Button variant="ghost" size="icon" aria-label="Logout" onClick={logout}>
