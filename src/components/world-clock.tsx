@@ -48,7 +48,6 @@ function WorldClockComponent() {
     } catch (err) {
        const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
        setError(errorMessage);
-       // Do not clear timeData here, so the old time remains visible on error
     } finally {
       setIsLoading(false);
     }
@@ -70,8 +69,7 @@ function WorldClockComponent() {
         } finally {
             setIsTimezoneListLoading(false);
         }
-        // Fetch initial time after getting timezones or if it fails
-        fetchTime('Asia/Kolkata');
+        await fetchTime('Asia/Kolkata');
     }
     fetchInitialData();
   }, [fetchTime]); 
@@ -104,21 +102,24 @@ function WorldClockComponent() {
   };
 
   const handleSearch = () => {
-    const searchTerm = query.trim();
+    const searchTerm = query.trim().toLowerCase();
     if (!searchTerm) return;
     
-    // Check if the search term exactly matches a suggestion
-    const exactMatch = allTimezones.find(tz => tz.toLowerCase() === searchTerm.toLowerCase());
+    const exactMatch = allTimezones.find(tz => tz.toLowerCase() === searchTerm);
     if (exactMatch) {
       fetchTime(exactMatch);
       return;
     }
     
-    // Otherwise, use the first suggestion if it exists
     if (suggestions.length > 0) {
       fetchTime(suggestions[0]);
     } else {
-       setError(`Could not find a timezone matching "${searchTerm}".`);
+       const bestGuess = allTimezones.find(tz => tz.toLowerCase().includes(searchTerm));
+       if (bestGuess) {
+           fetchTime(bestGuess);
+       } else {
+           setError(`Could not find a timezone matching "${query}".`);
+       }
     }
   }
 
@@ -162,7 +163,7 @@ function WorldClockComponent() {
                   disabled={isTimezoneListLoading}
                 />
             </div>
-            <Button onClick={handleSearch} disabled={isLoading || !query.trim()} className="h-14 rounded-full px-6">
+            <Button onClick={handleSearch} disabled={isTimezoneListLoading || !query.trim()} className="h-14 rounded-full px-6">
                 <Search className="h-5 w-5" />
             </Button>
         </div>
