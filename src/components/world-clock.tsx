@@ -75,10 +75,13 @@ function WorldClockComponent() {
   }, []);
 
   useEffect(() => {
+    // Only fetch time if timezones have been loaded.
     if (allTimezones.length > 0) {
+      // On initial load, use the default selected timezone.
       fetchTime(selectedTimezone);
     }
-  }, [allTimezones, fetchTime, selectedTimezone]); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allTimezones]); // Intentionally only run when allTimezones is populated.
 
   useEffect(() => {
     if (currentTime) {
@@ -96,7 +99,7 @@ function WorldClockComponent() {
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
-    if (value.length > 1 && allTimezones.length > 0) {
+    if (value.length > 1 && allTimezones) {
       const filtered = allTimezones.filter(tz => tz.toLowerCase().includes(value.toLowerCase()));
       setSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
     } else {
@@ -139,7 +142,9 @@ function WorldClockComponent() {
     if (!timeData) return '';
     const offsetHours = timeData.gmtOffset / 3600;
     const sign = offsetHours >= 0 ? '+' : '-';
-    return `UTC${sign}${Math.abs(offsetHours)}`;
+    const hours = Math.floor(Math.abs(offsetHours));
+    const minutes = (Math.abs(offsetHours) * 60) % 60;
+    return `UTC${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
   }, [timeData]);
 
 
