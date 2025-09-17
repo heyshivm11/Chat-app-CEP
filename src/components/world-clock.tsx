@@ -32,33 +32,13 @@ function WorldClockComponent() {
   const [error, setError] = useState<string | null>(null);
   const [allTimezones, setAllTimezones] = useState<string[]>([]);
 
-  // Fetch the list of all available timezones from the API
-  useEffect(() => {
-    async function fetchAllTimezones() {
-        if (allTimezones.length > 0) return; // Don't refetch if we already have them
-        try {
-            const response = await fetch('https://worldtimeapi.org/api/timezone');
-            if (!response.ok) {
-                throw new Error('Failed to load timezone list.');
-            }
-            const data: string[] = await response.json();
-            setAllTimezones(data);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Could not load timezones.');
-        }
-    }
-    fetchAllTimezones();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Function to fetch the time for a specific timezone
   const fetchTime = useCallback(async (timezone: string) => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
       if (!response.ok) {
-        throw new Error(`Could not find time for "${timezone}". Please select a valid timezone from the list.`);
+        throw new Error(`Could not find time for "${timezone}". Please select a valid timezone.`);
       }
       const data: TimeData = await response.json();
       setTimeData(data);
@@ -67,20 +47,35 @@ function WorldClockComponent() {
       setQuery('');
       setSuggestions([]);
     } catch (err) {
-       setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-       setTimeData(null); // Clear old data on error
+       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
+       setError(errorMessage);
+       setTimeData(null); 
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  // Fetch initial time for the default timezone
+  useEffect(() => {
+    async function fetchAllTimezones() {
+        try {
+            const response = await fetch('https://worldtimeapi.org/api/timezone');
+            if (!response.ok) {
+                throw new Error('Failed to load timezone list.');
+            }
+            const data: string[] = await response.json();
+            setAllTimezones(data);
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Could not load timezones.';
+            setError(errorMessage);
+        }
+    }
+    fetchAllTimezones();
+  }, []);
+
   useEffect(() => {
     fetchTime(selectedTimezone);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
+  }, [fetchTime, selectedTimezone]); 
 
-  // Update the clock every second
   useEffect(() => {
     if (currentTime) {
       const timer = setInterval(() => {
@@ -93,7 +88,6 @@ function WorldClockComponent() {
     }
   }, [currentTime]);
 
-  // Handle changes in the search input
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
@@ -105,24 +99,14 @@ function WorldClockComponent() {
     }
   };
   
-  // Handle clicking a suggestion from the list
   const handleSuggestionClick = (timezone: string) => {
     fetchTime(timezone);
   };
 
-  // Handle submitting the search
   const handleSearch = () => {
     const searchTerm = query.trim();
     if (!searchTerm) return;
     
-    // Check for an exact match first (case-insensitive)
-    const exactMatch = allTimezones.find(tz => tz.toLowerCase() === searchTerm.toLowerCase());
-    if (exactMatch) {
-      fetchTime(exactMatch);
-      return;
-    }
-
-    // If no exact match, use the first suggestion if available
     if (suggestions.length > 0) {
       fetchTime(suggestions[0]);
     } else {
@@ -138,23 +122,21 @@ function WorldClockComponent() {
   };
 
   const locationName = useMemo(() => {
-      if (!selectedTimezone) return "";
-      const parts = selectedTimezone.split('/');
+      if (!timeData?.timezone) return "";
+      const parts = timeData.timezone.split('/');
       return parts[parts.length - 1].replace(/_/g, ' ');
-  }, [selectedTimezone]);
+  }, [timeData]);
   
   const regionName = useMemo(() => {
-      if (!selectedTimezone) return "";
-      const parts = selectedTimezone.split('/');
+      if (!timeData?.timezone) return "";
+      const parts = timeData.timezone.split('/');
       return parts.length > 1 ? parts[0].replace(/_/g, ' ') : "";
-  }, [selectedTimezone]);
+  }, [timeData]);
   
   const utcOffset = useMemo(() => {
     if (!timeData) return '';
     return `UTC${timeData.utc_offset}`;
   }, [timeData]);
-
-  const showLoader = isLoading || (allTimezones.length === 0 && !error);
 
   return (
     <div className="w-full max-w-md">
@@ -172,7 +154,7 @@ function WorldClockComponent() {
                   disabled={allTimezones.length === 0}
                 />
             </div>
-            <Button onClick={handleSearch} disabled={showLoader || !query.trim()} className="h-14 rounded-full px-6">
+            <Button onClick={handleSearch} disabled={isLoading || !query.trim()} className="h-14 rounded-full px-6">
                 <Search className="h-5 w-5" />
             </Button>
         </div>
@@ -194,7 +176,7 @@ function WorldClockComponent() {
       </div>
 
       <div className="mt-8">
-        {showLoader && !timeData ? (
+        {isLoading && !timeData ? (
           <div className="flex justify-center items-center p-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
