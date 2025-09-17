@@ -54,6 +54,9 @@ const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: st
 const doesScriptMatch = (script: Script, term: string) => {
   const lowerCaseTerm = term.toLowerCase();
 
+  // The user wants to search based on subheadings and content, not the main title.
+  // if (script.title.toLowerCase().includes(lowerCaseTerm)) return true;
+
   if (typeof script.content === 'string') {
     if (script.content.toLowerCase().includes(lowerCaseTerm)) return true;
   } else if (Array.isArray(script.content)) {
@@ -120,6 +123,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 
   const filteredScripts = useMemo(() => {
     if (!searchTerm) return [];
+    // We only filter from all scripts, not just the currently displayed ones.
     return scripts.filter(script => doesScriptMatch(script, searchTerm)).slice(0, 8);
   }, [searchTerm]);
 
@@ -133,14 +137,14 @@ export default function ScriptPage({ department: initialDepartment }: { departme
       }, 1500);
     }
   }, []);
-  
+
   const handleSearchSubmit = useCallback(() => {
     if (filteredScripts.length > 0) {
       highlightAndScrollTo(filteredScripts[0].id);
       setSearchTerm(""); 
     }
   }, [highlightAndScrollTo, filteredScripts]);
-
+  
   const onSuggestionClick = useCallback((scriptId: string) => {
     highlightAndScrollTo(scriptId);
     setSearchTerm("");
@@ -181,20 +185,16 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   
   const scriptsToDisplay = useMemo(() => {
     let scriptsToFilter = scripts;
-    if (searchTerm && filteredScripts.length === 0) {
-        // If there's a search term but no matches, we can show nothing or everything.
-        // For now, let's show scripts that match category and department.
-    }
     return scriptsToFilter.filter((script) => {
       const categoryMatch = category === "All" || script.category === category;
       const teamMatch = script.department === 'common' || script.department === department;
       return categoryMatch && teamMatch;
     });
-  }, [category, department, searchTerm, filteredScripts]);
+  }, [category, department]);
 
 
   const departmentScripts = useMemo(() => {
-    const deptScripts = scriptsToDisplay.filter(s => s.department === department || s.department === 'common' && (category === "All" || s.category === category));
+    const deptScripts = scriptsToDisplay.filter(s => (s.department === department || s.department === 'common') && (category === "All" || s.category === category));
     return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent', currentQuery);
   }, [scriptsToDisplay, department, category, customerName, user?.name, currentQuery]);
 
@@ -346,6 +346,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
 }
 
     
-
-    
-
