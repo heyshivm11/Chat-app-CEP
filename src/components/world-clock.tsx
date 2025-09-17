@@ -41,7 +41,6 @@ function WorldClockComponent() {
     setIsLoading(true);
     setError(null);
     
-    // Stop any existing timer
     if (timerRef.current) {
         clearInterval(timerRef.current);
     }
@@ -49,20 +48,20 @@ function WorldClockComponent() {
     try {
       const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
       if (!response.ok) {
-        throw new Error(`Could not find time for "${timezone}". Please select a valid timezone.`);
+        throw new Error(`Could not find time for "${timezone}". Please select a valid timezone from the list.`);
       }
       const data: TimeData = await response.json();
       
+      const newDate = new Date(data.datetime);
       setTimeData(data);
-      setCurrentTime(new Date(data.datetime));
+      setCurrentTime(newDate); // Set the new time immediately
 
       setQuery('');
       setSuggestions([]);
     } catch (err) {
        const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
        setError(errorMessage);
-       setTimeData(null);
-       setCurrentTime(null);
+       // Do not null out the clock on a failed search, keep the last good time.
     } finally {
       setIsLoading(false);
     }
@@ -76,48 +75,58 @@ function WorldClockComponent() {
         setError(null);
         try {
             const tzResponse = await fetch('https://worldtimeapi.org/api/timezone');
-            if (!tzResponse.ok) throw new Error('Failed to load timezone list.');
+            if (!tzResponse.ok) throw new Error('Failed to load timezone list. The clock cannot function.');
             const tzData: string[] = await tzResponse.json();
             if(isMounted) {
               setAllTimezones(tzData);
+              // NOW that we have timezones, fetch the initial time.
+              await fetchTime('Asia/Kolkata');
             }
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Could not load timezones.';
             if(isMounted) {
               setError(errorMessage);
+              setIsLoading(false); // Stop loading on fatal error
             }
         }
-        // Fetch initial time after getting timezone list.
-        await fetchTime('Asia/Kolkata');
     }
+    
     fetchInitialData();
 
     return () => {
       isMounted = false;
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
     };
-  }, [fetchTime]); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only ONCE on mount. `fetchTime` is memoized with useCallback.
 
-  // Effect for the clock tick. This is the crucial fix.
+  // Effect for the clock tick.
   useEffect(() => {
-    // Only start the timer if we have a valid current time.
     if (currentTime) {
+      // Clear any existing timer before creating a new one
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      // Set up the new timer
       timerRef.current = setInterval(() => {
         // Use a functional update to ensure we are always working with the latest state.
         setCurrentTime(prevTime => {
           if (!prevTime) return null;
-          return new Date(prevTime.getTime() + 1000)
+          return new Date(prevTime.getTime() + 1000);
         });
       }, 1000);
     }
     
     // Cleanup function to clear the interval when the component unmounts
-    // or before this effect runs again.
+    // or before this effect runs again (e.g., when currentTime is reset).
     return () => {
         if (timerRef.current) {
             clearInterval(timerRef.current);
         }
     };
-  }, [currentTime]); // Rerun this effect ONLY when `currentTime` is reset by a new fetch.
+  }, [currentTime]); // This effect ONLY re-runs when `currentTime` itself is reset.
 
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -255,5 +264,3 @@ function WorldClockComponent() {
 }
 
 export const WorldClock = memo(WorldClockComponent);
-
-    
