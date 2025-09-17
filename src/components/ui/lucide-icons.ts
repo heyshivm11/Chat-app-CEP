@@ -1,4 +1,3 @@
-
 export {
     ClipboardPaste,
     User,
@@ -31,4 +30,5 @@ export {
     MessageCircle,
     Send,
     PersonStanding,
+    Clapperboard,
 } from 'lucide-react';

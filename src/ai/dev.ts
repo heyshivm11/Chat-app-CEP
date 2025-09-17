@@ -3,3 +3,4 @@ config();
 
 import '@/ai/flows/refine-script-with-ai.ts';
 import '@/ai/flows/chatbot-flow.ts';
+import '@/ai/flows/random-fact-flow.ts';

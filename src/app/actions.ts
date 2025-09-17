@@ -2,6 +2,7 @@
 
 import { refineScript } from "@/ai/flows/refine-script-with-ai";
 import { chat } from "@/ai/flows/chatbot-flow";
+import { randomFact } from "@/ai/flows/random-fact-flow";
 import type { RefineScriptInput, ChatInput } from "./ai-schemas";
 
 
@@ -22,5 +23,15 @@ export async function getChatResponse(input: ChatInput) {
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
         return { success: false, error: `Failed to get response: ${errorMessage}` };
+    }
+}
+
+export async function getRandomFact() {
+    try {
+        const result = await randomFact();
+        return { success: true, data: result };
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
+        return { success: false, error: `Failed to get fact: ${errorMessage}` };
     }
 }
