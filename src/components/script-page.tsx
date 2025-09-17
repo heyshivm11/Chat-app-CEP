@@ -6,7 +6,7 @@ import { scripts } from "@/lib/scripts";
 import { Script } from "@/lib/types";
 import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
-import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote } from "@/components/ui/lucide-icons";
+import { FileText, Workflow, ChevronsUpDown, MessageSquareQuote } from "@/components/ui/lucide-icons";
 import { CustomerDetailsCard } from "./customer-details-card";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
@@ -113,7 +113,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [customerDetailsOpen, setCustomerDetailsOpen] = useState(true);
   const [openingOpen, setOpeningOpen] = useState(true);
   const [workflowOpen, setWorkflowOpen] = useState(false);
-  const [commonOpen, setCommonOpen] = useState(false);
   const [closingOpen, setClosingOpen] = useState(true);
   
   const [areAllSectionsOpen, setAreAllSectionsOpen] = useState(true);
@@ -148,7 +147,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     setCustomerDetailsOpen(nextState);
     setOpeningOpen(nextState);
     setWorkflowOpen(nextState);
-    setCommonOpen(nextState);
     setClosingOpen(nextState);
   };
 
@@ -214,11 +212,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   
   const workflowScripts = useMemo(() => {
     const common = scriptsToDisplay.filter(s => s.department === "common" && s.category === "Workflow");
-    return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
-  }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
-
-  const commonScripts = useMemo(() => {
-    const common = scriptsToDisplay.filter(s => s.department === "common" && s.category !== "Workflow" && s.category !== "Chat Closing" && s.category !== "Conversation Flow");
     return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
   }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
   
@@ -339,15 +332,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                     </SectionCard>
                     
                     <SectionCard
-                        icon={<BookCopy className="h-6 w-6 text-primary" />}
-                        title="Common Scripts"
-                        isOpen={commonOpen}
-                        onOpenChange={setCommonOpen}
-                    >
-                        {renderScriptList(commonScripts)}
-                    </SectionCard>
-
-                    <SectionCard
                         icon={<MessageSquareQuote className="h-6 w-6 text-primary" />}
                         title="Chat Closing"
                         isOpen={closingOpen}
@@ -365,5 +349,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
 
     
