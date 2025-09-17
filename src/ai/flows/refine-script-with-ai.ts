@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -35,7 +36,7 @@ const refineScriptPrompt = ai.definePrompt({
   Original Script:
   "{{{script}}}"
   
-  Now, provide the humanized version.`,
+  Now, provide the humanized version in the 'refinedScript' output field.`,
   config: {
     temperature: 0.7,
   }
