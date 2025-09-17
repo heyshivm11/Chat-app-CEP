@@ -29,14 +29,13 @@ function WorldClockComponent() {
   const [timeData, setTimeData] = useState<TimeData | null>(null);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingTimezones, setIsLoadingTimezones] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [allTimezones, setAllTimezones] = useState<string[]>([]);
 
   // Fetch the list of all available timezones from the API
   useEffect(() => {
     async function fetchAllTimezones() {
-        setIsLoadingTimezones(true);
+        if (allTimezones.length > 0) return; // Don't refetch if we already have them
         try {
             const response = await fetch('https://worldtimeapi.org/api/timezone');
             if (!response.ok) {
@@ -46,26 +45,22 @@ function WorldClockComponent() {
             setAllTimezones(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Could not load timezones.');
-        } finally {
-            setIsLoadingTimezones(false);
         }
     }
     fetchAllTimezones();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Function to fetch the time for a specific timezone
   const fetchTime = useCallback(async (timezone: string) => {
     setIsLoading(true);
     setError(null);
-    
     try {
       const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
       if (!response.ok) {
         throw new Error(`Could not find time for "${timezone}". Please select a valid timezone from the list.`);
       }
-      
       const data: TimeData = await response.json();
-      
       setTimeData(data);
       setCurrentTime(new Date(data.datetime));
       setSelectedTimezone(data.timezone);
@@ -81,11 +76,9 @@ function WorldClockComponent() {
 
   // Fetch initial time for the default timezone
   useEffect(() => {
-    if (!isLoadingTimezones) { // Only fetch time after timezones are loaded.
-        fetchTime(selectedTimezone);
-    }
+    fetchTime(selectedTimezone);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingTimezones]); 
+  }, []); 
 
   // Update the clock every second
   useEffect(() => {
@@ -122,13 +115,18 @@ function WorldClockComponent() {
     const searchTerm = query.trim();
     if (!searchTerm) return;
     
-    // Prioritize an exact match or the first suggestion
-    const firstSuggestion = suggestions.find(s => s.toLowerCase() === searchTerm.toLowerCase()) || suggestions[0];
-    if (firstSuggestion) {
-      fetchTime(firstSuggestion);
+    // Check for an exact match first (case-insensitive)
+    const exactMatch = allTimezones.find(tz => tz.toLowerCase() === searchTerm.toLowerCase());
+    if (exactMatch) {
+      fetchTime(exactMatch);
+      return;
+    }
+
+    // If no exact match, use the first suggestion if available
+    if (suggestions.length > 0) {
+      fetchTime(suggestions[0]);
     } else {
-      // If no suggestion matches, try to fetch directly
-      fetchTime(searchTerm);
+       setError(`Could not find a timezone matching "${searchTerm}".`);
     }
   }
 
@@ -156,7 +154,7 @@ function WorldClockComponent() {
     return `UTC${timeData.utc_offset}`;
   }, [timeData]);
 
-  const showLoader = isLoading || isLoadingTimezones;
+  const showLoader = isLoading || (allTimezones.length === 0 && !error);
 
   return (
     <div className="w-full max-w-md">
@@ -171,7 +169,7 @@ function WorldClockComponent() {
                   onKeyDown={handleKeyDown}
                   placeholder="Search for a city or timezone..."
                   className="w-full pl-10 text-lg h-14 rounded-full shadow-lg"
-                  disabled={isLoadingTimezones || allTimezones.length === 0}
+                  disabled={allTimezones.length === 0}
                 />
             </div>
             <Button onClick={handleSearch} disabled={showLoader || !query.trim()} className="h-14 rounded-full px-6">
