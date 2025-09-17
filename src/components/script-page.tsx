@@ -105,6 +105,19 @@ const SectionCard = ({
     </Collapsible>
 );
 
+const getInitialFormState = (key: string): FormState => {
+    if (typeof window === 'undefined') {
+        return initialFormState;
+    }
+    try {
+        const savedState = localStorage.getItem(key);
+        return savedState ? JSON.parse(savedState) : initialFormState;
+    } catch (e) {
+        console.error("Failed to parse form data from localStorage", e);
+        return initialFormState;
+    }
+};
+
 
 export default function ScriptPage({ department: initialDepartment }: { department: string }) {
   const router = useRouter();
@@ -116,8 +129,8 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [customerName, setCustomerName] = useState("");
   const [currentQuery, setCurrentQuery] = useState("");
   
-  const [form1Data, setForm1Data] = useState<FormState>(initialFormState);
-  const [form2Data, setForm2Data] = useState<FormState>(initialFormState);
+  const [form1Data, setForm1Data] = useState<FormState>(() => getInitialFormState('form1Data'));
+  const [form2Data, setForm2Data] = useState<FormState>(() => getInitialFormState('form2Data'));
 
   const [customerDetailsOpen, setCustomerDetailsOpen] = useState(true);
   const [openingOpen, setOpeningOpen] = useState(true);
@@ -158,18 +171,6 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     localStorage.setItem('collapsibleStates', JSON.stringify(states));
   }, [customerDetailsOpen, openingOpen, conversationFlowOpen, workflowOpen, closingOpen]);
 
-
-  useEffect(() => {
-    try {
-      const savedForm1 = localStorage.getItem('form1Data');
-      if (savedForm1) setForm1Data(JSON.parse(savedForm1));
-      
-      const savedForm2 = localStorage.getItem('form2Data');
-      if (savedForm2) setForm2Data(JSON.parse(savedForm2));
-    } catch (e) {
-      console.error("Failed to parse form data from localStorage", e);
-    }
-  }, []);
 
   useEffect(() => {
     localStorage.setItem('form1Data', JSON.stringify(form1Data));
@@ -398,3 +399,5 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
