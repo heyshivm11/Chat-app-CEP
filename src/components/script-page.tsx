@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
@@ -241,7 +240,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     }
     
     return (
-        <div className="grid grid-cols-1 md:col-span-2 xl:col-span-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {scriptList.map((script) => (
                 <ScriptCard key={script.id} script={script} />
             ))}
@@ -311,13 +310,13 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         isOpen={openingOpen}
                         onOpenChange={setOpeningOpen}
                     >
-                        <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                             {requestStatedVerifiedScript && (
-                                <div className="p-4 rounded-md border bg-card">
-                                    <ScriptCard script={requestStatedVerifiedScript} />
-                                </div>
+                                <ScriptCard script={requestStatedVerifiedScript} />
                             )}
-                            {renderScriptList(otherDepartmentScripts)}
+                            {otherDepartmentScripts.map((script) => (
+                                <ScriptCard key={script.id} script={script} />
+                            ))}
                         </div>
                     </SectionCard>
 
@@ -366,5 +365,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
 
     
