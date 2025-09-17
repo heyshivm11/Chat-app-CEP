@@ -25,7 +25,6 @@ const formatDate = (date: Date) => {
 function WorldClockComponent() {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [selectedTimezone, setSelectedTimezone] = useState<string>('Asia/Kolkata');
   const [timeData, setTimeData] = useState<TimeData | null>(null);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +42,6 @@ function WorldClockComponent() {
       const data: TimeData = await response.json();
       setTimeData(data);
       setCurrentTime(new Date(data.datetime));
-      setSelectedTimezone(data.timezone);
       setQuery('');
       setSuggestions([]);
     } catch (err) {
@@ -70,10 +68,7 @@ function WorldClockComponent() {
         }
     }
     fetchAllTimezones();
-  }, []);
-
-  useEffect(() => {
-    fetchTime(selectedTimezone);
+    fetchTime('Asia/Kolkata');
   }, [fetchTime]); 
 
   useEffect(() => {
