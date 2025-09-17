@@ -9,7 +9,7 @@ import { ScriptCard } from "./script-card";
 import { PageHeader } from "./page-header";
 import { FileText, Workflow, BookCopy, ChevronsUpDown, MessageSquareQuote } from "@/components/ui/lucide-icons";
 import { CustomerDetailsCard } from "./customer-details-card";
-import { Label } from "@/components/ui/label";
+import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { TypingEffect } from "./typing-effect";
@@ -55,6 +55,7 @@ const getProcessedScripts = (scriptsToProcess: Script[], currentCustomerName: st
 const doesScriptMatch = (script: Script, term: string) => {
   const lowerCaseTerm = term.toLowerCase();
   if (script.title.toLowerCase().includes(lowerCaseTerm)) return true;
+  if (script.category.toLowerCase().includes(lowerCaseTerm)) return true;
 
   if (typeof script.content === 'string') {
     if (script.content.toLowerCase().includes(lowerCaseTerm)) return true;
