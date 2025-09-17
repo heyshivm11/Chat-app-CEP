@@ -240,7 +240,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     }
     
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:col-span-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {scriptList.map((script) => (
                 <ScriptCard key={script.id} script={script} />
             ))}
@@ -310,7 +310,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         isOpen={openingOpen}
                         onOpenChange={setOpeningOpen}
                     >
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {requestStatedVerifiedScript && (
                                 <ScriptCard script={requestStatedVerifiedScript} />
                             )}
@@ -365,7 +365,5 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
 
     
