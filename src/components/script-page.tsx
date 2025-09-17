@@ -128,6 +128,27 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const [areAllSectionsOpen, setAreAllSectionsOpen] = useState(false);
 
   const blobRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    try {
+      const savedForm1 = localStorage.getItem('form1Data');
+      if (savedForm1) setForm1Data(JSON.parse(savedForm1));
+      
+      const savedForm2 = localStorage.getItem('form2Data');
+      if (savedForm2) setForm2Data(JSON.parse(savedForm2));
+    } catch (e) {
+      console.error("Failed to parse form data from localStorage", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('form1Data', JSON.stringify(form1Data));
+  }, [form1Data]);
+
+  useEffect(() => {
+    localStorage.setItem('form2Data', JSON.stringify(form2Data));
+  }, [form2Data]);
+
 
   const highlightAndScrollTo = useCallback((scriptId: string) => {
     const element = document.getElementById(`script-card-${scriptId}`);
@@ -157,24 +178,20 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   }, []);
   
   const scriptsToDisplay = useMemo(() => {
-    let scriptsToFilter = scripts;
-    if (searchTerm) {
-        scriptsToFilter = scripts.filter(script => doesScriptMatch(script, searchTerm));
+    if (!searchTerm) {
+        return scripts;
     }
-    
-    return scriptsToFilter.filter((script) => {
-      const categoryMatch = category === "All" || script.category === category;
-      const teamMatch = script.department === 'common' || script.department === department;
-      return categoryMatch && teamMatch;
-    });
-  }, [searchTerm, category, department]);
+    return scripts.filter(script => doesScriptMatch(script, searchTerm));
+  }, [searchTerm]);
 
   const handleSearchSubmit = useCallback(() => {
-    if (scriptsToDisplay.length > 0) {
-      highlightAndScrollTo(scriptsToDisplay[0].id);
+    const filteredScripts = scripts.filter(script => doesScriptMatch(script, searchTerm) && (script.department === department || script.department === 'common') && (category === "All" || script.category === category));
+
+    if (filteredScripts.length > 0) {
+      highlightAndScrollTo(filteredScripts[0].id);
       setSearchTerm(""); 
     }
-  }, [highlightAndScrollTo, scriptsToDisplay]);
+  }, [highlightAndScrollTo, searchTerm, department, category]);
 
 
   useEffect(() => {
@@ -350,7 +367,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         isOpen={closingOpen}
                         onOpenChange={setClosingOpen}
                     >
-                        {chatClosingScript && <ScriptCard script={chatClosingScript} />}
+                       {chatClosingScript && <ScriptCard script={chatClosingScript} />}
                     </SectionCard>
                 </div>
             </main>
@@ -362,5 +379,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    

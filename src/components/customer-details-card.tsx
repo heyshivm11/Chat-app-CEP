@@ -56,9 +56,10 @@ interface CustomerFormProps {
   setHistory: (history: FormState[]) => void;
   onQueryChange?: (query: string) => void;
   scheduleReminder: () => void;
+  formId: 'form1' | 'form2';
 }
 
-function CustomerFormComponent({ agentName, formData, setFormData, history, setHistory, onQueryChange, scheduleReminder }: CustomerFormProps) {
+function CustomerFormComponent({ agentName, formData, setFormData, history, setHistory, onQueryChange, scheduleReminder, formId }: CustomerFormProps) {
   const [customerIsCaller, setCustomerIsCaller] = useState(false);
   
   // Refs for inputs
@@ -135,8 +136,9 @@ function CustomerFormComponent({ agentName, formData, setFormData, history, setH
   const handleReset = useCallback(() => {
       setHistory([...history, formData]);
       setFormData(initialFormState);
+      localStorage.removeItem(`${formId}Data`);
       if(onQueryChange) onQueryChange('');
-  }, [formData, history, setFormData, setHistory, onQueryChange]);
+  }, [formData, history, setFormData, setHistory, onQueryChange, formId]);
 
   const detailsToCopy = useMemo(() => {
     return getDetailsToCopy(formData, agentName)
@@ -401,6 +403,7 @@ function CustomerDetailsCardComponent({
               setHistory={setHistory1}
               onQueryChange={onQueryChange}
               scheduleReminder={scheduleReminder}
+              formId="form1"
             />
         </TabsContent>
         <TabsContent value="customer2">
@@ -412,6 +415,7 @@ function CustomerDetailsCardComponent({
               setHistory={setHistory2}
               onQueryChange={onQueryChange}
               scheduleReminder={scheduleReminder}
+              formId="form2"
             />
         </TabsContent>
     </Tabs>
@@ -419,5 +423,3 @@ function CustomerDetailsCardComponent({
 }
 
 export const CustomerDetailsCard = React.memo(CustomerDetailsCardComponent);
-
-    
