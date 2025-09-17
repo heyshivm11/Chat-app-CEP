@@ -297,14 +297,17 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     return otherDepartmentScripts.filter(s => s.category === "Workflow");
   }, [otherDepartmentScripts]);
 
-  const consequentRefreshScript = useMemo(() => {
-    return workflowScripts.find(s => s.title === 'Consequent refresh hold');
+  const landscapeWorkflowTitles = ['Hold', 'Refresh Hold', 'Consequent refresh hold'];
+  
+  const landscapeWorkflowScripts = useMemo(() => {
+    return workflowScripts
+      .filter(s => landscapeWorkflowTitles.includes(s.title))
+      .sort((a, b) => landscapeWorkflowTitles.indexOf(a.title) - landscapeWorkflowTitles.indexOf(b.title));
   }, [workflowScripts]);
-
+  
   const otherWorkflowScripts = useMemo(() => {
-    return workflowScripts.filter(s => s.title !== 'Consequent refresh hold');
+    return workflowScripts.filter(s => !landscapeWorkflowTitles.includes(s.title));
   }, [workflowScripts]);
-
   
   const conversationFlowScripts = useMemo(() => {
     return otherDepartmentScripts.filter(s => s.category === "Conversation Flow");
@@ -415,7 +418,9 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         onOpenChange={setWorkflowOpen}
                     >
                       <div className="flex flex-col gap-6">
-                          {consequentRefreshScript && <LandscapeScriptCard script={consequentRefreshScript} />}
+                          {landscapeWorkflowScripts.map(script => (
+                            <LandscapeScriptCard key={script.id} script={script} />
+                          ))}
                           {renderScriptList(otherWorkflowScripts)}
                       </div>
                     </SectionCard>
@@ -438,7 +443,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
-
-    
