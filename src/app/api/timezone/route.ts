@@ -2,7 +2,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const API_KEY = process.env.TIMEZONEDB_API_KEY;
-const BASE_URL = 'http://api.timezonedb.com/v2.1';
+const BASE_URL_LIST = 'https://api.ipgeolocation.io/timezone';
+const BASE_URL_GET = 'https://api.ipgeolocation.io/timezone';
 
 export async function GET(request: NextRequest) {
   if (!API_KEY) {
@@ -16,9 +17,9 @@ export async function GET(request: NextRequest) {
   try {
     let apiUrl = '';
     if (list) {
-      apiUrl = `${BASE_URL}/list-time-zone?key=${API_KEY}&format=json`;
+      apiUrl = `${BASE_URL_LIST}?apiKey=${API_KEY}`;
     } else if (zone) {
-      apiUrl = `${BASE_URL}/get-time-zone?key=${API_KEY}&format=json&by=zone&zone=${zone}`;
+      apiUrl = `${BASE_URL_GET}?apiKey=${API_KEY}&tz=${zone}`;
     } else {
       return NextResponse.json({ error: 'Missing required query parameters.' }, { status: 400 });
     }
@@ -29,23 +30,30 @@ export async function GET(request: NextRequest) {
 
     if (!apiResponse.ok) {
         const errorData = await apiResponse.json().catch(() => ({ message: 'Unknown API error' }));
-        console.error('TimezoneDB API Error:', errorData);
+        console.error('Timezone API Error:', errorData);
         return NextResponse.json({ error: `API request failed: ${errorData.message}` }, { status: apiResponse.status });
     }
 
     const data = await apiResponse.json();
 
-    if (data.status !== 'OK') {
-        return NextResponse.json({ error: data.message || 'An error occurred with the timezone API.'}, { status: 400 });
+    // ipgeolocation.io returns an array of zones for list, and an object for get
+    if (list) {
+        return NextResponse.json({ zones: data.timezones });
+    }
+
+    if (data.message) {
+        return NextResponse.json({ error: data.message}, { status: 400 });
     }
     
-    // timezonedb returns a timestamp in seconds, but we need JS date which works in ms
-    if(data.timestamp) {
-        data.formatted = new Date(data.timestamp * 1000).toISOString();
-    }
+    // ipgeolocation returns a string like "2024-08-01 10:30:45"
+    // We need to make it a valid ISO string for new Date()
+    const formattedDateTime = data.date_time_txt.replace(' ', 'T') + 'Z';
 
-
-    return NextResponse.json(data);
+    return NextResponse.json({
+        formatted: new Date(formattedDateTime).toISOString(),
+        zoneName: data.timezone,
+        gmtOffset: data.timezone_offset * 3600, // convert hours to seconds
+    });
   } catch (error) {
     console.error('Proxy API Error:', error);
     return NextResponse.json({ error: 'An internal server error occurred.' }, { status: 500 });

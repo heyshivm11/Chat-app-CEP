@@ -7,10 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Search } from 'lucide-react';
 
-interface Timezone {
-  zoneName: string;
-}
-
 interface TimeData {
   formatted: string;
   zoneName: string;
@@ -40,10 +36,11 @@ function WorldClockComponent() {
       try {
         const response = await fetch('/api/timezone?list=true');
         if (!response.ok) {
-          throw new Error('Failed to load timezone list.');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to load timezone list.');
         }
         const data = await response.json();
-        setAllTimezones(data.zones.map((z: any) => z.zoneName));
+        setAllTimezones(data.zones);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Could not load timezones.');
       }
@@ -59,13 +56,13 @@ function WorldClockComponent() {
     try {
       const response = await fetch(`/api/timezone?zone=${timezone}`);
       if (!response.ok) {
-        throw new Error(`Could not find time for "${timezone}". Please check the spelling or try a different timezone.`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Could not find time for "${timezone}".`);
       }
       
       const data: TimeData = await response.json();
       
       setTimeData(data);
-      // The timestamp is in seconds, convert to milliseconds
       setCurrentTime(new Date(data.formatted));
       setSelectedTimezone(data.zoneName);
       setQuery('');
@@ -140,7 +137,7 @@ function WorldClockComponent() {
   
   const utcOffset = useMemo(() => {
     if (!timeData) return '';
-    const offsetHours = Math.floor(timeData.gmtOffset / 3600);
+    const offsetHours = timeData.gmtOffset / 3600;
     const sign = offsetHours >= 0 ? '+' : '-';
     return `UTC${sign}${Math.abs(offsetHours)}`;
   }, [timeData]);
