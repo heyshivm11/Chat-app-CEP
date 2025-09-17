@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
@@ -154,6 +155,13 @@ export default function ScriptPage({ department: initialDepartment }: { departme
         setConversationFlowOpen(states.conversationFlowOpen ?? true);
         setWorkflowOpen(states.workflowOpen ?? true);
         setClosingOpen(states.closingOpen ?? true);
+      } else {
+        // Set default states if nothing is in localStorage
+        setCustomerDetailsOpen(true);
+        setOpeningOpen(true);
+        setConversationFlowOpen(true);
+        setWorkflowOpen(true);
+        setClosingOpen(true);
       }
     } catch (e) {
       console.error("Failed to parse collapsible states from localStorage", e);
@@ -288,6 +296,15 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   const workflowScripts = useMemo(() => {
     return otherDepartmentScripts.filter(s => s.category === "Workflow");
   }, [otherDepartmentScripts]);
+
+  const consequentRefreshScript = useMemo(() => {
+    return workflowScripts.find(s => s.title === 'Consequent refresh hold');
+  }, [workflowScripts]);
+
+  const otherWorkflowScripts = useMemo(() => {
+    return workflowScripts.filter(s => s.title !== 'Consequent refresh hold');
+  }, [workflowScripts]);
+
   
   const conversationFlowScripts = useMemo(() => {
     return otherDepartmentScripts.filter(s => s.category === "Conversation Flow");
@@ -397,7 +414,10 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         isOpen={workflowOpen}
                         onOpenChange={setWorkflowOpen}
                     >
-                        {renderScriptList(workflowScripts)}
+                      <div className="flex flex-col gap-6">
+                          {consequentRefreshScript && <LandscapeScriptCard script={consequentRefreshScript} />}
+                          {renderScriptList(otherWorkflowScripts)}
+                      </div>
                     </SectionCard>
                     
                     <SectionCard
