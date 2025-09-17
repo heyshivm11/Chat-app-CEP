@@ -218,7 +218,12 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
 
   const commonScripts = useMemo(() => {
-    const common = scriptsToDisplay.filter(s => s.department === "common" && s.category !== "Workflow" && s.category !== "Chat Closing");
+    const common = scriptsToDisplay.filter(s => s.department === "common" && s.category !== "Workflow" && s.category !== "Chat Closing" && s.category !== "Conversation Flow");
+    return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
+  }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
+  
+  const conversationFlowScripts = useMemo(() => {
+    const common = scriptsToDisplay.filter(s => s.department === "common" && s.category === "Conversation Flow");
     return getProcessedScripts(common, customerName, user?.name || 'Agent', currentQuery);
   }, [scriptsToDisplay, customerName, user?.name, currentQuery]);
 
@@ -235,7 +240,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     }
     
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:col-span-3 gap-6">
+        <div className="grid grid-cols-1 md:col-span-2 xl:col-span-3 gap-6">
             {scriptList.map((script) => (
                 <ScriptCard key={script.id} script={script} />
             ))}
@@ -315,6 +320,15 @@ export default function ScriptPage({ department: initialDepartment }: { departme
                         </div>
                     </SectionCard>
 
+                     <SectionCard
+                        icon={<Workflow className="h-6 w-6 text-primary" />}
+                        title="Conversation Flow"
+                        isOpen={workflowOpen}
+                        onOpenChange={setWorkflowOpen}
+                    >
+                        {renderScriptList(conversationFlowScripts)}
+                    </SectionCard>
+
                     <SectionCard
                         icon={<Workflow className="h-6 w-6 text-primary" />}
                         title="Workflow"
@@ -351,5 +365,7 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
+
+    
 
     
