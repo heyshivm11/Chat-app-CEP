@@ -35,10 +35,9 @@ function WorldClockComponent() {
   useEffect(() => {
     async function fetchAllTimezones() {
         try {
-            const response = await fetch('/api/timezone');
+            const response = await fetch('https://worldtimeapi.org/api/timezone');
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to load timezone list.');
+                throw new Error('Failed to load timezone list.');
             }
             const data = await response.json();
             setAllTimezones(data);
@@ -55,7 +54,7 @@ function WorldClockComponent() {
     setSuggestions([]);
     
     try {
-      const response = await fetch(`/api/timezone?timezone=${timezone}`);
+      const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || `Could not find time for "${timezone}".`);
