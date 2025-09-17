@@ -252,9 +252,10 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   };
   
   const departmentScripts = useMemo(() => {
-    const scriptsToDisplay = scripts; // No search term filtering here
-    const deptScripts = scriptsToDisplay.filter(s => (s.department === department || s.department === 'common') && (category === "All" || s.category === category));
-    return getProcessedScripts(deptScripts, customerName, user?.name || 'Agent', currentQuery);
+    const scriptsToDisplay = scripts;
+    const deptScripts = scriptsToDisplay.filter(s => s.department === department || s.department === 'common');
+    const categoryFiltered = category === "All" ? deptScripts : deptScripts.filter(s => s.category === category);
+    return getProcessedScripts(categoryFiltered, customerName, user?.name || 'Agent', currentQuery);
   }, [department, category, customerName, user?.name, currentQuery]);
 
   const openingCategories = useMemo(() => [
@@ -266,20 +267,30 @@ export default function ScriptPage({ department: initialDepartment }: { departme
   ], []);
 
   const openingScripts = useMemo(() => {
-    return departmentScripts.filter(s => openingCategories.includes(s.category));
-  }, [departmentScripts, openingCategories]);
+    const deptScripts = scripts.filter(s => (s.department === department || s.department === 'common'));
+    const opening = deptScripts.filter(s => openingCategories.includes(s.category));
+    return getProcessedScripts(opening, customerName, user?.name || 'Agent', currentQuery);
+  }, [department, openingCategories, customerName, user?.name, currentQuery]);
+  
+  const otherDepartmentScripts = useMemo(() => {
+    const scriptsToDisplay = scripts;
+    const deptScripts = scriptsToDisplay.filter(s => (s.department === department || s.department === 'common'));
+    const categoryFiltered = category === "All" ? deptScripts : deptScripts.filter(s => s.category === category);
+    const nonOpening = categoryFiltered.filter(s => !openingCategories.includes(s.category));
+    return getProcessedScripts(nonOpening, customerName, user?.name || 'Agent', currentQuery);
+  }, [department, category, customerName, user?.name, currentQuery, openingCategories]);
   
   const workflowScripts = useMemo(() => {
-    return departmentScripts.filter(s => s.category === "Workflow");
-  }, [departmentScripts]);
+    return otherDepartmentScripts.filter(s => s.category === "Workflow");
+  }, [otherDepartmentScripts]);
   
   const conversationFlowScripts = useMemo(() => {
-    return departmentScripts.filter(s => s.category === "Conversation Flow");
-  }, [departmentScripts]);
+    return otherDepartmentScripts.filter(s => s.category === "Conversation Flow");
+  }, [otherDepartmentScripts]);
 
   const chatClosingScript = useMemo(() => {
-    return departmentScripts.find(s => s.category === "Chat Closing");
-  }, [departmentScripts]);
+    return otherDepartmentScripts.find(s => s.category === "Chat Closing");
+  }, [otherDepartmentScripts]);
 
 
   const renderScriptList = useCallback((scriptList: Script[]) => {
@@ -399,5 +410,3 @@ export default function ScriptPage({ department: initialDepartment }: { departme
     </div>
   );
 }
-
-    
